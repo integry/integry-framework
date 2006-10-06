@@ -32,6 +32,7 @@ class Router {
 	}
 
 
+/*
 	public function setBaseDir($dir) {
 	  
 	  	$this->baseDir = $dir;
@@ -41,7 +42,7 @@ class Router {
 	  
 	  	return $this->baseDir;
 	}
-
+*/
 
 	/**
 	 * Connects a new route to some URL pattern.
