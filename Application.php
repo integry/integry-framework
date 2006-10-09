@@ -4,7 +4,6 @@ ClassLoader::import('framework.request.*');
 ClassLoader::import('framework.renderer.*');
 ClassLoader::import('framework.response.*');
 ClassLoader::import('framework.controller.*');
-//ClassLoader::import("framework.configuration.route.RouteConfigurator");
 
 /**
  * Class for running an application.
@@ -37,9 +36,10 @@ ClassLoader::import('framework.controller.*');
  *
  * @package framework
  * @author Saulius Rupainis <saulius@integry.net>
- * 
+ *
  */
-class Application {
+class Application
+{
 
 	/**
 	 * Application instance (based on a singleton pattern)
@@ -70,7 +70,7 @@ class Application {
 	 * @var string
 	 * @see self::setDefaultControllerName()
 	 */
-	private $defaultControllerName  = "index";
+	private $defaultControllerName = "index";
 
 
 	/**
@@ -78,8 +78,8 @@ class Application {
 	 *
 	 * @see self::getInstance()
 	 */
-	final private function __construct() {
-
+	final private function __construct()
+	{
 		$this->request = new Request();
 		$this->router = Router::getInstance();
 	}
@@ -91,8 +91,10 @@ class Application {
 	 *
 	 * @return Application
 	 */
-	public static function getInstance() {
-		if (is_null(self::$instance)) {
+	public static function getInstance()
+	{
+		if (is_null(self::$instance))
+		{
 			self::$instance = new Application();
 		}
 		return self::$instance;
@@ -104,7 +106,8 @@ class Application {
 	 * @param string $controller Name of controller
 	 * @return void
 	 */
-	public function setDefaultControllerName($controllerName) {
+	public function setDefaultControllerName($controllerName)
+	{
 		$this->defaultControllerName = $controllerName;
 	}
 
@@ -113,8 +116,9 @@ class Application {
 	 *
 	 * @return string Controller name
 	 */
-	public function getDefaultControllerName() {
-		return $this->defaultControllerName ;
+	public function getDefaultControllerName()
+	{
+		return $this->defaultControllerName;
 	}
 
 	/**
@@ -123,7 +127,8 @@ class Application {
 	 * @param Renderer $renderer Instance of Renderer
 	 * @return void
 	 */
-	public function setRenderer(Renderer $renderer) {
+	public function setRenderer(Renderer $renderer)
+	{
 		$this->renderer = $renderer;
 	}
 
@@ -132,8 +137,10 @@ class Application {
 	 *
 	 * @return Renderer
 	 */
-	public function getRenderer() {
-		if (is_null($this->renderer)) {
+	public function getRenderer()
+	{
+		if (is_null($this->renderer))
+		{
 			$this->renderer = new TemplateRenderer($this->router);
 		}
 		return $this->renderer;
@@ -144,9 +151,10 @@ class Application {
 	 *
 	 * @return Request
 	 */
-	public function getRequest() {
-		
-		if ($this->request == null) {
+	public function getRequest()
+	{
+		if ($this->request == null)
+		{
 			$this->request = $this->router->getRequest();
 		}
 		return $this->request;
@@ -157,52 +165,66 @@ class Application {
 	 *
 	 * @throws ApplicationException Rethowed framework level exception (should be handled manually)
 	 */
-	public function run() {
-		
-		//Router::mapToRoute(Router::getRequestPath(), $this->request);
+	public function run()
+	{
 		$this->router->mapToRoute($this->router->getRequestPath(), $this->request);
-		
+
 		$controllerName = $this->getRequest()->getControllerName();
 		$actionName = $this->getRequest()->getActionName();
 
-		if (empty($controllerName)) {
+		if (empty($controllerName))
+		{
 			$controllerName = $this->getDefaultControllerName();
 		}
-		if (empty($actionName)) {
+		if (empty($actionName))
+		{
 			$actionName = Controller::DEFAULT_ACTION;
 		}
 
 		/* Execute an action of some controller */
-		try {
+		try
+		{
 			$controllerInstance = $this->getControllerInstance($controllerName);
-			
+
 			$response = $this->execute($controllerInstance, $actionName);
 			$response->sendHeaders();
-			
-			if ($response instanceof Renderable) {
+
+			if ($response instanceof Renderable)
+			{
 				$applicationOutput = $this->render($controllerName, $actionName, $response);
-				
+
 				/* using laypout defined in a controller for action output */
-				if ($controllerInstance->getLayout() != null) {
+				if ($controllerInstance->getLayout() != null)
+				{
 					$structure = $controllerInstance->getLayoutStructure();
-					foreach ($structure as $block) {
-						if ($block['response'] instanceof BlockResponse) {
+					foreach($structure as $block)
+					{
+						if ($block['response'] instanceof BlockResponse)
+						{
 							$blockOutput = $this->getRenderer()->process($block['response'], $block['view']);
 							$this->getRenderer()->appendValue($block['container'], $blockOutput);
-						} else {
+						}
+						else
+						{
 							throw new ApplicationException("Unknown response flom a block");
 						}
 					}
 					$this->getRenderer()->setValue("ACTION_VIEW", $applicationOutput);
 					echo $this->getRenderer()->render($this->getLayoutPath($controllerInstance->getLayout()));
-				/* end layout renderer block */
-				} else {
+					/* end layout renderer block */
+				}
+				else
+				{
 					echo $applicationOutput;
 				}
-			} else {
+			}
+			else
+			{
 				echo $response->getData();
 			}
-		} catch (ApplicationException $ex) {
+		}
+		catch(ApplicationException $ex)
+		{
 			throw $ex;
 		}
 	}
@@ -215,12 +237,16 @@ class Application {
 	 * @return Response
 	 * @throws ApplicationException if error situation occurs
 	 */
-	protected function execute($controllerInstance, $actionName) {
-		try {
+	protected function execute($controllerInstance, $actionName)
+	{
+		try
+		{
 			$response = $controllerInstance->execute($actionName, $this->getRequest());
 			$this->processResponse($response);
 			return $response;
-		} catch (ApplicationException $ex) {
+		}
+		catch(ApplicationException $ex)
+		{
 			throw $ex;
 		}
 	}
@@ -232,20 +258,24 @@ class Application {
 	 * @return Controller
 	 * @throws ControllerNotFoundException if controller does not exist
 	 */
-	protected function getControllerInstance($controllerName) {
+	protected function getControllerInstance($controllerName)
+	{
 		$controllerPath = explode(".", $controllerName);
 		$pathLength = count($controllerPath);
 		$className = ucfirst($controllerPath[$pathLength - 1]).'Controller';
 		$controllerPath[$pathLength - 1] = $className;
 		$controllerPath = implode(".", $controllerPath);
 
-		ClassLoader::import("application.controller." . $controllerPath);
-		$controllerSystemPath = ClassLoader::getRealPath("application.controller." . $controllerPath) . ".php";
-		
+		ClassLoader::import("application.controller.".$controllerPath);
+		$controllerSystemPath = ClassLoader::getRealPath("application.controller.".$controllerPath).".php";
+
 		//if (!empty($controllerName) && class_exists($className)) {
-		if (file_exists($controllerSystemPath)) {
+		if (file_exists($controllerSystemPath))
+		{
 			return new $className($this->getRequest());
-		} else {
+		}
+		else
+		{
 			throw new ControllerNotFoundException($controllerName);
 		}
 	}
@@ -257,33 +287,38 @@ class Application {
 	 * @return void
 	 * @throws ApplicationException if error situation occurs
 	 */
-	protected function processResponse(Response $response) {
+	protected function processResponse(Response $response)
+	{
 		/* Handle redirect to another action */
-		if ($response instanceof ActionRedirectResponse) {
-			try {
+		if ($response instanceof ActionRedirectResponse)
+		{
+			try
+			{
 				$paramList = array("controller" => $response->getControllerName(), "action" => $response->getActionName());
 				$paramList = array_merge($paramList, $response->getParamList());
 				$response->setRedirectURL($this->router->createURL($paramList));
-			} catch (ApplicationException $ex) {
+			}
+			catch(ApplicationException $ex)
+			{
 				throw $ex;
 			}
 		}
-		
+
 		/* Handle composite response */
-		if ($response instanceof CompositeResponse) {
-			try {
+		if ($response instanceof CompositeResponse)
+		{
+			try
+			{
 				$requestedActionList = $response->getRequestedActionList();
-				foreach ($requestedActionList as $outputHandle => $location) {
+				foreach($requestedActionList as $outputHandle => $location)
+				{
 					$controllerName = $location[CompositeResponse::CONTROLLER_HANDLE];
 					$actionName = $location[CompositeResponse::ACTION_HANDLE];
-					$response->setValue($outputHandle, 
-					                    $this->render($controllerName, 
-					                                  $actionName, 
-					                                  $this->execute($controllerName, $actionName)
-					                                  )
-					                    );
+					$response->setValue($outputHandle, $this->render($controllerName, $actionName, $this->execute($controllerName, $actionName)));
 				}
-			} catch (ApplicationException $ex) {
+			}
+			catch(ApplicationException $ex)
+			{
 				throw $ex;
 			}
 		}
@@ -298,10 +333,14 @@ class Application {
 	 * @return string Renderer content
 	 * @throws ViewNotFoundException if view does not exists for specified controller
 	 */
-	public function render($controllerName, $actionName, Response $response) {
-		try {
+	public function render($controllerName, $actionName, Response $response)
+	{
+		try
+		{
 			return $this->getRenderer()->process($response, $this->getView($controllerName, $actionName));
-		} catch (ViewNotFoundException $ex) {
+		}
+		catch(ViewNotFoundException $ex)
+		{
 			throw $ex;
 		}
 	}
@@ -313,40 +352,31 @@ class Application {
 	 * @param string $actionName Action name
 	 * @return string View path
 	 */
-	public function getView($controllerName, $actionName) {
+	public function getView($controllerName, $actionName)
+	{
 		$controllerPath = explode(".", $controllerName);
 		$controllerName = implode(DIRECTORY_SEPARATOR, $controllerPath);
-		return implode(
-			DIRECTORY_SEPARATOR,
-			array(
-				ClassLoader::getBaseDir(),
-				'application',
-				'view',
-				$controllerName,
-				"$actionName.tpl"
-			)
-		);
+
+		return implode(DIRECTORY_SEPARATOR, array(ClassLoader::getBaseDir(), 
+                                              'application', 
+                                              'view', 
+                                              $controllerName, 
+                                              "$actionName.tpl"));
 	}
-	
+
 	/**
 	 * Gets a physical layout template path
 	 *
 	 * @param string $layout layout handle (filename without extension)
 	 * @return string
 	 */
-	public function getLayoutPath($layout) {
-		return implode(
-			DIRECTORY_SEPARATOR,
-			array(
-				ClassLoader::getBaseDir(),
-				'application',
-				'view',
-				'layout',
-				"$layout.tpl"
-			)
-		);
+	public function getLayoutPath($layout)
+	{
+		return implode(DIRECTORY_SEPARATOR, array(ClassLoader::getBaseDir(), 
+												  'application', 
+												  'view', 
+												  'layout', 
+												  "$layout.tpl"));
 	}
-
 }
-
 ?>

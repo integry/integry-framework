@@ -2,18 +2,18 @@
 
 /**
  * Class for accessing and manipulating request data
- * 
- * Request class acts as central request data storage which also allows to access 
+ *
+ * Request class acts as central request data storage which also allows to access
  * application-specific data directy - controller and action name
  *
  * @see self::getControllerName()
  * @see self::getActionName()
- * 
+ *
  * @package	framework.request
  * @author Saulius Rupainis <saulius@integry.net>
  */
-class Request {
-
+class Request
+{
 	/**
 	 * Controller variable name in request array
 	 */
@@ -33,7 +33,8 @@ class Request {
 	/**
 	 * @param array $default Associative array with default values
 	 */
-	public function __construct() {
+	public function __construct()
+	{
 		$this->setValueArray($_GET);
 		$this->setValueArray($_POST);
 		$this->setValueArray($_COOKIE);
@@ -46,7 +47,8 @@ class Request {
 	 * @param scalar $value Value
 	 * @return void
 	 */
-	function setValue($name, $value) {
+	function setValue($name, $value)
+	{
 		$this->dataContainer[$name] = $value;
 	}
 
@@ -56,20 +58,24 @@ class Request {
 	 * @param array $dataArray Associative array with values
 	 * @return void
 	 */
-	function setValueArray($dataArray) {
+	function setValueArray($dataArray)
+	{
 		$this->dataContainer = @array_merge($this->dataContainer, $dataArray);
 	}
-	
+
 	/**
 	 * Gets a list of request variables
 	 *
 	 * @param array $varNameList Arrays of request variables name
 	 * @return array Associative array where index maps to variable name
 	 */
-	public function getValueArray($varNameList = array()) {
+	public function getValueArray($varNameList = array())
+	{
 		$varList = array();
-		foreach ($varNameList as $name) {
-			if ($this->isValueSet($name)) {
+		foreach($varNameList as $name)
+		{
+			if ($this->isValueSet($name))
+			{
 				$varList[$name] = $this->getValue($name);
 			}
 		}
@@ -83,8 +89,10 @@ class Request {
 	 * @param mixed $default Default value to return
 	 * @return mixed
 	 */
-	function getValue($name, $default = null) {
-		if (isset($this->dataContainer[$name])) {
+	function getValue($name, $default = null)
+	{
+		if (isset($this->dataContainer[$name]))
+		{
 			return $this->dataContainer[$name];
 		}
 		return $default;
@@ -95,7 +103,8 @@ class Request {
 	 *
 	 * @return mixed null if there is no action name value
 	 */
-	public function getActionName() {
+	public function getActionName()
+	{
 		return $this->getValue(self::ACTION_NAME);
 	}
 
@@ -104,7 +113,8 @@ class Request {
 	 *
 	 * @return mixed null if there is no controller name value
 	 */
-	public function getControllerName() {
+	public function getControllerName()
+	{
 		return $this->getValue(self::CONTROLLER_NAME);
 	}
 
@@ -114,10 +124,14 @@ class Request {
 	 * @param string $name Name of value
 	 * @return boolean true if there is $name value, false otherwise
 	 */
-	public function isValueSet($name) {
-		if(!empty($this->dataContainer[$name])) {
+	public function isValueSet($name)
+	{
+		if (!empty($this->dataContainer[$name]))
+		{
 			return true;
-		} else {
+		}
+		else
+		{
 			return false;
 		}
 	}
@@ -127,7 +141,8 @@ class Request {
 	 *
 	 * @return array
 	 */
-	public function &toArray() {
+	public function & toArray()
+	{
 		return $this->dataContainer;
 	}
 

@@ -12,7 +12,8 @@ ClassLoader::import("framework.response.ActionResponse");
  * @package framework.response
  * @author Saulius Rupainis <saulius@integry.com>
  */
-class BlockResponse extends ActionResponse {
+class BlockResponse extends ActionResponse 
+{
 }
 
 ?>

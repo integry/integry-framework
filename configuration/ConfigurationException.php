@@ -8,7 +8,8 @@ ClassLoader::import("framework.ApplicationException");
  * @package framework.configuration
  * @author Saulius Rupainis <saulius@integry.net>
  */
-class ConfigurationException extends ApplicationException {
+class ConfigurationException extends ApplicationException
+{
 }
 
 ?>

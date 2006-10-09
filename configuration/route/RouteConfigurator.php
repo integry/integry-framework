@@ -8,22 +8,23 @@ ClassLoader::import("framework.configuration.route.RouteCompiler");
  * @package framework.configuration.router
  * @author Saulius Rupainis <saulius@integry.net>
  */
-class RouteConfigurator {
-	
+class RouteConfigurator
+{
 	private static $recompile = true;
-	
+
 	/**
-	 * Performs a router configuration: collects and compiles a defined list of 
+	 * Performs a router configuration: collects and compiles a defined list of
 	 * routing config and/or executes a compiled one
 	 *
 	 */
-	public static function run(Router $router) {
-		
+	public static function run(Router $router)
+	{
 		$configPath = ClassLoader::getRealPath("application.configuration.route");
-		if (self::$recompile) {
+		if (self::$recompile)
+		{
 			$compiler = new RouteCompiler();
 			$compiler->loadRouteConfigList($configPath);
-			$PHPCode = "<?php\n" . $compiler->compile() . "?>\n";
+			$PHPCode = "<?php\n".$compiler->compile()."?>\n";
 
 			$cachePath = ClassLoader::getRealPath("cache.configuration.route") . "/route_compiled.php";
 			file_put_contents($cachePath, $PHPCode);

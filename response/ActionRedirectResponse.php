@@ -4,16 +4,16 @@ ClassLoader::import('framework.response.RedirectResponse');
 
 /**
  * Class for creating action redirect response.
- * 
- * Action redirect response indicates a controler and action to redirect to. 
+ *
+ * Action redirect response indicates a controler and action to redirect to.
  * Redirection is performed by an Application after an instance is returned from an action
  *
  * @see Application
  * @package	framework.response
  * @author Saulius Rupainis
  */
-class ActionRedirectResponse extends RedirectResponse {
-
+class ActionRedirectResponse extends RedirectResponse
+{
 	/**
 	 * Controllers name to redirect to
 	 */
@@ -29,11 +29,11 @@ class ActionRedirectResponse extends RedirectResponse {
 	 */
 	private $paramList = array();
 
-
 	/**
 	 * @param string $content Content of response (optional)
 	 */
-	public function __construct($controllerName, $actionName, $paramList = array()) {
+	public function __construct($controllerName, $actionName, $paramList = array())
+	{
 		parent::__construct('');
 
 		$this->setControllerName($controllerName);
@@ -47,7 +47,8 @@ class ActionRedirectResponse extends RedirectResponse {
 	 * @param string $controller Controller
 	 * @return void
 	 */
-	public function setControllerName($controller) {
+	public function setControllerName($controller)
+	{
 		$this->controllerName = $controller;
 	}
 
@@ -56,7 +57,8 @@ class ActionRedirectResponse extends RedirectResponse {
 	 *
 	 * @return mixed null if no controller set, string otherwise
 	 */
-	public function getControllerName() {
+	public function getControllerName()
+	{
 		return $this->controllerName;
 	}
 
@@ -66,7 +68,8 @@ class ActionRedirectResponse extends RedirectResponse {
 	 * @param string $action Action
 	 * @return void
 	 */
-	public function setActionName($action) {
+	public function setActionName($action)
+	{
 		$this->actionName = $action;
 	}
 
@@ -75,7 +78,8 @@ class ActionRedirectResponse extends RedirectResponse {
 	 *
 	 * @return mixed null if no action set, string otherwise
 	 */
-	public function getActionName() {
+	public function getActionName()
+	{
 		return $this->actionName;
 	}
 
@@ -85,7 +89,8 @@ class ActionRedirectResponse extends RedirectResponse {
 	 * @param array $parameter Associative array with parameters
 	 * @return void
 	 */
-	public function setParamList($paramList) {
+	public function setParamList($paramList)
+	{
 		$this->paramList = $paramList;
 	}
 
@@ -94,10 +99,10 @@ class ActionRedirectResponse extends RedirectResponse {
 	 *
 	 * @return array Associative array with paramaters
 	 */
-	public function getParamList() {
-		return (array) $this->paramList;
+	public function getParamList()
+	{
+		return (array)$this->paramList;
 	}
-
 }
 
 ?>

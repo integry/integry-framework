@@ -14,7 +14,8 @@
  * @param string $className Class Name
  * @link  http://www.php.net/__autoload
  */
-function __autoload($className){
+function __autoload($className)
+{
 	ClassLoader::load($className);
 }
 
@@ -24,53 +25,59 @@ function __autoload($className){
  * @package	framework
  * @author Saulius Rupainis <saulius@integry.net>
  */
-class ClassLoader {
-
+class ClassLoader
+{
 	/**
 	 * Mount point list
 	 *
-	 * Mount point is kind of a path handle: it gives a shorter name for a system path 
+	 * Mount point is kind of a path handle: it gives a shorter name for a system path
 	 * (directory) which can be used in an application
-	 * 
+	 *
 	 * @see self::mountPath()
 	 * @see self::unmountPath()
 	 * @var array
 	 */
 	private static $mountList = array();
 
-
 	/**
 	 * Loads a class file (performs include_once)
 	 *
 	 * @param string $class Class file
 	 */
-	public static function load($class) {
+	public static function load($class)
+	{
 		$className = substr($class, strrpos($class, DIRECTORY_SEPARATOR));
-		if (!class_exists($className, false)) {
+		if (!class_exists($className, false))
+		{
 			@include_once $class.'.php';
 		}
 	}
-	
+
 	/**
 	 * Registers a new mount point
-	 * 
+	 *
 	 * @param string $mountName
 	 * @param string $fullDirPath
 	 */
-	public static function mountPath($mountName, $fullDirPath) {
-		if (is_dir($fullDirPath)) {
+	public static function mountPath($mountName, $fullDirPath)
+	{
+		if (is_dir($fullDirPath))
+		{
 			self::$mountList[$mountName] = $fullDirPath;
-		} else {
+		}
+		else
+		{
 			throw new ClassLoaderException("No such directory: $fullDirPath");
 		}
 	}
-	
+
 	/**
 	 * Removes a mount point
 	 *
 	 * @param string $mountName
 	 */
-	public static function unmountPath($mountName) {
+	public static function unmountPath($mountName)
+	{
 		unset(self::$mountList[$mountName]);
 	}
 
@@ -96,35 +103,44 @@ class ClassLoader {
 	 *
 	 * @param string $path
 	 */
-	public static function import($path) {
+	public static function import($path)
+	{
 		$path = self::mapToMountPoint($path);
 		$path = str_replace('.', DIRECTORY_SEPARATOR, $path);
-		if (strpos($path, '*')) {
+		if (strpos($path, '*'))
+		{
 			$path = str_replace('*', '', $path);
 			self::importPath($path);
-		} else {
+		}
+		else
+		{
 			self::load($path);
 		}
 	}
-	
+
 	/**
 	 * Translates a path to a system path by looking at a mount list
 	 *
 	 * @param unknown_type $path
 	 * @return unknown
 	 */
-	private static function mapToMountPoint($path) {
+	private static function mapToMountPoint($path)
+	{
 		$mountedPath = "";
 		$pathParts = explode(".", $path);
-		if (!empty($pathParts[0])) {
-			if (!empty(self::$mountList[$pathParts[0]])) {
+		if (!empty($pathParts[0]))
+		{
+			if (!empty(self::$mountList[$pathParts[0]]))
+			{
 				$mountedPath = self::$mountList[$pathParts[0]];
 				unset($pathParts[0]);
-			} else if (!empty(self::$mountList["."])) {
+			}
+			else if (!empty(self::$mountList["."]))
+			{
 				$mountedPath = self::$mountList["."];
 			}
 		}
-		return $mountedPath . implode(".", $pathParts);
+		return $mountedPath.implode(".", $pathParts);
 	}
 
 	/**
@@ -138,7 +154,8 @@ class ClassLoader {
 	 * @param string $path
 	 * @param string $root Root path
 	 */
-	public static function remove($path) {
+	public static function remove($path)
+	{
 		$path = self::mapToMountPoint($path);
 		$path = str_replace('*', '', str_replace('.', DIRECTORY_SEPARATOR, $path));
 
@@ -150,21 +167,26 @@ class ClassLoader {
 	 *
 	 * @return string base directory
 	 */
-	public static function getBaseDir() {
-		if (!empty(self::$mountList["."])) {
+	public static function getBaseDir()
+	{
+		if (!empty(self::$mountList["."]))
+		{
 			return self::$mountList["."];
-		} else {
+		}
+		else
+		{
 			return "";
 		}
 	}
-	
+
 	/**
 	 * Gets a translated (physical) path by using a package path
 	 *
 	 * @param string $path
 	 * @return string
 	 */
-	public static function getRealPath($path) {
+	public static function getRealPath($path)
+	{
 		$path = self::mapToMountPoint($path);
 		return str_replace('.', DIRECTORY_SEPARATOR, $path);
 	}
@@ -174,7 +196,8 @@ class ClassLoader {
 	 *
 	 * @param string $dir Directory name
 	 */
-	public static function setBaseDir($dir) {
+	public static function setBaseDir($dir)
+	{
 		self::mountPath(".", $dir);
 	}
 
@@ -184,14 +207,18 @@ class ClassLoader {
 	 * @param string $path Directory
 	 * @param boolean $check Chech if directory exists
 	 */
-	public static function importPath($path, $check = true) {
+	public static function importPath($path, $check = true)
+	{
 		$oldPath = get_include_path();
-		if ($check) {
+		if ($check)
+		{
 			$oldPathArray = explode(PATH_SEPARATOR, $oldPath);
-			if (!is_dir($path)) {
+			if (!is_dir($path))
+			{
 				return false;
 			}
-			if (in_array($path, $oldPathArray)) {
+			if (in_array($path, $oldPathArray))
+			{
 				return false;
 			}
 		}
@@ -203,12 +230,14 @@ class ClassLoader {
 	 *
 	 * @param string $path Directory
 	 */
-	private static function removePath($path) {
+	private static function removePath($path)
+	{
 		$oldPathArray = explode(PATH_SEPARATOR, get_include_path());
 		$oldPathCount = count($oldPathArray);
 
 		$oldPath = array_diff($oldPathArray, array($path));
-		if (count($oldPath) < $oldPathCount) {
+		if (count($oldPath) < $oldPathCount)
+		{
 			ini_set('include_path', implode(PATH_SEPARATOR, $oldPath));
 		}
 	}

@@ -7,18 +7,18 @@ ClassLoader::import('framework.response.*');
  *
  * @package	framework.response
  */
-class RawResponse extends Response {
-
+class RawResponse extends Response
+{
 	/**
 	 * Stores content
 	 */
 	private $content;
 
-
 	/**
 	 * @param string $content Raw output
 	 */
-	public function __construct($content = '') {
+	public function __construct($content = '')
+	{
 		$this->setContent($content);
 	}
 
@@ -29,10 +29,14 @@ class RawResponse extends Response {
 	 * @param boolean $append True to append content, false to replace
 	 * @return void
 	 */
-	public function setContent($content, $append = false) {
-		if ($append) {
+	public function setContent($content, $append = false)
+	{
+		if ($append)
+		{
 			$this->content .= $content;
-		} else {
+		}
+		else
+		{
 			$this->content = $content;
 		}
 	}
@@ -42,12 +46,14 @@ class RawResponse extends Response {
 	 *
 	 * @return string Content of response
 	 */
-	public function getContent() {
+	public function getContent()
+	{
 		return $this->content;
 	}
-	
-	
-	public function getData() {
+
+
+	public function getData()
+	{
 		return $this->content;
 	}
 

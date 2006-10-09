@@ -7,7 +7,8 @@
  *
  * @package	framework.response
  */
-class ResponseException extends ApplicationException {
+class ResponseException extends ApplicationException
+{
 }
 
 ?>

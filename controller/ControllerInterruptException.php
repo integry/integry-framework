@@ -1,24 +1,25 @@
 <?php
 
-
 /**
  * Controller interrupt exception
- * 
+ *
  * @package framework.controller
  * @author Saulius Rupainis
  */
-class ControllerInterruptException extends ControllerException {
-	
+class ControllerInterruptException extends ControllerException
+{
 	private $controllerName = "";
 	private $actionName = "";
-	
-	public function __construct($controllerNameToCall, $actionNameToCall) {
+
+	public function __construct($controllerNameToCall, $actionNameToCall)
+	{
 		parent::__construct();
 		$this->controllerName = $controllerNameToCall;
-		$this->actionName = $actionNameToCall; 
+		$this->actionName = $actionNameToCall;
 	}
-	
-	public function createActionRedirectResponse() {
+
+	public function createActionRedirectResponse()
+	{
 		return new ActionRedirectResponse($this->controllerName, $this->actionName);
 	}
 }

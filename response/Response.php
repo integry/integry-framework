@@ -7,8 +7,8 @@
  *
  * @package	framework.response
  */
-abstract class Response {
-
+abstract class Response
+{
 	/**
 	 * Stores raw headers
 	 */
@@ -25,7 +25,8 @@ abstract class Response {
 	 * @param string $header Raw header to send
 	 * @return void
 	 */
-	public function setRawHeader($header) {
+	public function setRawHeader($header)
+	{
 		$this->rawHeaderData[] = $header;
 	}
 
@@ -34,7 +35,8 @@ abstract class Response {
 	 *
 	 * @return void
 	 */
-	public function unsetAllRawHeaders() {
+	public function unsetAllRawHeaders()
+	{
 		$this->rawHeaderData = array();
 	}
 
@@ -45,7 +47,8 @@ abstract class Response {
 	 * @param string $value Value
 	 * @return void
 	 */
-	public function setHeader($name, $value) {
+	public function setHeader($name, $value)
+	{
 		$this->headerData[$name] = $value;
 	}
 
@@ -55,8 +58,10 @@ abstract class Response {
 	 * @param string $name Name of header
 	 * @return mixed null if there is no $name value
 	 */
-	public function getHeader($name) {
-		if ($this->isHeaderSet($name)) {
+	public function getHeader($name)
+	{
+		if ($this->isHeaderSet($name))
+		{
 			return $this->headerData[$name];
 		}
 		return null;
@@ -68,8 +73,10 @@ abstract class Response {
 	 * @param string $name Name of header
 	 * @return void
 	 */
-	public function unsetHeader($name) {
-		if ($this->isHeaderSet($name)) {
+	public function unsetHeader($name)
+	{
+		if ($this->isHeaderSet($name))
+		{
 			unset($this->headerData[$name]);
 		}
 	}
@@ -79,7 +86,8 @@ abstract class Response {
 	 *
 	 * @return void
 	 */
-	public function unsetAllHeaders() {
+	public function unsetAllHeaders()
+	{
 		$this->headerData = array();
 	}
 
@@ -89,7 +97,8 @@ abstract class Response {
 	 * @param string $name Name of header
 	 * @return boolean true if there is $name header, false otherwise
 	 */
-	public function isHeaderSet($name) {
+	public function isHeaderSet($name)
+	{
 		return isset($this->headerData[$name]);
 	}
 
@@ -99,20 +108,24 @@ abstract class Response {
 	 * @return void
 	 * @throws HeadersSentException if headers have been already sent
 	 */
-	public function sendHeaders() {
-		if (headers_sent()) {
+	public function sendHeaders()
+	{
+		if (headers_sent())
+		{
 			//throw new HeadersSentException();
 		}
 		/* Raw header */
-		foreach ((array) $this->rawHeaderData as $header) {
+		foreach((array)$this->rawHeaderData as $header)
+		{
 			header($header);
 		}
 		/* Headers */
-		foreach ((array) $this->headerData as $name => $value) {
+		foreach((array)$this->headerData as $name => $value)
+		{
 			header("$name: $value");
 		}
 	}
-	
+
 	abstract public function getData();
 }
 

@@ -5,15 +5,15 @@ ClassLoader::import('framework.response.Response');
 
 /**
  * Class for rendering a response.
- * 
+ *
  * Response rendering consists of displaying collected (assigned) data.
  * Renderer is kind of template engine wrapper.
  *
  * @package	framework.renderer
  * @author Saulius Rupainis <saulius@integry.net>
  */
-abstract class Renderer {
-
+abstract class Renderer
+{
 	/**
 	 * Registers value to render
 	 *
@@ -22,7 +22,7 @@ abstract class Renderer {
 	 * @return void
 	 */
 	abstract public function setValue($name, $value);
-	
+
 	/**
 	 * Appends a template variable by a given value
 	 *
@@ -71,10 +71,14 @@ abstract class Renderer {
 	 * @return string Rendered output
 	 * @throws FwViewNotFoundException if view does not exists
 	 */
-	public function process(Renderable $object, $view) {
-		try {
+	public function process(Renderable $object, $view)
+	{
+		try
+		{
 			return $object->render($this, $view);
-		} catch (ViewNotFoundException $ex) {
+		}
+		catch(ViewNotFoundException $ex)
+		{
 			throw $ex;
 		}
 	}
@@ -87,7 +91,6 @@ abstract class Renderer {
 	 * @throws FwViewNotFoundException if view does not exists
 	 */
 	abstract public function render($view);
-
 }
 
 ?>

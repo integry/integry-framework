@@ -6,7 +6,8 @@
  * @package framework
  * @author Saulius Rupainis <saulius@integry.net>
  */
-class ApplicationException extends Exception {
+class ApplicationException extends Exception 
+{
 }
 
 ?>

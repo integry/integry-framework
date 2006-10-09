@@ -2,7 +2,12 @@
 
 ClassLoader::import("framework.ApplicationException");
 
-class HelperException extends ApplicationException {
+/**
+ *
+ *
+ */
+class HelperException extends ApplicationException 
+{
 }
 
 ?>

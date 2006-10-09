@@ -7,8 +7,8 @@
  *
  * @package	framework.controller
  */
-class ActionNotFoundException extends ControllerException  {
-
+class ActionNotFoundException extends ControllerException
+{
 	/**
 	 * Controller name that contains the action
 	 */
@@ -19,14 +19,14 @@ class ActionNotFoundException extends ControllerException  {
 	 */
 	private $actionName;
 
-
 	/**
 	 * @param string $controllerName
 	 * @param string $actionName
 	 */
-	public function __construct($controllerName, $actionName) {
+	public function __construct($controllerName, $actionName)
+	{
 		parent::__construct("Specified action does not exist ($controllerName.$actionName)");
-		
+
 		$this->controllerName = $controllerName;
 		$this->actionName = $actionName;
 	}
@@ -36,7 +36,8 @@ class ActionNotFoundException extends ControllerException  {
 	 *
 	 * @return string Controller name
 	 */
-	public function getControllerName() {
+	public function getControllerName()
+	{
 		return $this->controllerName;
 	}
 
@@ -45,10 +46,10 @@ class ActionNotFoundException extends ControllerException  {
 	 *
 	 * @return string Action name
 	 */
-	public function getActionName() {
+	public function getActionName()
+	{
 		return $this->actionName;
 	}
-
 }
 
 ?>

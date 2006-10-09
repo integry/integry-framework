@@ -6,7 +6,8 @@
  * @author	Saulius Rupainis <saulius.rupainis@artogama.lt>
  * @package	framework.controller
  */
-class ControllerException extends ApplicationException {
+class ControllerException extends ApplicationException
+{
 }
 
 ?>

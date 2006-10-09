@@ -7,8 +7,8 @@ ClassLoader::import("framework.renderer.Renderable");
  *
  * @package	framework.renderer
  */
-interface Renderable {
-
+interface Renderable
+{
 	/**
 	 * Renders self into renderer using view if needed
 	 *

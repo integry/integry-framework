@@ -8,8 +8,8 @@ ClassLoader::import('framework.renderer.RendererException');
  * @package	framework.renderer
  * @author Saulius Rupainis <saulius@integry.net>
  */
-class ViewNotFoundException extends RendererException {
-
+class ViewNotFoundException extends RendererException
+{
 	/**
 	 * Template path (view name)
 	 */
@@ -18,7 +18,8 @@ class ViewNotFoundException extends RendererException {
 	/**
 	 * @param string $view Path of not found view
 	 */
-	public function __construct($view) {
+	public function __construct($view)
+	{
 		parent::__construct("Specified view ($view) was not found");
 		$this->viewName = $view;
 	}
@@ -28,10 +29,10 @@ class ViewNotFoundException extends RendererException {
 	 *
 	 * @return string View path
 	 */
-	public function getView() {
+	public function getView()
+	{
 		return $this->viewName;
 	}
-	
 }
 
 ?>

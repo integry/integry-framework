@@ -7,8 +7,8 @@ ClassLoader::import('framework.response.ActionResponse');
  *
  * @package	framework.response
  */
-class CompositeResponse extends ActionResponse {
-
+class CompositeResponse extends ActionResponse
+{
 	/**
 	 * Controller variable name
 	 */
@@ -32,11 +32,10 @@ class CompositeResponse extends ActionResponse {
 	 * @param string $action Name of action
 	 * @return void
 	 */
-	public function addAction($actionOutputHandle, $controllerName, $actionName) {
-		$this->requestedActionList[$actionOutputHandle] = array(
-			self::CONTROLLER_HANDLE => $controllerName,
-			self::ACTION_HANDLE => $actionName
-		);
+	public function addAction($actionOutputHandle, $controllerName, $actionName)
+	{
+		$this->requestedActionList[$actionOutputHandle] = array(self::CONTROLLER_HANDLE => $controllerName, 
+                                                            self::ACTION_HANDLE => $actionName);
 	}
 
 	/**
@@ -44,7 +43,8 @@ class CompositeResponse extends ActionResponse {
 	 *
 	 * @return array with names
 	 */
-	public function getRequestedActionList() {
+	public function getRequestedActionList()
+	{
 		return $this->requestedActionList;
 	}
 
@@ -54,8 +54,10 @@ class CompositeResponse extends ActionResponse {
 	 * @param string $name Name of include
 	 * @return mixed null if there is no include, otherwise string - Name of controller
 	 */
-	public function getControllerName($actionOutputHandle){
-		if (isset($this->requestedActionList[$actionOutputHandle])) {
+	public function getControllerName($actionOutputHandle)
+	{
+		if (isset($this->requestedActionList[$actionOutputHandle]))
+		{
 			return $this->requestedActionList[$actionOutputHandle][self::CONTROLLER_HANDLE];
 		}
 		return null;
@@ -67,13 +69,14 @@ class CompositeResponse extends ActionResponse {
 	 * @param string $name Name of include
 	 * @return mixed null if there is no include, otherwise string - Name of action
 	 */
-	public function getIncludeAction($actionOutputHandle){
-		if (isset($this->requestedActionList[$actionOutputHandle])) {
+	public function getIncludeAction($actionOutputHandle)
+	{
+		if (isset($this->requestedActionList[$actionOutputHandle]))
+		{
 			return $this->requestedActionList[$actionOutputHandle][self::ACTION_HANDLE];
 		}
 		return null;
 	}
-
 }
 
 ?>

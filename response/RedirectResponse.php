@@ -7,12 +7,13 @@ ClassLoader::import('framework.response.Response');
  *
  * @package	framework.response
  */
-class RedirectResponse extends Response {
-
+class RedirectResponse extends Response
+{
 	/**
 	 * @param string $url URL location
 	 */
-	public function __construct($url) {
+	public function __construct($url)
+	{
 		$this->setRedirectUrl($url);
 	}
 
@@ -22,7 +23,8 @@ class RedirectResponse extends Response {
 	 * @param string $url URL location
 	 * @return void
 	 */
-	public function setRedirectURL($url) {
+	public function setRedirectURL($url)
+	{
 		$this->setHeader('Location', $url);
 	}
 
@@ -31,12 +33,14 @@ class RedirectResponse extends Response {
 	 *
 	 * @return string URL location
 	 */
-	public function getRedirectURL($url) {
+	public function getRedirectURL($url)
+	{
 		return $this->getHeader('Location');
 	}
 
-	public function getData() {
-		return;
+	public function getData()
+	{
+		return ;
 	}
 }
 
