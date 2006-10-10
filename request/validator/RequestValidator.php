@@ -1,6 +1,9 @@
 <?php
 
 ClassLoader::import("framework.request.Request");
+ClassLoader::import("framework.request.validator.ValidatorVariable");
+ClassLoader::import("framework.request.validator.check.*");
+ClassLoader::import("framework.request.validator.filter.*");
 
 /**
  * Request data validator
@@ -18,8 +21,21 @@ class RequestValidator
 	 */
 	private $request = null;
 
+	/**
+	 * The list of validator variables.
+	 *
+	 * @var ValidatorVariable[]
+	 */
 	private $validatorVarList = array();
+	
+	/**
+	 * Validator intance name
+	 *
+	 * @var string
+	 */
 	private $name = "";
+	
+	private $errorList = array();
 
 	/**
 	 * Creates a RequestValidator instance
@@ -31,6 +47,27 @@ class RequestValidator
 	{
 		$this->name = $name;
 		$this->request = $request;
+	}
+	
+	public function execute()
+	{
+		unset($this->errorList);
+		foreach ($this->validatorVarList as $var)
+		{
+			try
+			{
+				$var->validate();
+			} 
+			catch(CheckException $e)
+			{
+				$this->errorList[$var->getName()] = $e->getMessage();
+			}
+		}
+		
+		foreach ($this->validatorVarList as $var)
+		{
+			$var->filter();
+		}
 	}
 
 	private function getValidatorVar($name)
