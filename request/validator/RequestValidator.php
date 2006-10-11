@@ -36,6 +36,8 @@ class RequestValidator
 	private $name = "";
 	
 	private $errorList = array();
+	
+	private $restoredData = array();
 
 	/**
 	 * Creates a RequestValidator instance
@@ -49,6 +51,10 @@ class RequestValidator
 		$this->request = $request;
 	}
 	
+	/**
+	 * Executes a validator and collects validation errors
+	 *
+	 */
 	public function execute()
 	{
 		unset($this->errorList);
@@ -74,7 +80,7 @@ class RequestValidator
 	{
 		if (empty($this->validatorVarList[$name]))
 		{
-			$this->validatorVarList[$name] = new ValidatorVariable();
+			$this->validatorVarList[$name] = new ValidatorVariable($name, $this->request);
 		}
 		return $this->validatorVarList[$name];
 	}
@@ -101,8 +107,19 @@ class RequestValidator
 		$this->getValidatorVar($varName)->addFilter($filter);
 	}
 
+	public function hasFailed()
+	{
+		if (!empty($this->errorList))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 
-	public function isValidationFailed()
+	public function hasSavedState()
 	{
 		@session_start();
 		if (!empty($_SESSION['_validator'][$this->name]))
@@ -118,15 +135,28 @@ class RequestValidator
 	public function saveState()
 	{
 		@session_start();
-		$_SESSION['_validator'][$this->name] = serialize($this);
+		$_SESSION['_validator'][$this->name]['error'] = $this->errorList;
+		$_SESSION['_validator'][$this->name]['data'] = $this->request->toArray(); 
 	}
 
 	public function restore()
 	{
 		@session_start();
 
-		$storedValidator = unserialize($_SESSION['_validator'][$this->name]);
+		$this->errorList = $_SESSION['_validator'][$this->name]['error'];
+		$this->restoredData =  $_SESSION['_validator'][$this->name]['data'];
+		//$storedValidator = unserialize($_SESSION['_validator'][$this->name]);
 		unset($_SESSION['_validator'][$this->name]);
+	}
+	
+	public function getRestoredData()
+	{
+		return $this->restoredData;
+	}
+	
+	public function getErrorList()
+	{
+		return $this->errorList;
 	}
 }
 

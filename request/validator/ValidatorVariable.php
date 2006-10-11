@@ -49,6 +49,11 @@ class ValidatorVariable
 		return $this->varName;
 	}
 	
+	/**
+	 * Applies validation rules to a request variable
+	 *
+	 * @throws CheckException when validation fails
+	 */
 	public function validate()
 	{
 		foreach ($this->checkList as $check)

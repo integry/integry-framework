@@ -8,16 +8,28 @@
  */
 class Form
 {
+	/**
+	 * Validator instance
+	 *
+	 * @var RequestValidator
+	 */
 	private $validator = null;
+	
+	/**
+	 * Form data array
+	 *
+	 * @var array
+	 */
 	private $data = array();
 
+	
 	public function __construct(RequestValidator $validator)
 	{
 		$this->validator = $validator;
-		if ($validator->hasErrors())
+		if ($validator->hasSavedState())
 		{
 			$validator->restore();
-			$data = $validator->getData();
+			$this->data = $validator->getData();
 		}
 	}
 
@@ -26,13 +38,25 @@ class Form
 		$this->data = $data;
 	}
 
+	/**
+	 * Sets/overwrites a form field value
+	 *
+	 * @param string $name
+	 * @param mixed $value
+	 */
 	public function setValue($name, $value)
 	{
 		$this->data[$name] = $value;
 	}
 
-	public function getValue($fieldName){
-
+	/**
+	 * Gets a form field value
+	 *
+	 * @param string $fieldName
+	 */
+	public function getValue($fieldName)
+	{
+		return $this->data[$fieldName];
 	}
 }
 

@@ -5,6 +5,8 @@ ClassLoader::import("framework.request.validator.check.CheckException");
 /**
  * Variable validation logic container
  *
+ * @package framework.request.validator
+ * @author Saulius Rupainis <saulius@integry.net>
  */
 abstract class Check
 {
