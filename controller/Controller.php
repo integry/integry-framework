@@ -239,7 +239,7 @@ abstract class Controller
 		foreach($this->blockList as $index => $block)
 		{
 			$position = array_search($blockMethodName, $block);
-			if ($position !=  = false)
+			if ($position !== false)
 			{
 				unset($this->blockList[$index]);
 
