@@ -54,7 +54,14 @@ class Form
 	public function setValue($name, $value)
 	{
 		$oldRequest = $this->validator->getRestoredRequest();
-		if ($oldRequest != null && !$oldRequest->isValueSet($name))
+		if ($oldRequest != null)
+		{
+			if (!$oldRequest->isValueSet($name))
+			{
+				$this->data[$name] = $value;
+			}
+		}
+		else
 		{
 			$this->data[$name] = $value;
 		}
@@ -67,7 +74,19 @@ class Form
 	 */
 	public function getValue($fieldName)
 	{
-		return $this->data[$fieldName];
+		if (!empty($this->data[$fieldName]))
+		{
+			return $this->data[$fieldName];
+		}
+		else
+		{
+			return null;
+		}
+	}
+	
+	public function getValidator()
+	{
+		return $this->validator;
 	}
 }
 

@@ -11,6 +11,7 @@ ClassLoader::import("framework.request.validator.check.CheckException");
 abstract class Check
 {
 	protected $violationMsg = "";
+	protected $paramList = array();
 	
 	public function __construct($violationMsg)
 	{
@@ -20,6 +21,21 @@ abstract class Check
 	public function getViolationMsg()
 	{
 		return $this->violationMsg;
+	}
+	
+	protected function setParam($name, $value)
+	{
+		$this->paramList[$name] = $value;
+	}
+	
+	public function getParam($name)
+	{
+		return $this->paramListp[$name];
+	}
+	
+	public function getParamList()
+	{
+		return $this->paramList;
 	}
 	
 	abstract public function isValid($value);

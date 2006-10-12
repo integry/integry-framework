@@ -1,8 +1,12 @@
 <?php
 
 /**
- * ...
+ * Maps request variable to checks and filters (validation elements)
+ * 
+ * Note: this class is protected and should not be used directly. Use a RequestValidator 
+ * instead.
  *
+ * @see RequestValidator
  * @package framework.request.validator
  * @author Saulius Rupainis <saulius@integry.net>
  */
@@ -22,6 +26,11 @@ class ValidatorVariable
 	 */
 	private $filterList = array();
 
+	/**
+	 * Request variable name that is going to be mapped to checks and filters
+	 *
+	 * @var string
+	 */
 	private $varName = "";
 	
 	/**
@@ -31,16 +40,19 @@ class ValidatorVariable
 	 */
 	private $request = null;
 
-	public function __construct($varName, Request $request){
+	public function __construct($varName, Request $request)
+	{
 		$this->varName = $varName;
 		$this->request = $request;
 	}
 
-	public function addCheck(Check $check){
+	public function addCheck(Check $check)
+	{
 		$this->checkList[] = $check;
 	}
 
-	public function addFilter(Filter $filter){
+	public function addFilter(Filter $filter)
+	{
 		$this->filterList[] = $filter;
 	}
 	
@@ -76,6 +88,28 @@ class ValidatorVariable
 			$this->request->setValue($this->varName, 
 									 $filter->apply($this->request->getValue($this->varName)));
 		}
+	}
+	
+	protected function getCheckData()
+	{
+		$data = array();
+		foreach ($this->checkList as $check)
+		{
+			$name = get_class($check);
+			$constraintList = $check->getParamList();
+			$errMsg = $check->getViolationMsg();
+			$data[$name] = array("err" => $errMsg, 
+								 "constraint" => $constraintList);
+		}
+		return $data;
+	}
+	
+	public function getJSValidatorParams()
+	{
+		ClassLoader::import("library.json.JSON");
+		
+		$json = new Services_JSON();
+		return $json->encode($this->getCheckData());
 	}
 }
 

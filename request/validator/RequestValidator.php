@@ -160,6 +160,11 @@ class RequestValidator
 	{
 		return $this->errorList;
 	}
+	
+	public function getJSValidatorParams($requestVarName)
+	{
+		return $this->getValidatorVar($requestVarName)->getJSValidatorParams();
+	}
 }
 
 ?>
