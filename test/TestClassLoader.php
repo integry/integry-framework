@@ -1,16 +1,11 @@
 <?php
 
-error_reporting(E_ALL);
+// run only this unit test case
+require_once('Initialize.php');
 
-$cd = getcwd();
-require_once('../framework/trunk/ClassLoader.php');
+require_once('ClassLoader.php');
 
-require_once('simpletest/unit_tester.php');
-require_once('simpletest/reporter.php');
-
-chdir($cd);
-
-class TestClassLoader extends UnitTestCase 
+class TestClassLoader extends UnitTest 
 {
   	function __construct() 
 	{    
@@ -89,6 +84,10 @@ class TestClassLoader extends UnitTestCase
 	    ClassLoader::unmountPath('test');
 	    $this->assertEqual(ClassLoader::getRealPath('test'),$cd.DIRECTORY_SEPARATOR.'test');
 	    
+		// [FAILS] mounting a relative path
+	    ClassLoader::mountPath('relativetest','..');
+	    $this->assertEqual(ClassLoader::getRealPath('relativetest'),realpath('..'));	    
+	    
 	    // register an INVALID mount point
 		$cd = getcwd().'sdsds';
 		
@@ -119,8 +118,5 @@ class TestClassLoader extends UnitTestCase
 	}
   
 }
-
-$test = new TestClassLoader();
-$test->run(new HtmlReporter());
 
 ?>
