@@ -112,7 +112,7 @@ class TestClassLoader extends UnitTest
   
   	function testImport() 
   	{
-	    ClassLoader::import('cd.ClassLoaderImport.*');	    
+	    ClassLoader::import('cd.classloadertest.*');	    
 	    $imp = new FirstImport();
 	    $this->assertTrue(is_object($imp));
 	}
