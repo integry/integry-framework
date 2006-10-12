@@ -37,7 +37,7 @@ class RequestValidator
 	
 	private $errorList = array();
 	
-	private $restoredData = array();
+	private $restoredRequest = null;
 
 	/**
 	 * Creates a RequestValidator instance
@@ -144,14 +144,16 @@ class RequestValidator
 		@session_start();
 
 		$this->errorList = $_SESSION['_validator'][$this->name]['error'];
-		$this->restoredData =  $_SESSION['_validator'][$this->name]['data'];
-		//$storedValidator = unserialize($_SESSION['_validator'][$this->name]);
+		//$this->restoredData =  $_SESSION['_validator'][$this->name]['data'];
+		$this->restoredRequest = new Request();
+		$this->restoredRequest->setValueArray($_SESSION['_validator'][$this->name]['data']);
+		
 		unset($_SESSION['_validator'][$this->name]);
 	}
 	
-	public function getRestoredData()
+	public function getRestoredRequest()
 	{
-		return $this->restoredData;
+		return $this->restoredRequest;
 	}
 	
 	public function getErrorList()

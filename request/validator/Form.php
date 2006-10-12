@@ -29,13 +29,20 @@ class Form
 		if ($validator->hasSavedState())
 		{
 			$validator->restore();
-			$this->data = $validator->getData();
+			$oldRequest = $this->validator->getRestoredRequest();
+			if ($oldRequest != null)
+			{
+				$this->data = $oldRequest->toArray();
+			}
 		}
 	}
 
 	public function setData($data)
 	{
-		$this->data = $data;
+		foreach ($data as $name => $value)
+		{
+			$this->setValue($name, $value);
+		}
 	}
 
 	/**
@@ -46,7 +53,11 @@ class Form
 	 */
 	public function setValue($name, $value)
 	{
-		$this->data[$name] = $value;
+		$oldRequest = $this->validator->getRestoredRequest();
+		if ($oldRequest != null && !$oldRequest->isValueSet($name))
+		{
+			$this->data[$name] = $value;
+		}
 	}
 
 	/**
