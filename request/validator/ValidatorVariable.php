@@ -109,7 +109,7 @@ class ValidatorVariable
 		ClassLoader::import("library.json.JSON");
 		
 		$json = new Services_JSON();
-		return $json->encode($this->getCheckData());
+		return str_replace('"', "&quot;", $json->encode($this->getCheckData()));
 	}
 }
 
