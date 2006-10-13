@@ -30,7 +30,7 @@ abstract class Check
 	
 	public function getParam($name)
 	{
-		return $this->paramListp[$name];
+		return $this->paramList[$name];
 	}
 	
 	public function getParamList()
