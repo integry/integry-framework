@@ -22,6 +22,7 @@ class Form
 	 */
 	private $data = array();
 
+	private $enableClientSideValidation = true;
 	
 	public function __construct(RequestValidator $validator)
 	{
@@ -87,6 +88,16 @@ class Form
 	public function getValidator()
 	{
 		return $this->validator;
+	}
+	
+	public function enableClientSideValidation($flag = true)
+	{
+		$this->enableClientSideValidation  = $flag;
+	}
+	
+	public function isClientSideValidationEnabled()
+	{
+		return $this->enableClientSideValidation;
 	}
 }
 
