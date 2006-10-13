@@ -49,7 +49,7 @@ class ClassLoader
 		$className = substr($class, strrpos($class, DIRECTORY_SEPARATOR));
 		if (!class_exists($className, false))
 		{
-			include_once $class.'.php';
+			@include_once $class.'.php';
 		}
 	}
 
