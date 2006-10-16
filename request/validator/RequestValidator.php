@@ -51,6 +51,11 @@ class RequestValidator
 		$this->request = $request;
 	}
 	
+	public function getName()
+	{
+		return $this->name;
+	}
+	
 	/**
 	 * Executes a validator and collects validation errors
 	 *
@@ -161,9 +166,21 @@ class RequestValidator
 		return $this->errorList;
 	}
 	
-	public function getJSValidatorParams($requestVarName)
+	public function getJSValidatorParams($requestVarName = null)
 	{
-		return $this->getValidatorVar($requestVarName)->getJSValidatorParams();
+		if ($requestVarName != null)
+		{
+			return $this->getValidatorVar($requestVarName)->getJSValidatorParams();
+		}
+		else
+		{
+			$validatorData = array();
+			foreach ($this->validatorVarList as $name => $var)
+			{
+				$validatorData[$name] = $var->getJSValidatorParams();
+			}
+			return $validatorData;
+		}
 	}
 }
 
