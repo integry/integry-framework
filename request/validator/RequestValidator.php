@@ -170,17 +170,25 @@ class RequestValidator
 	{
 		if ($requestVarName != null)
 		{
-			return $this->getValidatorVar($requestVarName)->getJSValidatorParams();
+			return $this->encode($this->getValidatorVar($requestVarName)->getCheckData());
 		}
 		else
 		{
 			$validatorData = array();
 			foreach ($this->validatorVarList as $name => $var)
 			{
-				$validatorData[$name] = $var->getJSValidatorParams();
+				$validatorData[$name] = $var->getCheckData();
 			}
-			return $validatorData;
+			return $this->encode($validatorData);
 		}
+	}
+	
+	protected function encode($data)
+	{
+		ClassLoader::import("library.json.JSON");
+		
+		$json = new Services_JSON();
+		return str_replace('"', "&quot;", $json->encode($data));
 	}
 }
 

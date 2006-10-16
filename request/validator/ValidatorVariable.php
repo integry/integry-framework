@@ -90,7 +90,7 @@ class ValidatorVariable
 		}
 	}
 	
-	protected function getCheckData()
+	public function getCheckData()
 	{
 		$data = array();
 		foreach ($this->checkList as $check)
@@ -98,12 +98,13 @@ class ValidatorVariable
 			$name = get_class($check);
 			$constraintList = $check->getParamList();
 			$errMsg = $check->getViolationMsg();
-			$data[$name] = array("err" => $errMsg, 
-								 "constraint" => $constraintList);
+			$data[$name] = array("error" => $errMsg, 
+								 "param" => $constraintList);
 		}
 		return $data;
 	}
 	
+	/*
 	public function getJSValidatorParams()
 	{
 		ClassLoader::import("library.json.JSON");
@@ -111,6 +112,7 @@ class ValidatorVariable
 		$json = new Services_JSON();
 		return str_replace('"', "&quot;", $json->encode($this->getCheckData()));
 	}
+	*/
 }
 
 ?>
