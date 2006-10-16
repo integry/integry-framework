@@ -99,20 +99,12 @@ class ValidatorVariable
 			$constraintList = $check->getParamList();
 			$errMsg = $check->getViolationMsg();
 			$data[$name] = array("error" => $errMsg, 
-								 "param" => $constraintList);
+								 "param" => $constraintList,
+								 "name"  => $this->getName());
 		}
 		return $data;
 	}
 	
-	/*
-	public function getJSValidatorParams()
-	{
-		ClassLoader::import("library.json.JSON");
-		
-		$json = new Services_JSON();
-		return str_replace('"', "&quot;", $json->encode($this->getCheckData()));
-	}
-	*/
 }
 
 ?>
