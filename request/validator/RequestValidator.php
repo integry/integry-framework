@@ -177,7 +177,7 @@ class RequestValidator
 			$validatorData = array();
 			foreach ($this->validatorVarList as $name => $var)
 			{
-				$validatorData[] = $var->getCheckData();
+				$validatorData[$name] = $var->getCheckData();
 			}
 			return $this->encode($validatorData);
 		}

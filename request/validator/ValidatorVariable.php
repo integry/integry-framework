@@ -99,8 +99,7 @@ class ValidatorVariable
 			$constraintList = $check->getParamList();
 			$errMsg = $check->getViolationMsg();
 			$data[$name] = array("error" => $errMsg, 
-								 "param" => $constraintList,
-								 "name"  => $this->getName());
+								 "param" => $constraintList);
 		}
 		return $data;
 	}
