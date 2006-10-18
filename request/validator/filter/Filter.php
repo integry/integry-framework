@@ -8,7 +8,7 @@
  */
 abstract class Filter
 {
-	abstract public function apply();
+	abstract public function apply($value);
 }
 
 ?>
