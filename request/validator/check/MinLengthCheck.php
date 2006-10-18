@@ -2,6 +2,10 @@
 
 ClassLoader::import("framework.request.validator.check.Check");
 
+/**
+ * 
+ * @package framework.request.validator.check
+ */
 class MinLengthCheck extends Check
 {
 	public function __construct($violationMsg, $minLength)

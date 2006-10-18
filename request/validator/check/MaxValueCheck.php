@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * 
+ * @package framework.request.validator.check
+ */
 class MaxValueCheck extends Check
 {
 	public function __construct($violationMsg, $maxValue)
