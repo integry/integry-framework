@@ -18,7 +18,6 @@ interface Renderable
 	 * @throws ViewNotFoundException if view does not exists
 	 */
 	public function render(Renderer $renderer, $view);
-
 }
 
 ?>
