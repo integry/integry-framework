@@ -1,5 +1,7 @@
 <?php
 
+ClassLoader::import("framework.request.validator.RequestValidator");
+
 /**
  * Request Validator and request data container wrapper
  *
