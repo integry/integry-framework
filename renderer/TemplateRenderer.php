@@ -41,7 +41,7 @@ class TemplateRenderer extends Renderer
 		$this->tpl->register_function("link", array($this, "helperFunctionLinkTo"));
 
 		$this->registerHelperList();
-		$this->tpl->register_prefilter("config");
+		$this->tpl->load_filter('pre', 'config');
 	}
 
 	/**
