@@ -13,6 +13,7 @@ class Router
 	private static $instance = null;
 
 	public static $baseDir = "";
+	public static $baseUrl = "";
 	public static $defaultController = "index";
 	public static $defaultAction = "index";
 
@@ -24,6 +25,15 @@ class Router
 	private $routeList = array();
 	private $isURLRewriteEnabled = true;
 
+	/**
+	 * @todo Add https and port to baseUrl
+	 */
+	private function __construct()
+	{
+		self::$baseDir = dirname($_SERVER['PHP_SELF']) . '/';
+		self::$baseUrl = 'http://' . $_SERVER['SERVER_NAME'] . self::$baseDir;
+	}
+
 	public static function getInstance()
 	{
 		if (self::$instance == null)
@@ -32,19 +42,6 @@ class Router
 		}
 		return self::$instance;
 	}
-
-
-	/*
-	public function setBaseDir($dir) {
-
-	$this->baseDir = $dir;
-	}
-
-	public function getBaseDir() {
-
-	return $this->baseDir;
-	}
-	 */
 
 	/**
 	 * Connects a new route to some URL pattern.
@@ -148,6 +145,11 @@ class Router
 	public function getBaseDir()
 	{
 		return self::$baseDir;
+	}
+
+	public function getBaseUrl()
+	{
+		return self::$baseUrl;
 	}
 
 	/**
