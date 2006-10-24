@@ -42,6 +42,7 @@ class TemplateRenderer extends Renderer
 
 		$this->registerHelperList();
 		$this->tpl->load_filter('pre', 'config');
+		$this->tpl->assign("BASE_URL", Router::getBaseUrl());
 	}
 
 	/**
