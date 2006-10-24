@@ -87,6 +87,11 @@ class Form
 		}
 	}
 	
+	/**
+	 * Gets a form validator
+	 *
+	 * @return RequestValidator
+	 */
 	public function getValidator()
 	{
 		return $this->validator;
