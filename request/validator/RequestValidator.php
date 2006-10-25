@@ -35,8 +35,18 @@ class RequestValidator
 	 */
 	private $name = "";
 	
+	/**
+	 * List of occurred errors
+	 *
+	 * @var string[]
+	 */
 	private $errorList = array();
 	
+	/**
+	 * Restored request object
+	 *
+	 * @var Request
+	 */
 	private $restoredRequest = null;
 
 	/**
@@ -60,7 +70,7 @@ class RequestValidator
 	 * Executes a validator and collects validation errors
 	 *
 	 */
-	public function execute()
+	private function execute()
 	{
 		unset($this->errorList);
 		foreach ($this->validatorVarList as $var)
@@ -112,18 +122,31 @@ class RequestValidator
 		$this->getValidatorVar($varName)->addFilter($filter);
 	}
 
-	public function hasFailed()
+	/**
+	 * Check if submited request data is valid
+	 *
+	 * @return bool
+	 */
+	public function isValid()
 	{
-		if (!empty($this->errorList))
+		$this->execute();
+		
+		if (empty($this->errorList))
 		{
 			return true;
 		}
 		else
 		{
+			$this->saveState();
 			return false;
 		}
 	}
 
+	/**
+	 * Check if there is a saved request state
+	 *
+	 * @return bool
+	 */
 	public function hasSavedState()
 	{
 		@session_start();
@@ -137,13 +160,21 @@ class RequestValidator
 		}
 	}
 
-	public function saveState()
+	/**
+	 * Store request object and error list in session
+	 *
+	 */
+	private function saveState()
 	{
 		@session_start();
 		$_SESSION['_validator'][$this->name]['error'] = $this->errorList;
 		$_SESSION['_validator'][$this->name]['data'] = $this->request->toArray(); 
 	}
 
+	/**
+	 * Restores request object and errors list from session (restore form variables)
+	 *
+	 */
 	public function restore()
 	{
 		@session_start();
@@ -156,11 +187,21 @@ class RequestValidator
 		unset($_SESSION['_validator'][$this->name]);
 	}
 	
+	/**
+	 * Get restored request object
+	 *
+	 * @return Request
+	 */
 	public function getRestoredRequest()
 	{
 		return $this->restoredRequest;
 	}
 	
+	/**
+	 * Get errors list
+	 *
+	 * @return string[]
+	 */
 	public function getErrorList()
 	{
 		return $this->errorList;
