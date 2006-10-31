@@ -12,7 +12,7 @@ ClassLoader::import("framework.request.Router");
  * @param Smarty $smarty Smarty instance
  * @return string Smarty function resut (formatted link)
  */
-function smarty_plugin_link($params, $smarty)
+function smarty_function_link($params, $smarty)
 {
 	$router = Router::getInstance();
 	$router->createURL($params);
