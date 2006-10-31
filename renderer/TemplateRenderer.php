@@ -149,10 +149,10 @@ class TemplateRenderer extends Renderer
 		$frameworkFormPluginDir = ClassLoader::getRealPath("framework.helper.form");
 		$applicationPluginDir = ClassLoader::getRealPath("application.helper");
 		//$this->tpl->plugins_dir[] = $path;
-		
-		$this->tpl->plugins_dir = array($frameworkPluginDir, 
-										$frameworkFormPluginDir, 
-										$applicationPluginDir);
+
+		$this->tpl->plugins_dir[] = $frameworkPluginDir;
+		$this->tpl->plugins_dir[] = $frameworkFormPluginDir;
+		$this->tpl->plugins_dir[] = $applicationPluginDir;
 	}
 
 	/**
