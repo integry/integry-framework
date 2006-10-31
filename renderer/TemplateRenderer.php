@@ -38,7 +38,7 @@ class TemplateRenderer extends Renderer
 	{
 		$this->router = $router;
 		$this->tpl = self::getSmartyInstance();
-		$this->tpl->register_function("link", array($this, "helperFunctionLinkTo"));
+		//$this->tpl->register_function("link", array($this, "helperFunctionLinkTo"));
 
 		$this->registerHelperList();
 		$this->tpl->load_filter('pre', 'config');
@@ -143,8 +143,15 @@ class TemplateRenderer extends Renderer
 	 */
 	public function registerHelperList()
 	{
-		$path = ClassLoader::getRealPath("application.helper");
-		$this->tpl->plugins_dir[] = $path;
+		//$path = ClassLoader::getRealPath("application.helper");
+		
+		$frameworkPluginDir = ClassLoader::getRealPath("framework.helper");
+		$frameworkFormPluginDir = ClassLoader::getRealPath("framework.helper.form");
+		$applicationPluginDir = ClassLoader::getRealPath("application.helper");
+		//$this->tpl->plugins_dir[] = $path;
+		$this->tpl->plugins_dir[] = array($frameworkPluginDir, 
+										  $frameworkFormPluginDir, 
+										  $applicationPluginDir);
 	}
 
 	/**
