@@ -40,7 +40,7 @@ function smarty_function_selectfield($params, $smarty)
 	{
 		if ($fieldValue == $value)
 		{
-			$content .= "\t" . '<option value="' . $value . '" selected>' . $title . '</option>' . "\n";
+			$content .= "\t" . '<option value="' . $value . '" selected="selected">' . $title . '</option>' . "\n";
 		}
 		else
 		{
