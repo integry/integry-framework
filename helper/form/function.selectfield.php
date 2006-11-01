@@ -26,7 +26,7 @@ function smarty_function_selectfield($params, $smarty)
 	foreach ($params as $name => $param) {
 		$content .= ' ' . $name . '="' . $param . '"'; 
 	}
-	$content .= '>\n';
+	$content .= ">\n";
 	
 	$fieldValue = $handle->getValue($params['name']);
 	foreach ($options as $value => $title)
