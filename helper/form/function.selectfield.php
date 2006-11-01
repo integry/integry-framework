@@ -21,6 +21,9 @@ function smarty_function_selectfield($params, $smarty)
 		$options = array();
 	}
 	unset($params['options']);
+
+	$defaultValue = $params['value'];
+	unset($params['value']);
 	
 	$content = '<select';
 	foreach ($params as $name => $param) {
@@ -29,6 +32,10 @@ function smarty_function_selectfield($params, $smarty)
 	$content .= ">\n";
 	
 	$fieldValue = $handle->getValue($params['name']);
+	if (empty($fieldValue))
+	{
+		$fieldValue = $defaultValue;
+	}
 	foreach ($options as $value => $title)
 	{
 		if ($fieldValue == $value)
