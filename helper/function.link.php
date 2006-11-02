@@ -5,7 +5,7 @@ ClassLoader::import("framework.request.Router");
 /**
  * Smarty helper function for creating hyperlinks in application.
  * As the format of application part addresing migth vary, links should be created
- * by using this helper method. When the addressing schema changes, all lionks
+ * by using this helper method. When the addressing schema changes, all links
  * will be regenerated
  *
  * @param array $params List of parameters passed to a function
@@ -15,7 +15,8 @@ ClassLoader::import("framework.request.Router");
 function smarty_function_link($params, $smarty)
 {
 	$router = Router::getInstance();
-	$router->createURL($params);
+	$result = $router->createURL($params);
+
 	return $result;
 }
 
