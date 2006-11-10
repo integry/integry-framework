@@ -49,7 +49,7 @@ class ClassLoader
 		$className = substr($class, strrpos($class, DIRECTORY_SEPARATOR));
 		if (!class_exists($className, false))
 		{
-			if(!(@include_once($class.'.php')))
+			if(!(include_once($class.'.php')))
 			{
 				throw new ClassLoaderException('File '.$class.'.php not found');
 			}
