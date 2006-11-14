@@ -38,6 +38,8 @@ class Request
 		$this->setValueArray($_GET);
 		$this->setValueArray($_POST);
 		$this->setValueArray($_COOKIE);
+
+		$this->dataContainer = $this->removeMagicQuotes($this->dataContainer);
 	}
 
 	/**
@@ -145,7 +147,36 @@ class Request
 	{
 		return $this->dataContainer;
 	}
-
+	
+	private function removeMagicQuotes ($postArray, $trim = false)
+	{
+	   if (get_magic_quotes_gpc() == 1)
+	   {
+	       $newArray = array();   
+	      
+	       foreach ($postArray as $key => $val)
+	       {
+	           if (is_array($val))
+	           {
+	               $newArray[$key] = $this->removeMagicQuotes ($val, $trim);
+	           }
+	           else
+	           {
+	               if ($trim == true)
+	               {
+	                   $val = trim($val);
+	               }
+	               $newArray[$key] = stripslashes($val);
+	           }
+	       }   
+	      
+	       return $newArray;   
+	   }
+	   else
+	   {
+	       return $postArray;   
+	   }       
+	}	
 }
 
 ?>

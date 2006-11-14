@@ -171,6 +171,10 @@ class Router
 		$actionName = $requestParamList['action'];
 		$controllerName = $requestParamList['controller'];
 
+		$params = $requestParamList;
+		unset($params['action']);
+		unset($params['controller']);
+
 		foreach($this->routeList as $route)
 		{
 
@@ -183,7 +187,19 @@ class Router
 					if (!empty($value))
 					{
 						$URL = str_replace(":".$value, @$requestParamList[$value], $URL);
+						unset($params[$value]);
 					}
+				}
+
+				// any extra params passed
+				if (count($params) > 0)
+				{
+					$pairs = array();
+					foreach ($params as $key => $value)
+				  	{
+						$pairs[] = $key . '=' . urlencode($value);	   
+					}				  
+				  	$URL .= '?' . implode('&', $pairs);					
 				}
 
 				if ($this->isURLRewriteEnabled)
