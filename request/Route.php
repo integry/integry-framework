@@ -1,100 +1,163 @@
 <?php
 
+/**
+ * Application route
+ *
+ * @author Saulius Rupainis <saulius@integry.net>
+ * @package framework.request
+ */
 class Route
 {
-
 	/**
-	 * Default URL variable regxep patern
+	 * Route definition pattern. Route is defined in following way:
+	 * :paramName/:secodParam:/someConst
 	 *
 	 * @var string
 	 */
-	private $defaultVariablePattern = "[.a-zA-Z0-9]+";
-
+	private $definitionPattern = "";
+	
 	/**
-	 * Route regexp that will be applied during the mapping process
+	 * Route recognition patern (regexp)
 	 *
 	 * @var string
 	 */
-	private $regexpPattern = "";
-
+	private $recognitionPattern = "";
+	
 	/**
-	 * Route URL pattern
+	 * Default requirement for a route param value (regexp)
 	 *
 	 * @var string
 	 */
-	private $URLPattern = "";
-
+	private $defaulParamValueRequirement = "[\.a-zA-Z0-9]+";
+	
 	/**
-	 * Request variables gathered by parsing URL pattern
+	 * The list of static values, that will be registered in request
 	 *
 	 * @var array
 	 */
-	private $requestVariableList = array();
-
-	private $tokenList = array();
-
+	private $requestValueAssigments = array();
+	
 	/**
-	 * Route contructor
+	 * Associative parameter array that is encoded into URL and thier coresponding value requirements
 	 *
-	 * @param string $URLPattern
-	 * @param array $defaultValueList
-	 * @param array $varValueRequirements
+	 * paramName => pattern
+	 * secondParam => secondPattern
+	 * 
+	 * @var array
 	 */
-	public function __construct($URLPattern, $defaultValueList = array(), $varValueRequirements = array())
+	private $paramList = array();
+	
+	/**
+	 * Creates a route instance
+	 *
+	 * @param string $definitionPattern
+	 * @param array $paramValueAssigments
+	 * @param array $paramValueRequirements
+	 */
+	public function __construct($definitionPattern, $paramValueAssigments = array(), $paramValueRequirements = array())
 	{
-		$this->URLPattern = $URLPattern;
-
-		foreach($defaultValueList as $name => $value)
+		$this->definitionPattern = $definitionPattern;
+		$definitionParts = explode("/", $this->definitionPattern);
+		foreach ($definitionParts as $part)
 		{
-			$this->registerVariable($name, $value);
-		}
-
-		$URLParts = explode("/", $URLPattern);
-		foreach($URLParts as $var)
-		{
-			$varValueRegexp = $this->defaultVariablePattern;
-
-			if (substr($var, 0, 1) == ":")
+			if ($this->isParam($part))
 			{
-				$varName = substr($var, 1, strlen($var));
-				$varDefaultValue = null;
-				if (!empty($defaultValueList[$varName]))
+				$paramName = substr($part, 1);
+				if (!empty($paramValueRequirements[$paramName]))
 				{
-					$varDefaultValue = $defaultValueList[$varName];
+					$this->appendRecognitionPattern($paramValueRequirements[$paramName]);
+					$this->registerParam($paramName, $paramValueRequirements[$paramName]);
 				}
-				$this->registerVariable($varName, $varDefaultValue);
-				$this->registerToken($varName);
-
-				if (!empty($varValueRequirements[$varName]))
+				else
 				{
-					$varValueRegexp = $varValueRequirements[$varName];
+					$this->appendRecognitionPattern($this->defaulParamValueRequirement);
+					$this->registerParam($paramName, $this->defaulParamValueRequirement);
 				}
 			}
 			else
 			{
-				$this->registerToken(null);
-				$varValueRegexp = $var;
-			}
-			if (!empty($this->regexpPattern))
-			{
-				$this->regexpPattern .= "\/".$varValueRegexp;
-			}
-			else
-			{
-				$this->regexpPattern .= $varValueRegexp;
+				$this->appendRecognitionPattern($part);
 			}
 		}
-		$this->regexpPattern = "/^".$this->regexpPattern."/";
+		foreach ($paramValueAssigments as $param => $value)
+		{
+			$this->registerParam($param, $value);
+			$this->registerRequestValueAssigment($param, $value);
+		}
 	}
-
-	public function registerToken($tokenName)
+	
+	/**
+	 * Gets a route param list
+	 *
+	 * @return array
+	 */
+	public function getParamList()
 	{
-		$this->tokenList[] = $tokenName;
+		return $this->paramList;
 	}
-
-	public function hasTokens()
+	
+	/**
+	 * ...
+	 *
+	 * @return array
+	 */
+	public function getRequestValueAssigments()
 	{
-		if (!empty($this->tokenList))
+		return $this->requestValueAssigments;
+	}
+	
+	/**
+	 * Gets a recognition pattern (regexp) for this route
+	 *
+	 * @return string
+	 */
+	public function getRecognitionPattern()
+	{
+		return $this->recognitionPattern;
+	}
+	
+	/**
+	 * Gets a definition pattern for this route
+	 *
+	 * @return string
+	 */
+	public function getDefinitionPattern()
+	{
+		return $this->definitionPattern;
+	}
+	
+	private function registerParam($name, $valueRequirement)
+	{
+		$this->paramList[$name] = $valueRequirement;
+	}
+	
+	private function registerRequestValueAssigment($name, $value)
+	{
+		$this->requestValueAssigments[$name] = $value;
+	}
+	
+	private function appendRecognitionPattern($requirement)
+	{
+		if (!empty($this->recognitionPattern))
+		{
+			$this->recognitionPattern .= "\/" . $requirement;
+		}
+		else
+		{
+			$this->recognitionPattern = $requirement;
+		}
+	}
+	
+	/**
+	 * Checks if a given string is a parameter from a route definition pattern (must 
+	 * have ":" at the beginnig)
+	 *
+	 * @param string $URLPatternPart
+	 * @return bool
+	 */
+	public function isParam($URLPatternPart)
+	{
+		if (substr($URLPatternPart, 0, 1) == ":")
 		{
 			return true;
 		}
@@ -102,53 +165,6 @@ class Route
 		{
 			return false;
 		}
-	}
-
-	public function getTokenList()
-	{
-		return $this->tokenList;
-	}
-
-	public function registerVariable($varName, $defaultValue = null)
-	{
-		$this->requestVariableList[$varName] = $defaultValue;
-	}
-
-	public function getVariableValue($varName)
-	{
-		if (!empty($this->requestVariableList[$varName]))
-		{
-			return $this->requestVariableList[$varName];
-		}
-		else
-		{
-			return null;
-		}
-	}
-
-	public function getVariableList()
-	{
-		return $this->requestVariableList;
-	}
-
-	public function getRegexpPattern()
-	{
-		return $this->regexpPattern;
-	}
-
-	public function getURLPattern()
-	{
-		return $this->URLPattern;
-	}
-
-	public function getAction()
-	{
-		return $this->getVariableValue("action");
-	}
-
-	public function getController()
-	{
-		return $this->getVariableValue("controller");
 	}
 }
 

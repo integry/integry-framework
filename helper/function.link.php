@@ -7,6 +7,9 @@ ClassLoader::import("framework.request.Router");
  * As the format of application part addresing migth vary, links should be created
  * by using this helper method. When the addressing schema changes, all links
  * will be regenerated
+ * 
+ * "query" is a special paramater, that will be appended to a generated link as "?query"
+ * Example: {link controller=category action=remove id=33 query="language=$lang&returnto=someurl"}
  *
  * @param array $params List of parameters passed to a function
  * @param Smarty $smarty Smarty instance
@@ -15,7 +18,14 @@ ClassLoader::import("framework.request.Router");
 function smarty_function_link($params, $smarty)
 {
 	$router = Router::getInstance();
-	$result = $router->createURL($params);
+	try
+	{
+		$result = $router->createURL($params);
+	}
+	catch(RouterException $e)
+	{
+		return "INVALID_LINK";
+	}
 
 	return $result;
 }

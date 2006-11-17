@@ -17,10 +17,9 @@ $validator->addCheck("name", new MaxLengthCheck("Name should not be longer that 
 $validator->addCheck("email", new IsNotEmptyCheck("You must fill in your email address"));
 $validator->execute();
 
-if ($validator->hasFailed()) 
+if ($validator->isValid()) 
 {
-	$validator->saveState();
-	echo "State saved!\n";
+	echo "ERROR: State should be saved now\n";
 }
 
 $formData = array("name" => "John", 
@@ -30,10 +29,6 @@ $formData = array("name" => "John",
 $form = new Form($validator);
 $form->setData($formData);
 
-
 print_r($form->getValidator()->getJSValidatorParams());
-
-//print_r($form);
-//print_r($_SESSION);
 
 ?>

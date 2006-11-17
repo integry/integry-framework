@@ -3,6 +3,12 @@
 ClassLoader::import("framework.request.Request");
 ClassLoader::import("framework.request.Route");
 
+/**
+ * Application router
+ * 
+ * @author Saulius Rupainis <saulius@integry.net>
+ * @package framework.request
+ */
 class Router
 {
 	/**
@@ -11,21 +17,54 @@ class Router
 	 * @var Router
 	 */
 	private static $instance = null;
-
-	public static $baseDir = "";
-	public static $baseUrl = "";
-	public static $defaultController = "index";
-	public static $defaultAction = "index";
-
+	
 	/**
 	 * The list of defined routes
 	 *
 	 * @var Route[]
 	 */
 	private $routeList = array();
-	private $isURLRewriteEnabled = true;
-
+	
 	/**
+	 * Default controller name
+	 *
+	 * @var string
+	 */
+	public static $defaultController = "index";
+	
+	/**
+	 * Default action name
+	 *
+	 * @var string
+	 */
+	public static $defaultAction = "index";
+	
+	/**
+	 * Application base dir
+	 * E.x. www.example.com/myapplication/dir/ base dir is /myapplication/dir/
+	 *
+	 * @var string
+	 */
+	public static $baseDir = "";
+	
+	/**
+	 * Base url
+	 *
+	 * @var string
+	 */
+	public static $baseUrl = "";
+	
+	/**
+	 * Identifies if mod_rewrite is enabled
+	 * Should be set manually by using enableURLRewrite(flag)
+	 *
+	 * @var bool
+	 */
+	private $isURLRewriteEnabled = true;
+	
+	/**
+	 * Router constructor
+	 * 
 	 * @todo Add https and port to baseUrl
 	 */
 	private function __construct()
@@ -33,7 +72,32 @@ class Router
 		self::$baseDir = dirname($_SERVER['PHP_SELF']) . '/';
 		self::$baseUrl = 'http://' . $_SERVER['SERVER_NAME'] . self::$baseDir;
 	}
-
+	
+	/**
+	 * Gets a base url
+	 *
+	 * @return string
+	 */
+	public function getBaseDir()
+	{
+		return self::$baseDir;
+	}
+	
+	/**
+	 * Gets a base directory
+	 *
+	 * @return string
+	 */
+	public function getBaseUrl()
+	{
+		return self::$baseUrl;
+	}
+	
+	/**
+	 * Creates a singleton instance
+	 *
+	 * @return Router
+	 */
 	public static function getInstance()
 	{
 		if (self::$instance == null)
@@ -42,7 +106,8 @@ class Router
 		}
 		return self::$instance;
 	}
-
+	
+	
 	/**
 	 * Connects a new route to some URL pattern.
 	 * URLPattern might have "variables", which has a ":" at the beggining. e.x. ":action"
@@ -67,164 +132,168 @@ class Router
 	 *
 	 * @link http://www.symfony-project.com/book/trunk/routing
 	 *
-	 * @param string $URLPattern
-	 * @param array $defaultValueList
-	 * @param array $varRequirements
+	 * @param string $routeDefinitionPattern
+	 * @param array $paramValueAssigments
+	 * @param array $paramValueRequirements
 	 *
 	 */
-	public function connect($URLPattern, $defaultValueList = array(), $varRequirements = array())
+	public function connect($routeDefinitionPattern, $paramValueAssigments = array(), $paramValueRequirements = array())
 	{
-		if (substr($URLPattern, 0, 1) == "/")
-		{
-			$URLPattern = substr($URLPattern, 1);
-		}
-		$this->routeList[] = new Route($URLPattern, $defaultValueList, $varRequirements);
+		$this->routeList[] = new Route($routeDefinitionPattern, $paramValueAssigments, $paramValueRequirements);
 	}
-
-	/**
-	 * Parses route pattern (request value supplied by URL) and sets appropriate
-	 * values to a Request instance
-	 *
-	 * @param string $URL
-	 * @param Request $request
-	 * @return Route
-	 */
-	public function mapToRoute($URL, Request $request)
+	
+	public function mapToRoute($URLStr, Request $request)
 	{
-		if (empty($URL))
+		if (empty($URLStr) || !$this->isURLRewriteEnabled)
 		{
-			$request->setValue("action", self::$defaultAction);
-			$request->setValue("controller", self::$defaultController);
-			return true;
-		}
-		$URLVariables = explode("/", $URL);
-		foreach($this->routeList as $route)
-		{
-			if (preg_match($route->getRegexpPattern(), $URL))
+			if (!$request->isValueSet("action"))
 			{
-				if ($route->hasTokens())
-				{
-					foreach($route->getVariableList()as $name => $value)
-					{
-						$request->setValue($name, $value);
-					}
-					foreach($route->getTokenList()as $index => $token)
-					{
-						if ($token != null && !empty($URLVariables[$index]))
-						{
-							$request->setValue($token, $URLVariables[$index]);
-						}
-					}
-				}
-
-				return $route;
+				$request->setValue("action", self::$defaultAction);
 			}
-		}
-		throw new RouterException("No route defined for this URL pattern");
-	}
-
-	/**
-	 * Informs Router that mod_rewrite is enabled so URL's will be generatated without
-	 * "frontcontroller.php?route=" part
-	 *
-	 */
-	public function enableURLRewrite()
-	{
-		$this->isURLRewriteEnabled = true;
-	}
-
-	/**
-	 * Informs router that URL rewriting (mod_rewrite) is disabled
-	 *
-	 */
-	public function diableURLRewrite()
-	{
-		$this->isURLRewriteEnabled = false;
-	}
-
-	public function getBaseDir()
-	{
-		return self::$baseDir;
-	}
-
-	public function getBaseUrl()
-	{
-		return self::$baseUrl;
-	}
-
-	/**
-	 * Creates an URL by using supplied request values
-	 *
-	 * @param array $requestParamList
-	 * @return string
-	 */
-	public function createURL($requestParamList = array())
-	{
-		if (empty($requestParamList['action']))
-		{
-			$requestParamList['action'] = self::$defaultAction;
-		}
-		if (empty($requestParamList['controller']))
-		{
-			$requestParamList['controller'] = self::$defaultController;
-		}
-		$actionName = $requestParamList['action'];
-		$controllerName = $requestParamList['controller'];
-
-		$params = $requestParamList;
-		unset($params['action']);
-		unset($params['controller']);
-
-		foreach($this->routeList as $route)
-		{
-
-			if (($route->getAction() == null || $route->getAction() == $actionName) && ($route->getController() == null || $route->getController() == $controllerName))
+			if (!$request->isValueSet("controller"))
 			{
+				$request->setValue("controller", self::$defaultController);
+			}
+			return false;
+		}
 
-				$URL = $route->getURLPattern();
-				foreach($route->getTokenList()as $index => $value)
+		foreach ($this->routeList as $route)
+		{
+			if (preg_match("/^" . $route->getRecognitionPattern() . "$/", $URLStr))
+			{
+				$URLParams = explode("/", $URLStr);
+				$definitionPattern = $route->getDefinitionPattern();
+				$definitionParts = explode("/", $definitionPattern);
+				foreach ($definitionParts as $index => $part)
 				{
-					if (!empty($value))
+					if ($route->isParam($part))
 					{
-						$URL = str_replace(":".$value, @$requestParamList[$value], $URL);
-						unset($params[$value]);
+						$paramName = substr($part, 1);
+						$value = $URLParams[$index];
+						$request->setValue($paramName, $value);
 					}
 				}
-
-				// any extra params passed
-				if (count($params) > 0)
+				$requestValueAssigments = $route->getRequestValueAssigments();
+				foreach ($requestValueAssigments as $paramName => $value)
 				{
-					$pairs = array();
-					foreach ($params as $key => $value)
-				  	{
-						$pairs[] = $key . '=' . urlencode($value);	   
-					}				  
-				  	$URL .= '?' . implode('&', $pairs);					
+					$request->setValue($paramName, $value);
 				}
-
-				if ($this->isURLRewriteEnabled)
-				{
-					$pos = @strpos($_SERVER['REQUEST_URI'], $this->getRequestPath());
-					$URLStart = substr($_SERVER['REQUEST_URI'], 0, $pos);
-					return $URLStart.$URL;
-				}
-				else
-				{
-					return "?".$URL;
-				}
+				return $route;
 			}
 		}
 		throw new RouterException("Unable to map to any route");
 	}
-
+	
 	/**
-	 * Gets a request value containing route
+	 * Creates an URL by using a supplied URL param list
 	 *
-	 * @return unknown
+	 * @param array $URLParamList
+	 * @return string
 	 */
-	public function getRequestPath()
+	public function createURL($URLParamList)
 	{
-		return $_GET['route'];
+		$queryToAppend = "";
+		if (!empty($URLParamList['query']))
+		{
+			$queryToAppend = "?" . $URLParamList['query'];
+			unset($URLParamList['query']);
+		}
+		/* Handling special case: URL rewrite is not enabled */
+		if (!$this->isURLRewriteEnabled)
+		{
+			return $this->createQueryString($URLParamList) . "&" . substr($queryToAppend, 1);
+		}
+		/* end */
+		
+		/* Handling special case: route to a default controller/action */
+		if (!empty($URLParamList['controller']) 
+		           && $URLParamList['controller'] == self::$defaultController 
+		           && (empty($URLParamList['action']) || $URLParamList['action'] == self::$defaultAction) 
+		           && sizeof($URLParamList) <= 2)
+		{
+			return $this->getBaseDir() . $queryToAppend;
+		}
+		/* end */
+		
+		$matchingRoute = null;
+		foreach ($this->routeList as $route)
+		{
+			$routeExpectedParamList = $route->getParamList();
+			$routeParamsMatch = false;
+			
+			$routeParamNames = array_keys($routeExpectedParamList);
+			$urlParamNames = array_keys($URLParamList);
+			
+			$urlParamDiff = array_diff($routeParamNames, $urlParamNames);
+			$routeParamDiff = array_diff($urlParamNames, $routeParamNames);
+			
+			if ((sizeof($urlParamDiff)) == 0 && (sizeof($routeParamDiff) == 0))
+			{
+				foreach ($routeExpectedParamList as $paramName => $paramRequirement)
+				{
+					if (empty($URLParamList[$paramName]) || !preg_match('/^' . $paramRequirement . '/' , $URLParamList[$paramName]))
+					{
+						$routeParamsMatch = false;
+						break;
+					}
+					else
+					{
+						$routeParamsMatch = true;
+					}
+				}
+			}
+			if ($routeParamsMatch)
+			{
+				$matchingRoute = $route;
+				break;
+			}
+		}
+		if ($matchingRoute == null)
+		{
+			throw new RouterException("Router::createURL - Unable to find matching route");
+		}
+		$url = $route->getDefinitionPattern();
+		foreach ($URLParamList as $paramName => $value)
+		{
+			$url = str_replace(":" . $paramName, $value, $url);
+		}
+		$uri = $_SERVER['REQUEST_URI'];
+		$route = $this->getRequestedRoute();
+		$virtualBaseDir = str_replace($route, "", $uri);
+		
+		return $virtualBaseDir . $url . $queryToAppend;
+	}
+	
+	private function createQueryString($URLParamList)
+	{
+		$assigmentList = array();
+		foreach ($URLParamList as $paramName => $value)
+		{
+			$assigmentList[] = $paramName . "=" . urlencode($value);
+		}
+		return "?" . implode("&", $assigmentList);
+	}
+	
+	public function enableURLRewrite($status = true)
+	{
+		$this->isURLRewriteEnabled = $status;
+	}
+	
+	public function isURLRewriteEnabled()
+	{
+		return $this->isURLRewriteEnabled;
+	}
+	
+	public function getRequestedRoute()
+	{
+		if (!empty($_GET['route']))
+		{
+			return $_GET['route'];
+		}
+		else
+		{
+			return null;
+		}
 	}
 }
 

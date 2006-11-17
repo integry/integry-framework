@@ -167,7 +167,7 @@ class Application
 	 */
 	public function run()
 	{
-		$this->router->mapToRoute($this->router->getRequestPath(), $this->request);
+		$this->router->mapToRoute($this->router->getRequestedRoute(), $this->request);
 
 		$controllerName = $this->getRequest()->getControllerName();
 		$actionName = $this->getRequest()->getActionName();
