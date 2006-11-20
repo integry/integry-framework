@@ -357,6 +357,11 @@ class Router
 			return null;
 		}
 	}
+	
+	public function createUrlFromRoute($route)
+	{
+		return $this->getBaseDirFromUrl() . $route;
+	}
 }
 
 ?>
