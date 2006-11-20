@@ -270,11 +270,18 @@ class Application
 		$controllerSystemPath = ClassLoader::getRealPath("application.controller.".$controllerPath).".php";
 
 		//if (!empty($controllerName) && class_exists($className)) {
-		if (file_exists($controllerSystemPath))
+		try 
 		{
-			return new $className($this->getRequest());
+			//if (file_exists($controllerSystemPath))
+			//{
+				return new $className($this->getRequest());
+			//}
+			//else
+			//{
+			//	throw new ControllerNotFoundException($controllerName);
+			//}
 		}
-		else
+		catch (ClassLoaderException $e)
 		{
 			throw new ControllerNotFoundException($controllerName);
 		}

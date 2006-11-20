@@ -14,6 +14,8 @@ ClassLoader::import("framework.request.Router");
  * @param array $params List of parameters passed to a function
  * @param Smarty $smarty Smarty instance
  * @return string Smarty function resut (formatted link)
+ * 
+ * @package framework.helper
  */
 function smarty_function_link($params, $smarty)
 {

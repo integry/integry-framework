@@ -86,7 +86,17 @@ class Router
 	public function getBaseDirFromUrl()
 	{
 		$URI = $_SERVER['REQUEST_URI'];
-		$URIBase = substr($URI, 0, strpos($URI, '?'));
+		
+		$queryStartPos = strpos($URI, '?');
+		if ($queryStartPos !== false)
+		{
+			$URIBase = substr($URI, 0, $queryStartPos);
+		}
+		else
+		{
+			$URIBase = $URI;
+		}
+		
 		$route = $this->getRequestedRoute();
 		$virtualBaseDir = str_replace($route, "", $URIBase);
 		
