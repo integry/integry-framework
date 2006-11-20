@@ -4,7 +4,7 @@ ClassLoader::import("framework.request.Request");
 ClassLoader::import("framework.request.Route");
 
 /**
- * Application router
+ * Router
  * 
  * @author Saulius Rupainis <saulius@integry.net>
  * @package framework.request
@@ -83,6 +83,16 @@ class Router
 		return self::$baseDir;
 	}
 	
+	public function getBaseDirFromUrl()
+	{
+		$URI = $_SERVER['REQUEST_URI'];
+		$URIBase = substr($URI, 0, strpos($URI, '?'));
+		$route = $this->getRequestedRoute();
+		$virtualBaseDir = str_replace($route, "", $URIBase);
+		
+		return $virtualBaseDir;
+	}
+	
 	/**
 	 * Gets a base directory
 	 *
@@ -142,6 +152,35 @@ class Router
 		$this->routeList[] = new Route($routeDefinitionPattern, $paramValueAssigments, $paramValueRequirements);
 	}
 	
+	/**
+	 * Connects a new route to some URL pattern.
+	 * URLPattern might have "variables", which has a ":" at the beggining. e.x. ":action"
+	 *
+	 * E.x.:
+	 * <code>
+	 * $router->connect(":controller/:action/:id", array(), array("id" => "[0-9]+"));
+	 * </code>
+	 *
+	 * The route above will map to following URL's:
+	 * item/add/34
+	 * post/view/9233
+	 *
+	 * But not to these:
+	 * item/add/AC331
+	 * post/view
+	 *
+	 * URLPattern variables :controller :action :id by default might have value from
+	 * a range [_.a-zA-Z0-9]. When you pass array("id" => "[0-9]") as varRequirements
+	 * id is required to be only numeric.
+	 *
+	 *
+	 * @link http://www.symfony-project.com/book/trunk/routing
+	 *
+	 * @param string $URLPattern
+	 * @param array $defaultValueList
+	 * @param array $varRequirements
+	 *
+	 */
 	public function mapToRoute($URLStr, Request $request)
 	{
 		if (empty($URLStr) || !$this->isURLRewriteEnabled)
@@ -257,11 +296,9 @@ class Router
 		{
 			$url = str_replace(":" . $paramName, $value, $url);
 		}
-		$uri = $_SERVER['REQUEST_URI'];
-		$route = $this->getRequestedRoute();
-		$virtualBaseDir = str_replace($route, "", $uri);
 		
-		return $virtualBaseDir . $url . $queryToAppend;
+		
+		return $this->getBaseDirFromUrl() . $url . $queryToAppend;
 	}
 	
 	private function createQueryString($URLParamList)
@@ -274,16 +311,31 @@ class Router
 		return "?" . implode("&", $assigmentList);
 	}
 	
+	/**
+	 * 
+	 *
+	 * @param bool $status
+	 */
 	public function enableURLRewrite($status = true)
 	{
 		$this->isURLRewriteEnabled = $status;
 	}
 	
+	/**
+	 * Returns URL rewrite status
+	 *
+	 * @return bool
+	 */
 	public function isURLRewriteEnabled()
 	{
 		return $this->isURLRewriteEnabled;
 	}
 	
+	/**
+	 * Gets a request variable value containing front controllers route
+	 *
+	 * @return string
+	 */
 	public function getRequestedRoute()
 	{
 		if (!empty($_GET['route']))
