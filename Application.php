@@ -266,22 +266,14 @@ class Application
 		$controllerPath[$pathLength - 1] = $className;
 		$controllerPath = implode(".", $controllerPath);
 
-		ClassLoader::import("application.controller.".$controllerPath);
 		$controllerSystemPath = ClassLoader::getRealPath("application.controller.".$controllerPath).".php";
 
-		//if (!empty($controllerName) && class_exists($className)) {
-		try 
+		if (file_exists($controllerSystemPath))
 		{
-			//if (file_exists($controllerSystemPath))
-			//{
-				return new $className($this->getRequest());
-			//}
-			//else
-			//{
-			//	throw new ControllerNotFoundException($controllerName);
-			//}
+			ClassLoader::import("application.controller." . $controllerPath);
+			return new $className($this->getRequest());
 		}
-		catch (ClassLoaderException $e)
+		else
 		{
 			throw new ControllerNotFoundException($controllerName);
 		}
