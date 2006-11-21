@@ -2,50 +2,60 @@
 
 /**
  * Smarty form helper
- * 
+ *
  * <code>
  * </code>
  *
  * @package application.helper
  * @author Saulius Rupainis <saulius@integry.net>
- * 
+ *
  * @todo Include javascript validator source
  */
-function smarty_block_form($params, $content, $smarty, &$repeat) 
+function smarty_block_form($params, $content, $smarty, &$repeat)
 {
 	$handle = $params['handle'];
 	unset($params['handle']);
-	if (!($handle instanceof Form)) 
+	if (!($handle instanceof Form))
 	{
 		throw new HelperException("Form must have a Form instance assigned!");
 	}
-	
+
 	$formAction = $params['action'];
 	unset($params['action']);
 	$vars = explode(" ", $formAction);
 	$URLVars = array();
-	
+
 	foreach ($vars as $var)
 	{
 		$parts = explode("=", $var);
 		$URLVars[$parts[0]] = $parts[1];
 	}
-	
+
 	$router = Router::getInstance();
-	$actionURL = $router->createURL($URLVars);
-	
+
+	try
+	{
+		$actionURL = $router->createURL($URLVars);
+	}
+	catch (RouterException $e)
+	{
+		print_r($URLVars);
+		$actionURL = "INVALID_FORM_ACTION_URL";
+	}
+
+
 	if (!empty($params['onsubmit']))
 	{
 		$customOnSubmit = $params['onsubmit'];
 		unset($params['onsubmit']);
 	}
-	
+
 	$formAttributes ="";
 	foreach ($params as $param => $value)
 	{
 		$formAttributes .= $param . '="' . $value . '"';
 	}
-	
+
 	$onSumbmit = "";
 	$validatorField = "";
 	if ($handle->isClientSideValidationEnabled())
@@ -58,10 +68,10 @@ function smarty_block_form($params, $content, $smarty, &$repeat)
 		{
 			$onSumbmit = ' onsubmit="return validateForm(this);"';
 		}
-		
+
 		require_once("function.includeJs.php");
 		smarty_function_includeJs(array("file" => "library/formvalidator.js"), $smarty);
-		
+
 		$validatorField = '<input type="hidden" class="hidden" name="_validator" value="' . $handle->getValidator()->getJSValidatorParams() . '"/>';
 	}
 	else

@@ -5,7 +5,7 @@ ClassLoader::import("framework.request.Route");
 
 /**
  * Router
- * 
+ *
  * @author Saulius Rupainis <saulius@integry.net>
  * @package framework.request
  */
@@ -17,28 +17,28 @@ class Router
 	 * @var Router
 	 */
 	private static $instance = null;
-	
+
 	/**
 	 * The list of defined routes
 	 *
 	 * @var Route[]
 	 */
 	private $routeList = array();
-	
+
 	/**
 	 * Default controller name
 	 *
 	 * @var string
 	 */
 	public static $defaultController = "index";
-	
+
 	/**
 	 * Default action name
 	 *
 	 * @var string
 	 */
 	public static $defaultAction = "index";
-	
+
 	/**
 	 * Application base dir
 	 * E.x. www.example.com/myapplication/dir/ base dir is /myapplication/dir/
@@ -46,14 +46,14 @@ class Router
 	 * @var string
 	 */
 	public static $baseDir = "";
-	
+
 	/**
 	 * Base url
 	 *
 	 * @var string
 	 */
 	public static $baseUrl = "";
-	
+
 	/**
 	 * Identifies if mod_rewrite is enabled
 	 * Should be set manually by using enableURLRewrite(flag)
@@ -61,10 +61,10 @@ class Router
 	 * @var bool
 	 */
 	private $isURLRewriteEnabled = true;
-	
+
 	/**
 	 * Router constructor
-	 * 
+	 *
 	 * @todo Add https and port to baseUrl
 	 */
 	private function __construct()
@@ -72,7 +72,7 @@ class Router
 		self::$baseDir = dirname($_SERVER['PHP_SELF']) . '/';
 		self::$baseUrl = 'http://' . $_SERVER['SERVER_NAME'] . self::$baseDir;
 	}
-	
+
 	/**
 	 * Gets a base url
 	 *
@@ -82,11 +82,11 @@ class Router
 	{
 		return self::$baseDir;
 	}
-	
+
 	public function getBaseDirFromUrl()
 	{
 		$URI = $_SERVER['REQUEST_URI'];
-		
+
 		$queryStartPos = strpos($URI, '?');
 		if ($queryStartPos !== false)
 		{
@@ -96,13 +96,13 @@ class Router
 		{
 			$URIBase = $URI;
 		}
-		
+
 		$route = $this->getRequestedRoute();
 		$virtualBaseDir = str_replace($route, "", $URIBase);
-		
+
 		return $virtualBaseDir;
 	}
-	
+
 	/**
 	 * Gets a base directory
 	 *
@@ -112,7 +112,7 @@ class Router
 	{
 		return self::$baseUrl;
 	}
-	
+
 	/**
 	 * Creates a singleton instance
 	 *
@@ -126,8 +126,8 @@ class Router
 		}
 		return self::$instance;
 	}
-	
-	
+
+
 	/**
 	 * Connects a new route to some URL pattern.
 	 * URLPattern might have "variables", which has a ":" at the beggining. e.x. ":action"
@@ -161,7 +161,7 @@ class Router
 	{
 		$this->routeList[] = new Route($routeDefinitionPattern, $paramValueAssigments, $paramValueRequirements);
 	}
-	
+
 	/**
 	 * Connects a new route to some URL pattern.
 	 * URLPattern might have "variables", which has a ":" at the beggining. e.x. ":action"
@@ -232,7 +232,7 @@ class Router
 		}
 		throw new RouterException("Unable to map to any route");
 	}
-	
+
 	/**
 	 * Creates an URL by using a supplied URL param list
 	 *
@@ -253,34 +253,34 @@ class Router
 			return $this->createQueryString($URLParamList) . "&" . substr($queryToAppend, 1);
 		}
 		/* end */
-		
+
 		/* Handling special case: route to a default controller/action */
-		if (!empty($URLParamList['controller']) 
-		           && $URLParamList['controller'] == self::$defaultController 
-		           && (empty($URLParamList['action']) || $URLParamList['action'] == self::$defaultAction) 
+		if (!empty($URLParamList['controller'])
+		           && $URLParamList['controller'] == self::$defaultController
+		           && (empty($URLParamList['action']) || $URLParamList['action'] == self::$defaultAction)
 		           && sizeof($URLParamList) <= 2)
 		{
 			return $this->getBaseDir() . $queryToAppend;
 		}
 		/* end */
-		
+
 		$matchingRoute = null;
 		foreach ($this->routeList as $route)
 		{
 			$routeExpectedParamList = $route->getParamList();
 			$routeParamsMatch = false;
-			
+
 			$routeParamNames = array_keys($routeExpectedParamList);
 			$urlParamNames = array_keys($URLParamList);
-			
+
 			$urlParamDiff = array_diff($routeParamNames, $urlParamNames);
 			$routeParamDiff = array_diff($urlParamNames, $routeParamNames);
-			
+
 			if ((sizeof($urlParamDiff)) == 0 && (sizeof($routeParamDiff) == 0))
 			{
 				foreach ($routeExpectedParamList as $paramName => $paramRequirement)
 				{
-					if (empty($URLParamList[$paramName]) || !preg_match('/^' . $paramRequirement . '/' , $URLParamList[$paramName]))
+					if (!isset($URLParamList[$paramName]) || !preg_match('/^' . $paramRequirement . '/' , $URLParamList[$paramName]))
 					{
 						$routeParamsMatch = false;
 						break;
@@ -306,11 +306,11 @@ class Router
 		{
 			$url = str_replace(":" . $paramName, $value, $url);
 		}
-		
-		
+
+
 		return $this->getBaseDirFromUrl() . $url . $queryToAppend;
 	}
-	
+
 	private function createQueryString($URLParamList)
 	{
 		$assigmentList = array();
@@ -320,9 +320,9 @@ class Router
 		}
 		return "?" . implode("&", $assigmentList);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 *
 	 * @param bool $status
 	 */
@@ -330,7 +330,7 @@ class Router
 	{
 		$this->isURLRewriteEnabled = $status;
 	}
-	
+
 	/**
 	 * Returns URL rewrite status
 	 *
@@ -340,7 +340,7 @@ class Router
 	{
 		return $this->isURLRewriteEnabled;
 	}
-	
+
 	/**
 	 * Gets a request variable value containing front controllers route
 	 *
@@ -357,7 +357,7 @@ class Router
 			return null;
 		}
 	}
-	
+
 	public function createUrlFromRoute($route)
 	{
 		return $this->getBaseDirFromUrl() . $route;
