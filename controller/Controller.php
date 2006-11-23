@@ -76,12 +76,16 @@ abstract class Controller
 		{
 			return $e->createActionRedirectResponse();
 		}
-		
+
 		if (method_exists($this, $actionName) && $this->isAction($actionName))
 		{
 			$response = call_user_func(array(&$this, $actionName));
 			if ($response instanceof Response)
 			{
+				if ($response instanceof ActionResponse)
+				{
+					$response->setValue("request", $this->request->toArray());
+				}
 				return $response;
 			}
 			else
