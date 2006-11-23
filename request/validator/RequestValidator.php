@@ -226,10 +226,7 @@ class RequestValidator
 	
 	protected function encode($data)
 	{
-		ClassLoader::import("library.json.JSON");
-		
-		$json = new Services_JSON();
-		return str_replace('"', "&quot;", $json->encode($data));
+		return str_replace('"', "&quot;", json_encode($data));
 	}
 }
 
