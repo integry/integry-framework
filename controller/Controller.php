@@ -61,7 +61,9 @@ abstract class Controller
 	}
 
 	/**
-	 * Executes controller action (method)
+	 * Executes controller action (method) and gets a response instance
+	 *
+	 * Registers request data array if request is renderable
 	 *
 	 * @param string $actionName
 	 * @return Response
