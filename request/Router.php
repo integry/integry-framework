@@ -62,6 +62,8 @@ class Router
 	 */
 	private $isURLRewriteEnabled = true;
 
+	private static $autoAppendVariableList = array();
+
 	/**
 	 * Router constructor
 	 *
@@ -241,6 +243,9 @@ class Router
 	 */
 	public function createURL($URLParamList)
 	{
+		// merging persisted variables into an URL variable array
+		$URLParamList = array_merge(self::$autoAppendVariableList, $URLParamList);
+
 		$queryToAppend = "";
 		if (!empty($URLParamList['query']))
 		{
@@ -361,6 +366,18 @@ class Router
 	public function createUrlFromRoute($route)
 	{
 		return $this->getBaseDirFromUrl() . $route;
+	}
+
+	/**
+	 * Set variable list that gets atonatically assigned when creating URL
+	 * (self::createURL()) (there will be no need to assign such variables
+	 * manually. E.x.current language code for a multilingual webapp)
+	 *
+	 * @param array $assocArray VariableName => VarValue
+	 */
+	public function setAutoAppendVariables($assocArray)
+	{
+		self::$autoAppendVariableList = $assocArray;
 	}
 }
 
