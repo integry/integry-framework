@@ -16,7 +16,7 @@ class Form
 	 * @var RequestValidator
 	 */
 	private $validator = null;
-	
+
 	/**
 	 * Form data array
 	 *
@@ -25,7 +25,7 @@ class Form
 	private $data = array();
 
 	private $enableClientSideValidation = true;
-	
+
 	public function __construct(RequestValidator $validator)
 	{
 		$this->validator = $validator;
@@ -86,7 +86,24 @@ class Form
 			return null;
 		}
 	}
-	
+
+	public function getData()
+	{
+		return $this->data;
+	}
+
+	public function getName()
+	{
+		if ($this->validator != null)
+		{
+			return $this->validator->getName();
+		}
+		else
+		{
+			return null;
+		}
+	}
+
 	/**
 	 * Gets a form validator
 	 *
@@ -96,12 +113,12 @@ class Form
 	{
 		return $this->validator;
 	}
-	
+
 	public function enableClientSideValidation($flag = true)
 	{
 		$this->enableClientSideValidation  = $flag;
 	}
-	
+
 	public function isClientSideValidationEnabled()
 	{
 		return $this->enableClientSideValidation;

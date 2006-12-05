@@ -27,7 +27,7 @@ function smarty_function_hidden($params, $smarty)
 	}
 
 	$formValue = $formHandler->getValue($fieldName);
-	$output .= 'value="' . $formValue . "'";
+	$output .= ' value="' . $formValue . '"';
 	$output .= "/>";
 
 	return $output;
