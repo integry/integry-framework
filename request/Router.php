@@ -304,7 +304,8 @@ class Router
 		}
 		if ($matchingRoute == null)
 		{
-			throw new RouterException("Router::createURL - Unable to find matching route");
+			throw new RouterException("Router::createURL - Unable to find matching route <Br />" . 
+									  var_export($URLParamList, true));
 		}
 		$url = $route->getDefinitionPattern();
 		foreach ($URLParamList as $paramName => $value)
