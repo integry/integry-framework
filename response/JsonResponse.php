@@ -3,7 +3,9 @@
 ClassLoader::import("framework.response.Response");
 
 /**
- * Response rendered as a primitive XML document
+ * JSON response
+ *
+ * @package framework.response
  */
 class JSONResponse extends Response
 {
