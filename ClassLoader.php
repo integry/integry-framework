@@ -212,7 +212,8 @@ class ClassLoader
 	 */
 	public static function importPath($path, $check = true)
 	{
-		if (substr($path, -1, 1) == DIRECTORY_SEPARATOR) {
+		if (substr($path, -1, 1) == DIRECTORY_SEPARATOR)
+		{
 			$path = substr($path, 0, strlen($path) - 1);
 		}
 		$oldPath = get_include_path();
