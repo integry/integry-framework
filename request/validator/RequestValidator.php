@@ -224,6 +224,23 @@ class RequestValidator
 		}
 	}
 	
+	public function getJSFilterParams($requestVarName = null)
+	{
+		if ($requestVarName != null)
+		{
+			return $this->encode($this->getValidatorVar($requestVarName)->getFilterData());
+		}
+		else
+		{
+			$validatorData = array();
+			foreach ($this->validatorVarList as $name => $var)
+			{
+				$validatorData[$name] = $var->getFilterData();
+			}
+			return $this->encode($validatorData);
+		}
+	}
+	
 	protected function encode($data)
 	{
 		return str_replace('"', "&quot;", json_encode($data));

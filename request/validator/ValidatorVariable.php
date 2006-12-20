@@ -104,6 +104,18 @@ class ValidatorVariable
 		return $data;
 	}
 	
+	public function getFilterData()
+	{
+		$data = array();
+		foreach ($this->filterList as $filter)
+		{
+			$name = get_class($filter);
+//			$constraintList = $filter->getParamList();
+			$data[$name] = array('');
+		}
+		return $data;
+	}
+
 }
 
 ?>

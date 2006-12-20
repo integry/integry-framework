@@ -43,7 +43,6 @@ function smarty_block_form($params, $content, $smarty, &$repeat)
 		$actionURL = "INVALID_FORM_ACTION_URL";
 	}
 
-
 	if (!empty($params['onsubmit']))
 	{
 		$customOnSubmit = $params['onsubmit'];
@@ -67,20 +66,22 @@ function smarty_block_form($params, $content, $smarty, &$repeat)
 		else
 		{
 			$onSumbmit = ' onsubmit="return validateForm(this);"';
-		}
-
+		}		
+		
 		require_once("function.includeJs.php");
 		smarty_function_includeJs(array("file" => "library/formvalidator.js"), $smarty);
 
 		$validatorField = '<input type="hidden" disabled="disabled" name="_validator" value="' . $handle->getValidator()->getJSValidatorParams() . '"/>';
+		$filterField = '<input type="hidden" disabled="disabled" name="_filter" value="' . $handle->getValidator()->getJSFilterParams() . '"/>';
 	}
 	else
 	{
 		$onSumbmit = $customOnSubmit;
 	}
 
-	$form = '<form action="'.$actionURL.'" '.$formAttributes.' ' . $onSumbmit .'>' . "\n";
+	$form = '<form action="'.$actionURL.'" '.$formAttributes.' ' . $onSumbmit .' onKeyUp="applyFilters(this, event);">' . "\n";
 	$form .= $validatorField;
+	$form .= $filterField;
 	$form .= $content;
 	$form .= "</form>";
 	return $form;
