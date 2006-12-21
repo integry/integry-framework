@@ -27,21 +27,21 @@ class RequestValidator
 	 * @var ValidatorVariable[]
 	 */
 	private $validatorVarList = array();
-	
+
 	/**
 	 * Validator intance name
 	 *
 	 * @var string
 	 */
 	private $name = "";
-	
+
 	/**
 	 * List of occurred errors
 	 *
 	 * @var string[]
 	 */
 	private $errorList = array();
-	
+
 	/**
 	 * Restored request object
 	 *
@@ -60,12 +60,12 @@ class RequestValidator
 		$this->name = $name;
 		$this->request = $request;
 	}
-	
+
 	public function getName()
 	{
 		return $this->name;
 	}
-	
+
 	/**
 	 * Executes a validator and collects validation errors
 	 *
@@ -78,13 +78,14 @@ class RequestValidator
 			try
 			{
 				$var->validate();
-			} 
+				//$var->filter();
+			}
 			catch(CheckException $e)
 			{
 				$this->errorList[$var->getName()] = $e->getMessage();
 			}
 		}
-		
+
 		foreach ($this->validatorVarList as $var)
 		{
 			$var->filter();
@@ -130,7 +131,7 @@ class RequestValidator
 	public function isValid()
 	{
 		$this->execute();
-		
+
 		if (empty($this->errorList))
 		{
 			return true;
@@ -168,7 +169,7 @@ class RequestValidator
 	{
 		@session_start();
 		$_SESSION['_validator'][$this->name]['error'] = $this->errorList;
-		$_SESSION['_validator'][$this->name]['data'] = $this->request->toArray(); 
+		$_SESSION['_validator'][$this->name]['data'] = $this->request->toArray();
 	}
 
 	/**
@@ -183,10 +184,10 @@ class RequestValidator
 		//$this->restoredData =  $_SESSION['_validator'][$this->name]['data'];
 		$this->restoredRequest = new Request();
 		$this->restoredRequest->setValueArray($_SESSION['_validator'][$this->name]['data']);
-		
+
 		unset($_SESSION['_validator'][$this->name]);
 	}
-	
+
 	/**
 	 * Get restored request object
 	 *
@@ -196,7 +197,7 @@ class RequestValidator
 	{
 		return $this->restoredRequest;
 	}
-	
+
 	/**
 	 * Get errors list
 	 *
@@ -206,7 +207,7 @@ class RequestValidator
 	{
 		return $this->errorList;
 	}
-	
+
 	public function getJSValidatorParams($requestVarName = null)
 	{
 		if ($requestVarName != null)
@@ -223,7 +224,7 @@ class RequestValidator
 			return $this->encode($validatorData);
 		}
 	}
-	
+
 	public function getJSFilterParams($requestVarName = null)
 	{
 		if ($requestVarName != null)
@@ -240,7 +241,7 @@ class RequestValidator
 			return $this->encode($validatorData);
 		}
 	}
-	
+
 	protected function encode($data)
 	{
 		return str_replace('"', "&quot;", json_encode($data));
