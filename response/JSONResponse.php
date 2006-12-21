@@ -13,9 +13,9 @@ class JSONResponse extends Response
 
 	public function __construct($data)
 	{
-        ClassLoader::import('library.json.Services_JSON');
-        $json = new Services_JSON();
-        $this->content = $json->encode($data);
+//        ClassLoader::import('library.json.Services_JSON');
+//        $json = new Services_JSON();
+        $this->content = json_encode($data);
 	}
 
 	public function getData()
