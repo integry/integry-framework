@@ -189,7 +189,7 @@ abstract class Controller
 	 * Adds a block to a controller layout
 	 *
 	 * Layout block is an atomic part of application which cannot be called directly
-	 * by a user. Block fills a layput which encapsulates currently executed action
+	 * by a user. Block fills a layout which encapsulates currently executed action
 	 * (some kind of contextual menu or enviroinment depending on application part)
 	 *
 	 * Usage (lets say it is a body of some controller action)

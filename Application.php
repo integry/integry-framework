@@ -191,7 +191,7 @@ class Application
 
 			if ($response instanceof Renderable)
 			{
-				$applicationOutput = $this->render($controllerName, $actionName, $response);
+				//$applicationOutput = $this->render($controllerName, $actionName, $response);
 
 				/* using laypout defined in a controller for action output */
 				if ($controllerInstance->getLayout() != null)
@@ -209,12 +209,16 @@ class Application
 							throw new ApplicationException("Unknown response flom a block");
 						}
 					}
+					
+					$applicationOutput = $this->render($controllerName, $actionName, $response);
+					
 					$this->getRenderer()->setValue("ACTION_VIEW", $applicationOutput);
 					echo $this->getRenderer()->render($this->getLayoutPath($controllerInstance->getLayout()));
 					/* end layout renderer block */
 				}
 				else
 				{
+					$applicationOutput = $this->render($controllerName, $actionName, $response);
 					echo $applicationOutput;
 				}
 			}
