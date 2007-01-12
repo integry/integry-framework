@@ -48,6 +48,18 @@ class Route
 	private $paramList = array();
 	
 	/**
+	 * Array holding variable sequence in URL
+	 *
+	 * For example, for route ":controller/:action" it would be:
+	 *
+	 * 0 => controller
+	 * 1 => action
+	 * 
+	 * @var array
+	 */
+	private $varList = array();
+	
+	/**
 	 * Creates a route instance
 	 *
 	 * @param string $definitionPattern
@@ -56,34 +68,47 @@ class Route
 	 */
 	public function __construct($definitionPattern, $paramValueAssigments = array(), $paramValueRequirements = array())
 	{
-		$this->definitionPattern = $definitionPattern;
-		$definitionParts = explode("/", $this->definitionPattern);
-		foreach ($definitionParts as $part)
+		preg_match_all('/\:([a-zA-Z]+)/', $definitionPattern, $matches);
+		
+		$this->definitionPattern = $definitionPattern;		
+		$recognitionPattern = $definitionPattern;
+		
+		$rules = array();
+		if (count($matches[1]) > 0)
 		{
-			if ($this->isParam($part))
-			{
-				$paramName = substr($part, 1);
-				if (!empty($paramValueRequirements[$paramName]))
-				{
-					$this->appendRecognitionPattern($paramValueRequirements[$paramName]);
-					$this->registerParam($paramName, $paramValueRequirements[$paramName]);
-				}
-				else
-				{
-					$this->appendRecognitionPattern($this->defaulParamValueRequirement);
-					$this->registerParam($paramName, $this->defaulParamValueRequirement);
-				}
-			}
-			else
-			{
-				$this->appendRecognitionPattern($part);
+			foreach ($matches[1] as $paramName)
+		  	{
+				$rules[$paramName] = !empty($paramValueRequirements[$paramName]) ? $paramValueRequirements[$paramName] : $this->defaulParamValueRequirement;
+				$recognitionPattern = str_replace(':' . $paramName, '(' . $rules[$paramName] . ')', $recognitionPattern);	    		
 			}
 		}
+		
+		$recognitionPattern = str_replace('/' , '\/', $recognitionPattern);
+			
+		$this->recognitionPattern = $recognitionPattern;
+		$this->setParamList($rules);
+		$this->setVariableList($matches[1]);
+					
 		foreach ($paramValueAssigments as $param => $value)
 		{
 			$this->registerParam($param, $value);
 			$this->registerRequestValueAssigment($param, $value);
 		}
+	}
+	
+	function getVariableList()
+	{
+		return $this->varList;
+	}
+
+	function setVariableList($varList)
+	{
+		$this->varList = $varList;
+	}
+
+	function setParamList($paramList)
+	{
+		$this->paramList = $paramList;
 	}
 	
 	/**
@@ -134,37 +159,6 @@ class Route
 	private function registerRequestValueAssigment($name, $value)
 	{
 		$this->requestValueAssigments[$name] = $value;
-	}
-	
-	private function appendRecognitionPattern($requirement)
-	{
-		if (!empty($this->recognitionPattern))
-		{
-			$this->recognitionPattern .= "\/" . $requirement;
-		}
-		else
-		{
-			$this->recognitionPattern = $requirement;
-		}
-	}
-	
-	/**
-	 * Checks if a given string is a parameter from a route definition pattern (must 
-	 * have ":" at the beginnig)
-	 *
-	 * @param string $URLPatternPart
-	 * @return bool
-	 */
-	public function isParam($URLPatternPart)
-	{
-		if (substr($URLPatternPart, 0, 1) == ":")
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
 	}
 }
 

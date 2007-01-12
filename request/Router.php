@@ -210,25 +210,22 @@ class Router
 
 		foreach ($this->routeList as $route)
 		{
-			if (preg_match("/^" . $route->getRecognitionPattern() . "$/", $URLStr))
+			if (preg_match("/^" . $route->getRecognitionPattern() . "$/", $URLStr, $result))
 			{
-				$URLParams = explode("/", $URLStr);
-				$definitionPattern = $route->getDefinitionPattern();
-				$definitionParts = explode("/", $definitionPattern);
-				foreach ($definitionParts as $index => $part)
+				unset($result[0]);
+				
+				$varList = $route->getVariableList();
+				foreach ($result as $key => $value)
 				{
-					if ($route->isParam($part))
-					{
-						$paramName = substr($part, 1);
-						$value = $URLParams[$index];
-						$request->setValue($paramName, $value);
-					}
+				  	$request->setValue($varList[$key - 1], $value);
 				}
+				
 				$requestValueAssigments = $route->getRequestValueAssigments();
 				foreach ($requestValueAssigments as $paramName => $value)
 				{
 					$request->setValue($paramName, $value);
 				}
+				
 				return $route;
 			}
 		}
