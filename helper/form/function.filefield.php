@@ -16,8 +16,14 @@ function smarty_function_filefield($params, $smarty)
 	$handle = $formParams['handle'];
 	$fieldName = $params['name'];
 	
+	if (!isset($params['id']))
+	{
+	  	$params['id'] = $params['name'];
+	}
+	
 	$content = '<input type="file"';
-	foreach ($params as $name => $param) {
+	foreach ($params as $name => $param) 
+	{
 		$content .= ' ' . $name . '="' . $param . '"'; 
 	}
 	//$content .= ' validate="' . $handle->getValidator()->getJSValidatorParams($fieldName) . '"'; 

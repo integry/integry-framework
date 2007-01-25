@@ -19,7 +19,7 @@ function smarty_function_radio($params, $smarty)
 		throw new HelperException('Element must be placed in {form} block');
 	}
 	$fieldName = $params['name'];
-	
+		
 	$output = '<input type="radio"';
 	foreach ($params as $name => $value)
 	{

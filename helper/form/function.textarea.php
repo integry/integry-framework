@@ -16,6 +16,11 @@ function smarty_function_textarea($params, $smarty)
 	$handle = $formParams['handle'];
 	$fieldName = $params['name'];
 	
+	if (!isset($params['id']))
+	{
+	  	$params['id'] = $params['name'];
+	}
+	
 	$content = '<textarea';
 	foreach ($params as $name => $param) {
 		$content .= ' ' . $name . '="' . $param . '"'; 

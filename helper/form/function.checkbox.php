@@ -20,6 +20,11 @@ function smarty_function_checkbox($params, $smarty)
 	}
 	$fieldName = $params['name'];
 	
+	if (!isset($params['id']))
+	{
+	  	$params['id'] = $params['name'];
+	}
+	
 	$output = '<input type="checkbox"';
 	foreach ($params as $name => $value)
 	{

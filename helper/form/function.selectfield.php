@@ -25,6 +25,11 @@ function smarty_function_selectfield($params, $smarty)
 	$defaultValue = $params['value'];
 	unset($params['value']);
 	
+	if (!isset($params['id']))
+	{
+	  	$params['id'] = $params['name'];
+	}
+	
 	$content = '<select';
 	foreach ($params as $name => $param) {
 		$content .= ' ' . $name . '="' . $param . '"'; 
