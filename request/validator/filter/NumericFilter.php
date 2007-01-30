@@ -16,7 +16,7 @@ class NumericFilter extends Filter
 		
 		//next remove all characters save 0 though 9
 		//in both elements of the array
-		$dollars = eregi_replace("[^0-9]", null, $parts[0]);
+		$dollars = eregi_replace("[^-0-9]", null, $parts[0]);
 		if (isset($parts[1]))
 		{
 			$cents = eregi_replace("[^0-9]", null, $parts[1]);

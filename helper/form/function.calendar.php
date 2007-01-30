@@ -33,8 +33,7 @@ function smarty_function_calendar($params, $smarty)
     $params['format'] = isset($params['format']) ? $params['format'] : "%d-%b-%Y";
 	$format = $params['format'];
 	unset($params['format']);
-    
-	
+    	
 	if(isset($params['noform']))
     {
         $value = $params['value'];
@@ -48,6 +47,7 @@ function smarty_function_calendar($params, $smarty)
     unset($params['value']);
     unset($params['name']);
     
+	$params['class'] = !isset($params['class']) ? 'date' : $params['class']. ' date';
 	
 	$output  = '<input type="text" value="'.$value.'" '; 
 	foreach ($params as $n => $v)  

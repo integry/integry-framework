@@ -13,7 +13,7 @@ class IsNumericCheck extends Check
 	public function isValid($value)
 	{
 		$value = trim($value);
-		return is_numeric($value);
+		return is_numeric($value) || empty($value);
 	}
 }
 
