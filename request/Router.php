@@ -373,7 +373,7 @@ class Router
 	 *
 	 * @param array $assocArray VariableName => VarValue
 	 */
-	public function setAutoAppendVariables($assocArray)
+	public static function setAutoAppendVariables($assocArray)
 	{
 		self::$autoAppendVariableList = $assocArray;
 	}
