@@ -128,14 +128,7 @@ class Request
 	 */
 	public function isValueSet($name)
 	{
-		if (!empty($this->dataContainer[$name]))
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		return isset($this->dataContainer[$name]);
 	}
 
 	/**
