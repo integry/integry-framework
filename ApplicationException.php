@@ -19,8 +19,12 @@ class ApplicationException extends Exception
 		$i = 0;
 		$traceString = '';
 				
-		$ajax = isset($_SERVER['HTTP_X_REQUESTED_WITH']) ? true : false;
+		$ajax = false; //isset($_SERVER['HTTP_X_REQUESTED_WITH']) ? true : false;
 		
+				
+    	// Get new line
+    	$newLine = $ajax ? "\n" : "<br />\n";
+				
 		foreach($trace as $call)
 		{
 			if(isset($call['file']) && isset($call['line']) && !isset($showedFiles[$call['file']][$call['line']]))
@@ -77,12 +81,10 @@ class ApplicationException extends Exception
 				    
 				    if($j < count($call['args'])) $arguments .= ", "; $j++;
 				}
-				
-				// Get new line
-				$newLine = $ajax ? "\n" : "<br />\n";
+
 				
 				// format the output line
-				$traceString .= "$position - $functionName($arguments) $newLine";
+				$traceString .= "$newLine$position - $functionName($arguments)";
 			}
 		}
 		
