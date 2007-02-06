@@ -52,7 +52,7 @@ function smarty_function_textfield($params, $smarty)
 		  
 		$content .= '<div id="autocomplete_' . $params['id'] . '" class="autocomplete"></div>';
 		$content .= '<script type="text/javascript">
-						new Ajax.Autocompleter("' . $params['id'] . '", "autocomplete_' . $params['id'] . '", "' . $url . '", {});
+						new Ajax.Autocompleter("' . $params['id'] . '", "autocomplete_' . $params['id'] . '", "' . $url . '", {frequency: 0.2});
 					</script>';
 	}
 	

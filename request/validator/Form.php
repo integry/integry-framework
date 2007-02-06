@@ -77,7 +77,7 @@ class Form
 	 */
 	public function getValue($fieldName)
 	{
-		if (!empty($this->data[$fieldName]))
+		if (isset($this->data[$fieldName]))
 		{
 			return $this->data[$fieldName];
 		}
