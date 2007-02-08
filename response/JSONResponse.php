@@ -13,6 +13,9 @@ class JSONResponse extends Response
 
 	public function __construct($data)
 	{
+	    $this->setHeader('Cache-Control', 'no-cache, must-revalidate');
+	    $this->setHeader('Expires', 'Mon, 26 Jul 1997 05:00:00 GMT');
+	    
         $this->content = json_encode($data);
 	}
 
