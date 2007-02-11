@@ -1,7 +1,7 @@
 <?php
 
 /**
- * ...
+ * Display radio button
  *
  * @param array $params
  * @param Smarty $smarty
