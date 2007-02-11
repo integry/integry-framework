@@ -8,7 +8,7 @@
  * @return string
  * 
  * @package application.helper
- * @author Saulius Rupainis <saulius@integry.net>
+ * @author Integry Systems <http://integry.com>
  */
 function smarty_function_radio($params, $smarty) 
 {
@@ -20,17 +20,19 @@ function smarty_function_radio($params, $smarty)
 	}
 	$fieldName = $params['name'];
 		
+	// get checked state
+	$formValue = $formHandler->getValue($fieldName);
+	if ((!empty($formValue) && ($formValue == $params['value'])) || (empty($formValue) && $params['checked']))
+	{
+		$params['checked'] = 'checked';
+	}
+
 	$output = '<input type="radio"';
 	foreach ($params as $name => $value)
 	{
 		$output .= ' ' . $name . '="' . $value . '"';
 	}
 	
-	$formValue = $formHandler->getValue($fieldName);
-	if ($formValue == $params['value'])
-	{
-		$output .= ' checked="'. checked . '"';
-	}
 	$output .= "/>";
 	
 	return $output;
