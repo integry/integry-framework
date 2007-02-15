@@ -42,7 +42,7 @@ function smarty_block_form($params, $content, $smarty, &$repeat)
 		print_r($URLVars);
 		$actionURL = "INVALID_FORM_ACTION_URL";
 	}
-
+	
 	if (!empty($params['onsubmit']))
 	{
 		$customOnSubmit = $params['onsubmit'];
@@ -57,11 +57,19 @@ function smarty_block_form($params, $content, $smarty, &$repeat)
 
 	$onSumbmit = "";
 	$validatorField = "";
+	$preValidate = "";
+	
+	if (isset($params['prevalidate']))
+	{	  
+		$preValidate = $params['prevalidate'] . '; ';
+		unset($params['prevalidate']);
+	}
+	
 	if ($handle->isClientSideValidationEnabled())
 	{
 		if (!empty($customOnSubmit))
 		{
-			$onSumbmit = ' onsubmit="if (!validateForm(this)) { return false; } ' . $customOnSubmit . '"';
+			$onSumbmit = ' onsubmit="' . $preValidate . 'if (!validateForm(this)) { return false; } ' . $customOnSubmit . '"';
 		}
 		else
 		{
