@@ -12,7 +12,9 @@
  */
 function smarty_function_checkbox($params, $smarty) 
 {
-	$formParams = $smarty->_tag_stack[0][1];
+    if(!isset($params['value'])) $params['value'] = 1;
+    
+    $formParams = $smarty->_tag_stack[0][1];
 	$formHandler = $formParams['handle'];
 	if (!($formHandler instanceof Form))
 	{

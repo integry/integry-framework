@@ -39,7 +39,6 @@ function smarty_block_form($params, $content, $smarty, &$repeat)
 	}
 	catch (RouterException $e)
 	{
-		print_r($URLVars);
 		$actionURL = "INVALID_FORM_ACTION_URL";
 	}
 	
