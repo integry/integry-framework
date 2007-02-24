@@ -36,9 +36,9 @@ function smarty_function_checkbox($params, $smarty)
 	$formValue = $formHandler->getValue($fieldName);
 	if ($formValue == $params['value'] || ('on' == $params['value'] && 1 == $formValue))
 	{
-		$output .= ' checked="'. checked . '"';
+		$output .= ' checked="checked"';
 	}
-	$output .= "/>";
+	$output .= "/>" . $formValue;
 	
 	return $output;
 }
