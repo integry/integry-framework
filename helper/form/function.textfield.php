@@ -16,7 +16,7 @@
  * @return string
  * 
  * @package application.helper
- * @author Saulius Rupainis <saulius@integry.net>
+ * @author Integry Systems
  */
 function smarty_function_textfield($params, $smarty) 
 {
@@ -34,7 +34,7 @@ function smarty_function_textfield($params, $smarty)
 		$content .= ' ' . $name . '="' . $param . '"'; 
 	}
 
-	$content .= ' value="' . $handle->getValue($fieldName) . '"';
+	$content .= ' value="' . htmlspecialchars($handle->getValue($fieldName), ENT_QUOTES, 'UTF-8') . '"';
 	$content .= '/>';
 
 	if (isset($params['autocomplete']))
