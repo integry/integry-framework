@@ -38,7 +38,7 @@ function smarty_function_checkbox($params, $smarty)
 	{
 		$output .= ' checked="checked"';
 	}
-	$output .= "/>" . $formValue;
+	$output .= "/>";
 	
 	return $output;
 }
