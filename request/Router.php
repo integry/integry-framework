@@ -6,7 +6,7 @@ ClassLoader::import("framework.request.Route");
 /**
  * Router
  *
- * @author Saulius Rupainis <saulius@integry.net>
+ * @author Integry Systems
  * @package framework.request
  */
 class Router
@@ -62,6 +62,15 @@ class Router
 	 */
 	private $isURLRewriteEnabled = true;
 
+	/**
+	 * Stores matching route instances for createUrl requests to avoid repeated lookups
+	 *
+	 * @var array
+	 */
+	private $cachedRoutes = array();
+
+	private $virtualBaseDir;
+
 	private static $autoAppendVariableList = array();
 
 	/**
@@ -87,22 +96,25 @@ class Router
 
 	public function getBaseDirFromUrl()
 	{
-		$URI = $_SERVER['REQUEST_URI'];
-
-		$queryStartPos = strpos($URI, '?');
-		if ($queryStartPos !== false)
+		if (!$this->virtualBaseDir)
 		{
-			$URIBase = substr($URI, 0, $queryStartPos);
-		}
-		else
-		{
-			$URIBase = $URI;
+			$URI = $_SERVER['REQUEST_URI'];
+	
+			$queryStartPos = strpos($URI, '?');
+			if ($queryStartPos !== false)
+			{
+				$URIBase = substr($URI, 0, $queryStartPos);
+			}
+			else
+			{
+				$URIBase = $URI;
+			}
+	
+			$route = $this->getRequestedRoute();
+			$this->virtualBaseDir = str_replace($route, "", $URIBase);			
 		}
 
-		$route = $this->getRequestedRoute();
-		$virtualBaseDir = str_replace($route, "", $URIBase);
-
-		return $virtualBaseDir;
+		return $this->virtualBaseDir;
 	}
 
 	/**
@@ -249,6 +261,7 @@ class Router
 			$queryToAppend = "?" . $URLParamList['query'];
 			unset($URLParamList['query']);
 		}
+		
 		/* Handling special case: URL rewrite is not enabled */
 		if (!$this->isURLRewriteEnabled)
 		{
@@ -266,14 +279,45 @@ class Router
 		}
 		/* end */
 
+		$matchingRoute = $this->findRoute($URLParamList);
+		
+		if ($matchingRoute == null)
+		{
+			throw new RouterException("Router::createURL - Unable to find matching route <Br />" . 
+									  var_export($URLParamList, true));
+		}
+		
+		$url = $matchingRoute->getDefinitionPattern();
+		
+		$params = array_keys($URLParamList);
+		$p = array();
+		foreach ($params as $value)
+		{
+			$p[] = ':' . $value;
+		}
+		
+		$values = array_values($URLParamList);
+		$url = str_replace($p, $values, $url);
+
+		return $this->getBaseDirFromUrl() . $url . $queryToAppend;
+	}
+
+	private function findRoute($URLParamList)
+	{
+		$urlParamNames = array_keys($URLParamList);		
+		$hash = md5(implode('/', $urlParamNames));
+		
+		if (isset($this->cachedRoutes[$hash]))
+		{
+			return $this->cachedRoutes[$hash];
+		}		
+			
 		$matchingRoute = null;
+		
 		foreach ($this->routeList as $route)
 		{
 			$routeExpectedParamList = $route->getParamList();
-			$routeParamsMatch = false;
-
 			$routeParamNames = array_keys($routeExpectedParamList);
-			$urlParamNames = array_keys($URLParamList);
 
 			$urlParamDiff = array_diff($routeParamNames, $urlParamNames);
 			$routeParamDiff = array_diff($urlParamNames, $routeParamNames);
@@ -284,34 +328,24 @@ class Router
 				{
 					if (!isset($URLParamList[$paramName]) || !preg_match('/^' . $paramRequirement . '/' , $URLParamList[$paramName]))
 					{
-						$routeParamsMatch = false;
 						break;
 					}
 					else
 					{
-						$routeParamsMatch = true;
+						$matchingRoute = $route;
 					}
 				}
 			}
-			if ($routeParamsMatch)
+			
+			if ($matchingRoute)
 			{
-				$matchingRoute = $route;
 				break;
 			}
 		}
-		if ($matchingRoute == null)
-		{
-			throw new RouterException("Router::createURL - Unable to find matching route <Br />" . 
-									  var_export($URLParamList, true));
-		}
-		$url = $route->getDefinitionPattern();
-		foreach ($URLParamList as $paramName => $value)
-		{
-			$url = str_replace(":" . $paramName, $value, $url);
-		}
-
-
-		return $this->getBaseDirFromUrl() . $url . $queryToAppend;
+		
+		$this->cachedRoutes[$hash] = $matchingRoute;
+		
+		return $matchingRoute;		
 	}
 
 	private function createQueryString($URLParamList)
