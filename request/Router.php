@@ -26,6 +26,13 @@ class Router
 	private $routeList = array();
 
 	/**
+	 * The list of defined routes sorted by param count (for faster lookup)
+	 *
+	 * @var Route[]
+	 */
+	private $routeListByParamCount = array();
+
+	/**
 	 * Default controller name
 	 *
 	 * @var string
@@ -61,13 +68,6 @@ class Router
 	 * @var bool
 	 */
 	private $isURLRewriteEnabled = true;
-
-	/**
-	 * Stores matching route instances for createUrl requests to avoid repeated lookups
-	 *
-	 * @var array
-	 */
-	private $cachedRoutes = array();
 
 	private $virtualBaseDir;
 
@@ -173,7 +173,9 @@ class Router
 	 */
 	public function connect($routeDefinitionPattern, $paramValueAssigments = array(), $paramValueRequirements = array())
 	{
-		$this->routeList[] = new Route($routeDefinitionPattern, $paramValueAssigments, $paramValueRequirements);
+		$route = new Route($routeDefinitionPattern, $paramValueAssigments, $paramValueRequirements);
+		$this->routeListByParamCount[count($route->getParamList())][] = $route;
+		$this->routeList[] = $route;
 	}
 
 	/**
@@ -305,27 +307,15 @@ class Router
 	private function findRoute($URLParamList)
 	{
 		$urlParamNames = array_keys($URLParamList);		
-		$hash = md5(implode('/', $urlParamNames));
-
-		/*
-		if (isset($this->cachedRoutes[$hash]))
-		{
-			return $this->cachedRoutes[$hash];
-		}		
-		*/
+		$urlParamCount = count($urlParamNames);
 			
 		$matchingRoute = null;
 		
-		foreach ($this->routeList as $route)
+		foreach ($this->routeListByParamCount[$urlParamCount] as $route)
 		{
 			$routeExpectedParamList = $route->getParamList();
-			$routeParamNames = array_keys($routeExpectedParamList);
 
-			// check if route and URL variables are the same
-			$urlParamDiff = array_diff($routeParamNames, $urlParamNames);
-			$routeParamDiff = array_diff($urlParamNames, $routeParamNames);
-					
-			if ((sizeof($urlParamDiff)) == 0 && (sizeof($routeParamDiff) == 0))
+			if (!array_diff($urlParamNames, array_keys($routeExpectedParamList)))
 			{
 				foreach ($routeExpectedParamList as $paramName => $paramRequirement)
 				{
@@ -347,8 +337,6 @@ class Router
 				
 			}
 		}
-		
-	//	$this->cachedRoutes[$hash] = $matchingRoute;
 		
 		return $matchingRoute;		
 	}
