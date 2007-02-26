@@ -306,11 +306,13 @@ class Router
 	{
 		$urlParamNames = array_keys($URLParamList);		
 		$hash = md5(implode('/', $urlParamNames));
-		
+
+		/*
 		if (isset($this->cachedRoutes[$hash]))
 		{
 			return $this->cachedRoutes[$hash];
 		}		
+		*/
 			
 		$matchingRoute = null;
 		
@@ -319,31 +321,34 @@ class Router
 			$routeExpectedParamList = $route->getParamList();
 			$routeParamNames = array_keys($routeExpectedParamList);
 
+			// check if route and URL variables are the same
 			$urlParamDiff = array_diff($routeParamNames, $urlParamNames);
 			$routeParamDiff = array_diff($urlParamNames, $routeParamNames);
-
+					
 			if ((sizeof($urlParamDiff)) == 0 && (sizeof($routeParamDiff) == 0))
 			{
 				foreach ($routeExpectedParamList as $paramName => $paramRequirement)
 				{
-					if (!isset($URLParamList[$paramName]) || !preg_match('/^' . $paramRequirement . '/' , $URLParamList[$paramName]))
+					if (!preg_match('/^' . $paramRequirement . '/' , $URLParamList[$paramName]))
 					{
+						$matchingRoute = null;
 						break;
 					}
 					else
 					{
-						$matchingRoute = $route;
+					  	$matchingRoute = $route;
 					}
 				}
-			}
-			
-			if ($matchingRoute)
-			{
-				break;
+				
+				if ($matchingRoute)
+				{
+				  	break;
+				}
+				
 			}
 		}
 		
-		$this->cachedRoutes[$hash] = $matchingRoute;
+	//	$this->cachedRoutes[$hash] = $matchingRoute;
 		
 		return $matchingRoute;		
 	}
