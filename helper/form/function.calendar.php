@@ -49,7 +49,7 @@ function smarty_function_calendar($params, $smarty)
     
 	$params['class'] = !isset($params['class']) ? 'date' : $params['class']. ' date';
 	
-	$output  = '<input type="text" value="'.$value.'" '; 
+	$output  = '<input type="text" value="'.$value.'" name="'.$params['id'].'_visible" '; 
 	foreach ($params as $n => $v)  
 	    $output .= ' ' . $n . '="' . $v . '"'; 
 	$output .= "/>";
@@ -66,6 +66,10 @@ function smarty_function_calendar($params, $smarty)
         align:          "BR",
         singleClick:    true
     });
+
+	Event.observe("{$params['id']}", "change", function(e) {
+		$("{$params['id']}_real").value = Date.parseDate(this.value, "{$format}").print("%Y-%m-%d");
+	});
 </script>
 JAVASCRIPT;
 
