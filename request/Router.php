@@ -229,9 +229,10 @@ class Router
 				unset($result[0]);
 				
 				$varList = $route->getVariableList();
-				foreach ($result as $key => $value)
+				
+				foreach ($varList as $key => $value)
 				{
-				  	$request->setValue($varList[$key - 1], $value);
+				  	$request->setValue($value, $result[$key + 1]);
 				}
 				
 				$requestValueAssigments = $route->getRequestValueAssigments();
