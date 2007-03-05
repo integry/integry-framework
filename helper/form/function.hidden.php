@@ -21,14 +21,18 @@ function smarty_function_hidden($params, $smarty)
 	$fieldName = $params['name'];
 
 	$output = '<input type="hidden"';
+	
+	if (!isset($params['value']))
+	{
+		$params['value'] = $formHandler->getValue($fieldName);
+	}
+	
 	foreach ($params as $name => $value)
 	{
 		$output .= ' ' . $name . '="' . $value . '"';
 	}
 
-	$formValue = $formHandler->getValue($fieldName);
-	$output .= ' value="' . $formValue . '"';
-	$output .= "/>";
+	$output .= " />";
 
 	return $output;
 }
