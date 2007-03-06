@@ -58,6 +58,15 @@ function smarty_function_calendar($params, $smarty)
 	$output .= '<img src="image/silk/calendar.png" id="'.$params['id'].'_button" class="calendar_button" title="Date selector" onmouseover="Element.addClassName(this, \'calendar_button_hover\');" onmouseout="Element.removeClassName(this, \'calendar_button_hover\');" />';
 	$output .= <<<JAVASCRIPT
 <script type="text/javascript">
+	$("{$params['id']}_button").realInput = $("{$params['id']}_real");
+	$("{$params['id']}_button").showInput = $("{$params['id']}");
+	$("{$params['id']}").realInput = $("{$params['id']}_real");
+	$("{$params['id']}").showInput = $("{$params['id']}");
+
+    Event.observe($("{$params['id']}"),        "keyup",     Calendar.updateDate );
+    Event.observe($("{$params['id']}"),        "blur",      Calendar.updateDate );
+    Event.observe($("{$params['id']}_button"), "mousedown", Calendar.updateDate );
+
     Calendar.setup({
         inputField:     "{$params['id']}",
         inputFieldReal: "{$params['id']}_real",    
@@ -66,10 +75,6 @@ function smarty_function_calendar($params, $smarty)
         align:          "BR",
         singleClick:    true
     });
-
-	Event.observe("{$params['id']}", "change", function(e) {
-		$("{$params['id']}_real").value = Date.parseDate(this.value, "{$format}").print("%Y-%m-%d");
-	});
 </script>
 JAVASCRIPT;
 
