@@ -48,7 +48,7 @@ function smarty_function_textfield($params, $smarty)
 		 
 		$url = Router::getInstance()->createURL(array('controller' => $acparams['controller'], 
 													  'action' => 'autoComplete', 
-													  'query' => 'field=' . $params['name']));
+													  'query' => 'field=' . $acparams['field']));
 		  
 		$content .= '<div id="autocomplete_' . $params['id'] . '" class="autocomplete"></div>';
 		$content .= '<script type="text/javascript">
