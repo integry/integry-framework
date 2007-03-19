@@ -50,9 +50,10 @@ function smarty_function_textfield($params, $smarty)
 													  'action' => 'autoComplete', 
 													  'query' => 'field=' . $acparams['field']));
 		  
+		$content .= '<span id="autocomplete_indicator_' . $params['id'] . '" class="progressIndicator" style="display: none;"></span>';
 		$content .= '<div id="autocomplete_' . $params['id'] . '" class="autocomplete"></div>';
 		$content .= '<script type="text/javascript">
-						new Ajax.Autocompleter("' . $params['id'] . '", "autocomplete_' . $params['id'] . '", "' . $url . '", {frequency: 0.2});
+						new Ajax.Autocompleter("' . $params['id'] . '", "autocomplete_' . $params['id'] . '", "' . $url . '", {frequency: 0.2, paramName: "' . $acparams['field'] . '", indicator: "autocomplete_indicator_' . $params['id'] . '"});
 					</script>';
 	}
 	
