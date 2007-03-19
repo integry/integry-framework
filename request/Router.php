@@ -72,6 +72,8 @@ class Router
 	private $virtualBaseDir;
 
 	private static $autoAppendVariableList = array();
+	
+	private static $autoAppendQueryVariableList = array();	
 
 	/**
 	 * Router constructor
@@ -259,6 +261,20 @@ class Router
 		$URLParamList = array_merge(self::$autoAppendVariableList, $URLParamList);
 
 		$queryToAppend = "";
+		
+		if (self::$autoAppendQueryVariableList)
+		{
+            $queryVars = implode('&', array_keys(self::$autoAppendQueryVariableList));
+    		if (!empty($URLParamList['query']))
+    		{
+                $URLParamList['query'] .= '&' . $queryVars;                
+            }
+            else
+            {
+                $URLParamList['query'] = $queryVars;
+            }
+        }
+		
 		if (!empty($URLParamList['query']))
 		{
 			$queryToAppend = "?" . $URLParamList['query'];
@@ -395,7 +411,7 @@ class Router
 	}
 
 	/**
-	 * Set variable list that gets atonatically assigned when creating URL
+	 * Set variable that gets automatically assigned when creating URL
 	 * (self::createURL()) (there will be no need to assign such variables
 	 * manually. E.x.current language code for a multilingual webapp)
 	 *
@@ -405,6 +421,20 @@ class Router
 	{
 		self::$autoAppendVariableList = $assocArray;
 	}
+
+	/**
+	 * Set variable list that will automatically be appended to URL query part 
+     * (for example, ?currency=USD). This method should be used when there are no
+     * special routing cases defined for the particular variable.
+	 *
+	 * @param string $value $key Variable name
+	 * @param string $value $value Variable value
+	 */
+	public static function addAutoAppendQueryVariable($key, $value)
+	{
+		self::$autoAppendQueryVariableList[$key . '=' . $value] = true;
+	}
+
 }
 
 ?>

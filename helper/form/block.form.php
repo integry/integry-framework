@@ -27,7 +27,7 @@ function smarty_block_form($params, $content, $smarty, &$repeat)
 
 	foreach ($vars as $var)
 	{
-		$parts = explode("=", $var);
+		$parts = explode("=", $var, 2);
 		$URLVars[$parts[0]] = $parts[1];
 	}
 
