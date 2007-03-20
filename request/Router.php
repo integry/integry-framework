@@ -407,7 +407,43 @@ class Router
 
 	public function createUrlFromRoute($route)
 	{
-		return $this->getBaseDirFromUrl() . $route;
+		$query = implode('&', array_keys(self::$autoAppendQueryVariableList));
+		if ($query)
+		{
+			$query = '?' . $query;
+		}
+		
+		return $this->getBaseDirFromUrl() . $route . $query;
+	}
+
+	/**
+	 *	A helper function for manipulating URL query parameters
+	 */
+	public static function setUrlQueryParam($url, $param, $paramValue)
+	{
+        $parts = explode('?', $url, 2);
+        $params = array();
+		if (isset($parts[1]))
+        {
+			$pairs = explode('&', $parts[1]);
+			foreach ($pairs as $pair)
+			{
+				list($key, $value) = explode('=', $pair, 2);
+				$params[$key] = $value;
+			}
+		}
+		
+		$params[$param] = $paramValue; 
+		
+		$pairs = array();
+		foreach ($params as $key => $value)
+		{
+			$pairs[] = $key . '=' . $value;
+		}
+		
+		$url = $parts[0] . '?' . implode('&', $pairs);
+		
+		return $url;
 	}
 
 	/**
