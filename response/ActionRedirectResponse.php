@@ -30,7 +30,9 @@ class ActionRedirectResponse extends RedirectResponse
 	private $paramList = array();
 
 	/**
-	 * @param string $content Content of response (optional)
+	 * @param string $controllerName Controller name (for example, "product" for ProductController)
+	 * @param string $actionName	Controller action name
+	 * @param array $paramList additional parameters (for example, array('id' => 4, 'query' => 'more=params&other=true'))
 	 */
 	public function __construct($controllerName, $actionName, $paramList = array())
 	{

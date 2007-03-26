@@ -65,6 +65,11 @@ class Session
 		}
 	}
 
+	public function isValueSet($value)
+	{
+		return isset($_SESSION[$value]);
+	}
+
 	/**
 	 * Returns a session ID
 	 *
@@ -76,6 +81,45 @@ class Session
 	}
 
 	/**
+	 *	Return controller-specific session data (data saved to session by particular controller)
+	 */
+	public function getControllerData(Controller $controller, $key = '')
+	{
+		$hash = $this->getControllerHash($controller);	
+		if (isset($_SESSION['controller'][$hash]))
+		{
+			if ($key)
+			{
+				if (isset($_SESSION['controller'][$hash][$key]))
+				{
+					return $_SESSION['controller'][$hash][$key];
+				}	
+				else
+				{
+					return array();
+				}
+			}
+			else
+			{
+				return $_SESSION['controller'][$hash];	
+			}			
+		}
+		else
+		{
+			return array();
+		}
+	}
+
+	/**
+	 *	Set controller-specific session data
+	 */
+	public function setControllerData(Controller $controller, $key, $value)
+	{
+		$hash = $this->getControllerHash($controller);	
+		$_SESSION['controller'][$hash][$key] = $value;
+	}
+	
+	/**
 	 * Destroys this session
 	 */
 	public function destroy()
@@ -84,6 +128,20 @@ class Session
 		session_destroy();
 		unset($this);
 	}
+	
+	private function getControllerHash(Controller $controller)
+	{
+		$hash = array();
+		$hash[] = get_class($controller);
+		while ($controller)
+		{
+			$controller = get_parent_class($controller);
+			$hash[] = $controller;
+		}
+		
+		return md5(implode(',', $hash));		
+	}
+
 }
 
 ?>
