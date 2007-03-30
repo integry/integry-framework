@@ -7,7 +7,9 @@
  */
 class Session
 {
-	public function __construct($name = null)
+	protected static $instance;
+    	
+    protected function __construct($name = null)
 	{
 		if (!empty($name))
 		{
@@ -15,6 +17,16 @@ class Session
 		}
 		@session_start();
 	}
+
+    public static function getInstance($name = null)
+    {
+        if (!self::$instance)     
+        {
+            self::$instance = new self($name);    
+        }   
+        
+        return self::$instance;
+    }
 
 	/**
 	 * Registers a session variable
@@ -26,13 +38,10 @@ class Session
 	{
 		if (is_object($value))
 		{
-			$serializedValue = serialize($value);
-			$_SESSION[$name] = $serializedValue;
+			$value = serialize($value);
 		}
-		else
-		{
-			$_SESSION[$name] = $value;
-		}
+
+		$_SESSION[$name] = $value;
 	}
 
 	/**
@@ -64,6 +73,18 @@ class Session
 			return null;
 		}
 	}
+
+    public function getObject($name)
+    {
+		if (!empty($_SESSION[$name]))
+		{			
+            return unserialize($_SESSION[$name]);
+		}
+		else
+		{
+			return null;
+		}        
+    }
 
 	public function isValueSet($value)
 	{

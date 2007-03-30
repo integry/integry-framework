@@ -275,6 +275,13 @@ class Router
             }
         }
 		
+		$addReturnPath = false;
+        if (!empty($URLParamList['returnPath']))
+		{
+    		$addReturnPath = true;
+            unset($URLParamList['returnPath']);
+        }
+		
 		if (!empty($URLParamList['query']))
 		{
 			$queryToAppend = "?" . $URLParamList['query'];
@@ -318,7 +325,14 @@ class Router
 		$values = array_values($URLParamList);
 		$url = str_replace($p, $values, $url);
 
-		return $this->getBaseDirFromUrl() . $url . $queryToAppend;
+        $url = $this->getBaseDirFromUrl() . $url . $queryToAppend;
+
+        if ($addReturnPath)
+        {
+            $url = self::setUrlQueryParam($url, 'return', $this->getRequestedRoute());
+        }
+
+		return $url;
 	}
 
 	private function findRoute($URLParamList)
