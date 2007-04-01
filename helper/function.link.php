@@ -20,9 +20,22 @@ ClassLoader::import("framework.request.Router");
 function smarty_function_link($params, $smarty)
 {
 	$router = Router::getInstance();
+	
 	try
 	{
-		$result = $router->createURL($params);
+		if (isset($params['route']))
+		{
+			$result = $router->createUrlFromRoute($params['route']);
+		}
+		else
+		{
+			if (!isset($params['action']))
+			{
+				$params['action'] = 'index';
+			}
+			
+			$result = $router->createURL($params);			
+		}
 	}
 	catch(RouterException $e)
 	{

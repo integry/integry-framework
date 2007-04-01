@@ -301,7 +301,7 @@ class Router
 		           && (empty($URLParamList['action']) || $URLParamList['action'] == self::$defaultAction)
 		           && sizeof($URLParamList) <= 2)
 		{
-			return $this->getBaseDir() . $queryToAppend;
+			return $this->getBaseDirFromUrl() . $queryToAppend;
 		}
 		/* end */
 
