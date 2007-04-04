@@ -37,6 +37,9 @@ class Request
 	{
 		$this->setValueArray($_GET);
 		$this->setValueArray($_POST);
+		
+		foreach($_FILES as $varName => $value) { $_FILES[$varName]['uploaded_file_array'] = true; }
+		$this->setValueArray($_FILES);
 		$this->setValueArray($_COOKIE);
 
 		$this->dataContainer = $this->removeMagicQuotes($this->dataContainer);
@@ -141,7 +144,7 @@ class Request
 		return $this->dataContainer;
 	}
 	
-	private function removeMagicQuotes ($postArray, $trim = false)
+	private function removeMagicQuotes ($postArray, $trim = false, $isFile = false)
 	{
 	   if (get_magic_quotes_gpc() == 1)
 	   {
@@ -151,7 +154,7 @@ class Request
 	       {
 	           if (is_array($val))
 	           {
-	               $newArray[$key] = $this->removeMagicQuotes ($val, $trim);
+	               $newArray[$key] = $this->removeMagicQuotes ($val, $trim, isset($val['uploaded_file_array']));
 	           }
 	           else
 	           {
@@ -159,7 +162,9 @@ class Request
 	               {
 	                   $val = trim($val);
 	               }
-	               $newArray[$key] = stripslashes($val);
+	               
+	               if($isFile && 'tmp_name' == $key) $newArray[$key] = $val;
+	               else $newArray[$key] = stripslashes($val);
 	           }
 	       }   
 	      
