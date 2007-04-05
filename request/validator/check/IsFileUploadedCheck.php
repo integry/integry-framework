@@ -12,8 +12,7 @@ class IsFileUploadedCheck extends Check
 {
 	public function isValid($value)
 	{
-		$field = $this->getParam('fieldName');
-		if (!isset($_FILES[$field]) || empty($_FILES[$field]['tmp_name']))
+		if (empty($value['tmp_name']))
 		{
 		  	return false;
 		} 
