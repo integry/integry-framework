@@ -38,8 +38,12 @@ class Request
 		$this->setValueArray($_GET);
 		$this->setValueArray($_POST);
 		
-		foreach($_FILES as $varName => $value) { $_FILES[$varName]['uploaded_file_array'] = true; }
-		$this->setValueArray($_FILES);
+		foreach($_FILES as $varName => $value) 
+        { 
+            $_FILES[$varName]['uploaded_file_array'] = true; 
+        }
+		
+        $this->setValueArray($_FILES);
 		$this->setValueArray($_COOKIE);
 
 		$this->dataContainer = $this->removeMagicQuotes($this->dataContainer);
@@ -65,7 +69,11 @@ class Request
 	 */
 	function setValueArray($dataArray)
 	{
-		$this->dataContainer = @array_merge($this->dataContainer, $dataArray);
+		if (!is_array($dataArray))
+		{
+            $dataArray = array();    
+        }
+        $this->dataContainer = array_merge($this->dataContainer, $dataArray);
 	}
 
 	/**

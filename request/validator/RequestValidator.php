@@ -92,7 +92,7 @@ class RequestValidator
 		}
 	}
 
-	private function getValidatorVar($name)
+	public function getValidatorVar($name)
 	{
 		if (empty($this->validatorVarList[$name]))
 		{

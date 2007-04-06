@@ -11,12 +11,7 @@
  * @author Saulius Rupainis <saulius@integry.net>
  */
 function smarty_function_checkbox($params, $smarty) 
-{
-	if(!isset($params['value'])) 
-    {
-        $params['value'] = 1;    
-    }
-    
+{    
     $formParams = $smarty->_tag_stack[0][1];
 	$formHandler = $formParams['handle'];
 	if (!($formHandler instanceof Form))
@@ -30,18 +25,32 @@ function smarty_function_checkbox($params, $smarty)
 	  	$params['id'] = $params['name'];
 	}
 	
+	if(!isset($params['value'])) 
+    {
+        $params['value'] = 1;    
+    }	
+
+    // get checkbox state if the form has been submitted
+    if (1 == $formHandler->getValue('checkbox_' . $fieldName))
+    {
+    	$formValue = $formHandler->getValue($fieldName);
+        if ($formValue == $params['value'] || ('on' == $params['value'] && 1 == $formValue))
+        {
+            $params['checked'] = 'checked';
+        }
+        else
+        {
+            unset($params['checked']);
+        }
+    }
+
 	$output = '<input type="checkbox"';
 	foreach ($params as $name => $value)
 	{
 		$output .= ' ' . $name . '="' . $value . '"';
 	}
-	
-	$formValue = $formHandler->getValue($fieldName);
-	if ($formValue == $params['value'] || ('on' == $params['value'] && 1 == $formValue))
-	{
-		$output .= ' checked="checked"';
-	}
-	$output .= "/>";
+	    	
+	$output .= '/><input type="hidden" name="checkbox_' . $params['name'] . '" value="1" />';
 		
 	return $output;
 }

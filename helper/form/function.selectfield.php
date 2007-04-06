@@ -8,7 +8,7 @@
  * @return string
  * 
  * @package application.helper
- * @author Saulius Rupainis <saulius@integry.net>
+ * @author Integry Systems
  */
 function smarty_function_selectfield($params, $smarty) 
 {
@@ -37,15 +37,16 @@ function smarty_function_selectfield($params, $smarty)
 	$content .= ">\n";
 	
 	$fieldValue = $handle->getValue($params['name']);
-	if (empty($fieldValue))
+	if (is_null($fieldValue))
 	{
-		$fieldValue = $defaultValue;
+        $fieldValue = $defaultValue;
 	}
+	
 	foreach ($options as $value => $title)
 	{
-		if ($fieldValue == $value)
+		if ($fieldValue == $value && (strlen($fieldValue) == strlen($value)))
 		{
-			$content .= "\t" . '<option value="' . $value . '" selected="selected">' . $title . '</option>' . "\n";
+			$content .= "\t" . '<option value="' . $value . '" selected="selected">' . $title  . '</option>' . "\n";
 		}
 		else
 		{
