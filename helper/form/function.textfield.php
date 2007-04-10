@@ -29,7 +29,12 @@ function smarty_function_textfield($params, $smarty)
 	  	$params['id'] = $params['name'];
 	}
 	
-	$content = '<input type="text"';
+	if (!isset($params['type']))
+	{
+		$params['type'] = 'text';
+	}
+	
+	$content = '<input';
 	foreach ($params as $name => $param) {
 		$content .= ' ' . $name . '="' . $param . '"'; 
 	}
