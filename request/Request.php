@@ -139,7 +139,7 @@ class Request
 	 */
 	public function isValueSet($name)
 	{
-	    if(isset($this->dataContainer[$name]) && is_array($this->dataContainer[$name]) && $this->dataContainer[$name]['uploaded_file_array']) {
+	    if(isset($this->dataContainer[$name]) && is_array($this->dataContainer[$name]) && isset($this->dataContainer[$name]['uploaded_file_array'])) {
 	        return 0 == $this->dataContainer[$name]['error'];
 	    }
 	    
