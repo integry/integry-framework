@@ -418,6 +418,11 @@ class Router
 			return null;
 		}
 	}
+	
+	public function setRequestedRoute($route)
+	{
+		$_GET['route'] = $route;	
+	}
 
 	public function createUrlFromRoute($route)
 	{
