@@ -284,7 +284,17 @@ class Router
 		
 		if (!empty($URLParamList['query']))
 		{
-			$queryToAppend = "?" . $URLParamList['query'];
+			if (is_array($URLParamList['query']))
+			{
+                $pairs = array();
+                foreach ($URLParamList['query'] as $key => $value)
+                {
+                    $pairs[] = urlencode($key) . '=' . urlencode($value);
+                }   
+                $URLParamList['query'] = implode('&', $pairs);
+            }
+            
+            $queryToAppend = "?" . $URLParamList['query'];
 			unset($URLParamList['query']);
 		}
 		
