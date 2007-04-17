@@ -32,9 +32,9 @@ function smarty_function_radio($params, $smarty)
 	{
 		$output .= ' ' . $name . '="' . $value . '"';
 	}
-	
+
 	$output .= "/>";
-	
+    	
 	return $output;
 }
 
