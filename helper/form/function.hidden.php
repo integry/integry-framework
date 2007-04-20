@@ -29,7 +29,7 @@ function smarty_function_hidden($params, $smarty)
 	
 	foreach ($params as $name => $value)
 	{
-		$output .= ' ' . $name . '="' . $value . '"';
+		$output .= ' ' . $name . '="' . htmlspecialchars($value, ENT_QUOTES) . '"';
 	}
 
 	$output .= " />";
