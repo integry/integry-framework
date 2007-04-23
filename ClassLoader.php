@@ -39,6 +39,8 @@ class ClassLoader
 	 */
 	private static $mountList = array();
 
+	private static $autoLoadFunctions = array();
+
 	/**
 	 * Loads a class file (performs include_once)
 	 *
@@ -47,6 +49,16 @@ class ClassLoader
 	public static function load($class)
 	{
 		$className = substr($class, strrpos($class, DIRECTORY_SEPARATOR));
+		
+		// try custom autoload functions
+		foreach (self::$autoLoadFunctions as $func => $isEnabled)
+		{
+			if ($func($class))
+			{
+				return true;
+			}
+		}
+		
 		if (!class_exists($className, false))
 		{
 			if(!(include_once($class.'.php')))
@@ -54,6 +66,11 @@ class ClassLoader
 				throw new ClassLoaderException('File '.$class.'.php not found');
 			}
 		}
+	}
+
+	public static function registerAutoLoadFunction($functionName)
+	{
+		self::$autoLoadFunctions[$functionName] = true;
 	}
 
 	/**
