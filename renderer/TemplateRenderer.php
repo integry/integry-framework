@@ -143,16 +143,11 @@ class TemplateRenderer extends Renderer
 	 */
 	public function registerHelperList()
 	{
-		//$path = ClassLoader::getRealPath("application.helper");
-		
-		$frameworkPluginDir = ClassLoader::getRealPath("framework.helper");
-		$frameworkFormPluginDir = ClassLoader::getRealPath("framework.helper.form");
-		$applicationPluginDir = ClassLoader::getRealPath("application.helper");
-		//$this->tpl->plugins_dir[] = $path;
-
-		$this->tpl->plugins_dir[] = $frameworkPluginDir;
-		$this->tpl->plugins_dir[] = $frameworkFormPluginDir;
-		$this->tpl->plugins_dir[] = $applicationPluginDir;
+		$helperDirs = array("framework.helper", "framework.helper.form", "application.helper");
+		foreach ($helperDirs as $dir)
+		{
+            $this->tpl->plugins_dir[] = ClassLoader::getRealPath($dir);            
+        }
 	}
 
 	/**

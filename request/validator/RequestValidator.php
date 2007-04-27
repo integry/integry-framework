@@ -242,6 +242,11 @@ class RequestValidator
 		}
 	}
 
+    public function triggerError($fieldName, $errorMessage)
+    {
+        $this->errorList[$fieldName] = $errorMessage;
+    }
+
 	protected function encode($data)
 	{
 		return str_replace('"', "&quot;", json_encode($data));

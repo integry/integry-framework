@@ -257,6 +257,16 @@ class Router
 	 */
 	public function createURL($URLParamList)
 	{
+		if (!isset($URLParamList['controller']))
+		{
+			$URLParamList['controller'] = self::$defaultController;
+		}
+
+		if (!isset($URLParamList['action']))
+		{
+			$URLParamList['action'] = self::$defaultAction;
+		}
+
 		// merging persisted variables into an URL variable array
 		$URLParamList = array_merge(self::$autoAppendVariableList, $URLParamList);
 
@@ -306,10 +316,8 @@ class Router
 		/* end */
 
 		/* Handling special case: route to a default controller/action */
-		if (!empty($URLParamList['controller'])
-		           && $URLParamList['controller'] == self::$defaultController
-		           && (empty($URLParamList['action']) || $URLParamList['action'] == self::$defaultAction)
-		           && sizeof($URLParamList) <= 2)
+		if (($URLParamList['controller'] == self::$defaultController) &&
+		    ($URLParamList['action'] == self::$defaultAction))
 		{
 			return $this->getBaseDirFromUrl() . $queryToAppend;
 		}
@@ -499,7 +507,6 @@ class Router
 	{
 		self::$autoAppendQueryVariableList[$key . '=' . $value] = true;
 	}
-
 }
 
 ?>

@@ -28,12 +28,7 @@ function smarty_function_link($params, $smarty)
 			$result = $router->createUrlFromRoute($params['route']);
 		}
 		else
-		{
-			if (!isset($params['action']))
-			{
-				$params['action'] = 'index';
-			}
-			
+		{			
 			$result = $router->createURL($params);			
 		}
 	}
