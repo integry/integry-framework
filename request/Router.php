@@ -84,6 +84,7 @@ class Router
 	{
 		self::$baseDir = dirname($_SERVER['PHP_SELF']) . '/';
 		self::$baseUrl = 'http://' . $_SERVER['SERVER_NAME'] . self::$baseDir;
+		$this->getBaseDirFromUrl();
 	}
 
 	/**
@@ -101,7 +102,7 @@ class Router
 		if (!$this->virtualBaseDir)
 		{
 			$URI = $_SERVER['REQUEST_URI'];
-	
+				
 			$queryStartPos = strpos($URI, '?');
 			if ($queryStartPos !== false)
 			{
@@ -111,7 +112,7 @@ class Router
 			{
 				$URIBase = $URI;
 			}
-	
+				
 			$route = $this->getRequestedRoute();
 			$this->virtualBaseDir = str_replace($route, "", $URIBase);			
 		}
@@ -351,6 +352,13 @@ class Router
         }
 
 		return $url;
+	}
+	
+	public function createFullUrl($relativeUrl)
+	{
+		$parts = parse_url(self::$baseUrl);
+		
+		return $parts['scheme'] . '://' . $parts['host'] . (isset($parts['port']) ? ':' . $parts['port'] : '') . $relativeUrl;
 	}
 
 	private function findRoute($URLParamList)

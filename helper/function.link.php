@@ -21,6 +21,16 @@ function smarty_function_link($params, $smarty)
 {
 	$router = Router::getInstance();
 	
+	if (isset($params['url']))
+	{
+		unset($params['url']);
+		$fullUrl = true;
+	}
+	else
+	{
+		$fullUrl = false;		
+	}
+	
 	try
 	{
 		if (isset($params['route']))
@@ -35,6 +45,11 @@ function smarty_function_link($params, $smarty)
 	catch(RouterException $e)
 	{
 		return "INVALID_LINK";
+	}
+
+	if ($fullUrl)
+	{
+		$result = $router->createFullUrl($result);
 	}
 
 	return $result;
