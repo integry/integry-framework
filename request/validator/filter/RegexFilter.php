@@ -1,5 +1,7 @@
 <?php
 
+include_once('Filter.php');
+
 /**
  * Filter characters from strings using custom regular expressions
  *
@@ -8,16 +10,14 @@
  */
 class RegexFilter extends Filter
 {
-	protected $regex;
-	
 	public function __construct($regex)
 	{
-		$this->regex = $regex;	
+		$this->setParam('regex', $regex);	
 	}
 	
 	public function apply($value)
 	{
-		return preg_replace($this->regex, '', $value);
+		return preg_replace('/' . $this->getParam('regex') . '/', '', $value);
 	}
 }
 

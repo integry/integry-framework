@@ -8,7 +8,24 @@
  */
 abstract class Filter
 {
-	abstract public function apply($value);
+	private $paramList = array();
+	
+	protected function setParam($name, $value)
+	{
+		$this->paramList[$name] = $value;
+	}
+
+	public function getParam($name)
+	{
+		return $this->paramList[$name];
+	}
+	
+	public function getParamList()
+	{
+		return $this->paramList;
+	}
+
+	abstract public function apply($value);	
 }
 
 ?>

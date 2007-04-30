@@ -110,8 +110,7 @@ class ValidatorVariable
 		foreach ($this->filterList as $filter)
 		{
 			$name = get_class($filter);
-//			$constraintList = $filter->getParamList();
-			$data[$name] = array('');
+			$data[$name] = $filter->getParamList();
 		}
 		return $data;
 	}

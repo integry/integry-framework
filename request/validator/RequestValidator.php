@@ -165,7 +165,7 @@ class RequestValidator
 	 * Store request object and error list in session
 	 *
 	 */
-	private function saveState()
+	public function saveState()
 	{
 		@session_start();
 		$_SESSION['_validator'][$this->name]['error'] = $this->errorList;
