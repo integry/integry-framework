@@ -22,7 +22,7 @@ function smarty_function_radio($params, $smarty)
 		
 	// get checked state
 	$formValue = $formHandler->getValue($fieldName);
-	if ((!empty($formValue) && ($formValue == $params['value'])) || (empty($formValue) && $params['checked']))
+	if ($formValue == $params['value'] || (empty($formValue) && $params['checked']))
 	{
 		$params['checked'] = 'checked';
 	}
