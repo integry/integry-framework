@@ -17,7 +17,7 @@ function smarty_block_form($params, $content, $smarty, &$repeat)
 	unset($params['handle']);
 	if (!($handle instanceof Form))
 	{
-		throw new HelperException("Form must have a Form instance assigned!");
+		throw new HelperException('Form must have a Form instance assigned! (handle=$formInstance)');
 	}
 
 	$formAction = $params['action'];

@@ -59,8 +59,6 @@ class Session
 	 *
 	 * @param string $name
 	 * @return mixed
-	 *
-	 * @todo restore serialized object
 	 */
 	public function getValue($name)
 	{
@@ -73,6 +71,20 @@ class Session
 			return null;
 		}
 	}
+
+	/**
+	 * Returns a session variable value and immediately removes it from session
+	 *
+	 * @param string $name
+	 * @return mixed
+	 */
+    public function pullValue($name)
+    {
+        $value = $this->getValue($name);
+        $this->unsetValue($name);
+        
+        return $value;
+    }
 
     public function getObject($name)
     {
