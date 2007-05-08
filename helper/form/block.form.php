@@ -22,25 +22,33 @@ function smarty_block_form($params, $content, $smarty, &$repeat)
 
 	$formAction = $params['action'];
 	unset($params['action']);
-	$vars = explode(" ", $formAction);
-	$URLVars = array();
-
-	foreach ($vars as $var)
-	{
-		$parts = explode("=", $var, 2);
-		$URLVars[$parts[0]] = $parts[1];
-	}
-
-	$router = Router::getInstance();
-
-	try
-	{
-		$actionURL = $router->createURL($URLVars);
-	}
-	catch (RouterException $e)
-	{
-		$actionURL = "INVALID_FORM_ACTION_URL";
-	}
+	
+    if ('self' != $formAction)
+    {
+        $vars = explode(" ", $formAction);
+    	$URLVars = array();
+    
+    	foreach ($vars as $var)
+    	{
+    		$parts = explode("=", $var, 2);
+    		$URLVars[$parts[0]] = $parts[1];
+    	}
+    
+    	$router = Router::getInstance();
+    
+    	try
+    	{
+    		$actionURL = $router->createURL($URLVars);
+    	}
+    	catch (RouterException $e)
+    	{
+    		$actionURL = "INVALID_FORM_ACTION_URL";
+    	}
+    }
+    else
+    {
+        $actionURL = $_SERVER['REQUEST_URI'];
+    }
 	
 	if (!empty($params['onsubmit']))
 	{
@@ -48,13 +56,7 @@ function smarty_block_form($params, $content, $smarty, &$repeat)
 		unset($params['onsubmit']);
 	}
 
-	$formAttributes ="";
-	foreach ($params as $param => $value)
-	{
-		$formAttributes .= $param . '="' . $value . '"';
-	}
-
-	$onSumbmit = "";
+	$onSubmit = "";
 	$validatorField = "";
 	$preValidate = "";
 	
@@ -68,11 +70,11 @@ function smarty_block_form($params, $content, $smarty, &$repeat)
 	{
 		if (!empty($customOnSubmit))
 		{
-			$onSumbmit = ' onsubmit="' . $preValidate . 'if (!validateForm(this)) { return false; } ' . $customOnSubmit . '"';
+			$onSubmit = $preValidate . 'if (!validateForm(this)) { return false; } ' . $customOnSubmit;
 		}
 		else
 		{
-			$onSumbmit = ' onsubmit="return validateForm(this);"';
+			$onSubmit = 'return validateForm(this);';
 		}		
 		
 		require_once("function.includeJs.php");
@@ -80,13 +82,26 @@ function smarty_block_form($params, $content, $smarty, &$repeat)
 
 		$validatorField = '<input type="hidden" disabled="disabled" name="_validator" value="' . $handle->getValidator()->getJSValidatorParams() . '"/>';
 		$filterField = '<input type="hidden" disabled="disabled" name="_filter" value="' . $handle->getValidator()->getJSFilterParams() . '"/>';
-	}
+	
+        $params['onkeyup'] = 'applyFilters(this, event);';
+    }
 	else
 	{
-		$onSumbmit = $customOnSubmit;
+		$onSubmit = $customOnSubmit;
 	}
 
-	$form = '<form action="'.$actionURL.'" '.$formAttributes.' ' . $onSumbmit .' onKeyUp="applyFilters(this, event);">' . "\n";
+	if ($onSubmit)
+	{
+        $params['onsubmit'] = $onSubmit;
+    }
+    
+    $formAttributes ="";
+	foreach ($params as $param => $value)
+	{
+		$formAttributes .= $param . '="' . $value . '" ';
+	}
+
+	$form = '<form action="'.$actionURL.'" '.$formAttributes.'>' . "\n";
 	$form .= $validatorField;
 	$form .= $filterField;
 	$form .= $content;
