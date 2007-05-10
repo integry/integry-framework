@@ -15,6 +15,15 @@ function smarty_block_form($params, $content, $smarty, &$repeat)
 {
 	$handle = $params['handle'];
 	unset($params['handle']);
+	
+	// create a generic Form handler instance
+    if ('generic' == $handle)
+	{
+		ClassLoader::import("framework.request.validator.Form");        
+        $handle = new Form(new RequestValidator("addToCart", new Request()));
+        $handle->enableClientSideValidation(false);
+    }
+	
 	if (!($handle instanceof Form))
 	{
 		throw new HelperException('Form must have a Form instance assigned! (handle=$formInstance)');
@@ -23,7 +32,16 @@ function smarty_block_form($params, $content, $smarty, &$repeat)
 	$formAction = $params['action'];
 	unset($params['action']);
 	
-    if ('self' != $formAction)
+    if (!empty($params['url']))
+    {
+        $actionURL = $params['url'];
+        unset($params['url']);
+    }    
+    elseif ('self' == $formAction)
+    {
+        $actionURL = $_SERVER['REQUEST_URI'];
+    }
+    else
     {
         $vars = explode(" ", $formAction);
     	$URLVars = array();
@@ -44,10 +62,6 @@ function smarty_block_form($params, $content, $smarty, &$repeat)
     	{
     		$actionURL = "INVALID_FORM_ACTION_URL";
     	}
-    }
-    else
-    {
-        $actionURL = $_SERVER['REQUEST_URI'];
     }
 	
 	if (!empty($params['onsubmit']))
