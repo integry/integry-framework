@@ -100,12 +100,42 @@ function smarty_block_form($params, $content, $smarty, &$repeat)
 	{
 		$formAttributes .= $param . '="' . $value . '" ';
 	}
+    
+    // pass URL query parameters with hidden fields for GET forms
+    if (empty($params['method']) || strtolower($params['method']) == 'get')
+    {
+        if (strpos($actionURL, '?'))
+        {
+            $q = substr($actionURL, strpos($actionURL, '?') + 1);
+            $actionURL = substr($actionURL, 0, strpos($actionURL, '?'));
+        }
+        
+        if (!empty($q))
+        {
+            $pairs = explode('&', $q);
+            $values = array();
+            foreach ($pairs as $pair)
+            {
+                list($key, $value) = explode('=', $pair, 2);
+                $values[$key] = $value;
+            }
+
+            $hidden = array();
+            foreach ($values as $key => $value)
+            {
+                $hidden[] = '<input type="hidden" name="' . $key . '" value="' . $value . '" />';                
+            }
+
+            $content = implode("\n", $hidden) . $content;
+        }                
+    }
 
 	$form = '<form action="'.$actionURL.'" '.$formAttributes.'>' . "\n";
 	$form .= $validatorField;
 	$form .= $filterField;
 	$form .= $content;
 	$form .= "</form>";
+	
 	return $form;
 }
 
