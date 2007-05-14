@@ -46,11 +46,11 @@ function smarty_function_selectfield($params, $smarty)
 	{
 		if ($fieldValue == $value && (strlen($fieldValue) == strlen($value)))
 		{
-			$content .= "\t" . '<option value="' . $value . '" selected="selected">' . $title  . '</option>' . "\n";
+			$content .= "\t" . '<option value="' . $value . '" selected="selected">' . htmlspecialchars($title)  . '</option>' . "\n";
 		}
 		else
 		{
-			$content .= "\t" . '<option value="' . $value . '">' . $title . '</option>' . "\n";
+			$content .= "\t" . '<option value="' . $value . '">' . htmlspecialchars($title) . '</option>' . "\n";
 		}
 	}
 	$content .= "</select>";
