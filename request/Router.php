@@ -450,7 +450,15 @@ class Router
 		$_GET['route'] = $route;	
 	}
 
-	public function createUrlFromRoute($route)
+    /**
+     *  @param string $url Relative URL
+     */
+    public function getRouteFromUrl($url)
+    {
+        return substr($url, strlen($this->getBaseDirFromUrl()));
+    }
+	
+    public function createUrlFromRoute($route)
 	{
 		$query = implode('&', array_keys(self::$autoAppendQueryVariableList));
 		if ($query)
