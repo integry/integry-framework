@@ -28,7 +28,7 @@ class Route
 	 *
 	 * @var string
 	 */
-	private $defaulParamValueRequirement = "[\.a-zA-Z0-9]+";
+	private $defaulParamValueRequirement = "-{0,1}[\.a-zA-Z0-9]+";
 	
 	/**
 	 * The list of static values, that will be registered in request
