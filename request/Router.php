@@ -455,7 +455,13 @@ class Router
      */
     public function getRouteFromUrl($url)
     {
-        return substr($url, strlen($this->getBaseDirFromUrl()));
+        $route = substr($url, strlen($this->getBaseDirFromUrl()));
+        if (strpos($route, '?'))
+        {
+            $route = substr($route, 0, strpos($route, '?'));
+        }
+        
+        return $route;
     }
 	
     public function createUrlFromRoute($route)

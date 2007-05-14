@@ -108,13 +108,7 @@ function smarty_block_form($params, $content, $smarty, &$repeat)
 	{
         $params['onsubmit'] = $onSubmit;
     }
-    
-    $formAttributes ="";
-	foreach ($params as $param => $value)
-	{
-		$formAttributes .= $param . '="' . $value . '" ';
-	}
-    
+        
     // pass URL query parameters with hidden fields for GET forms
     if (empty($params['method']) || strtolower($params['method']) == 'get')
     {
@@ -143,6 +137,21 @@ function smarty_block_form($params, $content, $smarty, &$repeat)
             $content = implode("\n", $hidden) . $content;
         }                
     }
+
+    if (empty($params['method']))
+    {
+        $params['method'] = 'get';    
+    }
+    else
+    {
+        $params['method'] = strtolower($params['method']);
+    }
+
+    $formAttributes ="";
+	foreach ($params as $param => $value)
+	{
+		$formAttributes .= $param . '="' . $value . '" ';
+	}
 
 	$form = '<form action="'.$actionURL.'" '.$formAttributes.'>' . "\n";
 	$form .= $validatorField;
