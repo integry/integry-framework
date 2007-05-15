@@ -70,6 +70,13 @@ class Router
 	private $isURLRewriteEnabled = true;
 
 	private $virtualBaseDir;
+	
+	/**
+	 * Custom return route
+	 *
+	 * @var string
+	 */
+	private $returnPath;
 
 	private static $autoAppendVariableList = array();
 	
@@ -348,7 +355,7 @@ class Router
 
         if ($addReturnPath)
         {
-            $url = self::setUrlQueryParam($url, 'return', $this->getRequestedRoute());
+            $url = self::setUrlQueryParam($url, 'return', $this->getReturnPath());
         }
 
 		return $url;
@@ -359,6 +366,16 @@ class Router
 		$parts = parse_url(self::$baseUrl);
 		
 		return $parts['scheme'] . '://' . $parts['host'] . (isset($parts['port']) ? ':' . $parts['port'] : '') . $relativeUrl;
+	}
+	
+	public function setReturnPath($returnRoute)
+	{
+		$this->returnPath = $returnRoute;
+	}
+
+	private function getReturnPath()
+	{
+		return $this->returnPath ? $this->returnPath : $this->getRequestedRoute();
 	}
 
 	private function findRoute($URLParamList)
