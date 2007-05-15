@@ -8,10 +8,11 @@ ClassLoader::import("framework.request.validator.check.Check");
  */
 class PasswordEqualityCheck extends Check
 {
-	public function __construct($violationMsg, $expectedValue)
+	public function __construct($violationMsg, $expectedValue, $secondPasswordFieldname)
 	{
 		parent::__construct($violationMsg);
 		$this->setParam("expectedValue", $expectedValue);
+		$this->setParam("secondPasswordFieldname", $secondPasswordFieldname);
 	}
 	
 	public function isValid($value)
