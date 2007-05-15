@@ -17,7 +17,7 @@ class PasswordEqualityCheck extends Check
 	
 	public function isValid($value)
 	{
-		if (strlen($value) == $this->getParam("expectedValue"))
+		if ($value == $this->getParam("expectedValue"))
 		{
 			return true;
 		}

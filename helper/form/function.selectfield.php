@@ -35,7 +35,6 @@ function smarty_function_selectfield($params, $smarty)
 		$content .= ' ' . $name . '="' . $param . '"'; 
 	}
 	$content .= ">\n";
-	
 	$fieldValue = $handle->getValue($params['name']);
 	if (is_null($fieldValue))
 	{
