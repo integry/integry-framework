@@ -43,11 +43,14 @@ class RolesParser
      */
     public function __construct($parsedFile, $cacheFile)
     {
-        require_once $parsedFile;
-        
         $this->parsedFile = $parsedFile;
         $this->cacheFile = $cacheFile;
         $this->className = substr(basename($parsedFile), 0, -4);
+        
+        if(!class_exists($this->className))
+        {
+            include_once $parsedFile;
+        }
         
         if($this->isExpired())
         {
@@ -56,7 +59,7 @@ class RolesParser
         }
         else
         {
-            require_once $this->cacheFile;
+            include_once $this->cacheFile;
             $this->roles = $roles;
         }
         
@@ -135,12 +138,7 @@ class RolesParser
         $reflectionClass = new ReflectionClass($this->className);
         $className = $reflectionClass->getName();
         $this->roles[$className] = $this->parsePHPDoc($reflectionClass->getDocComment());
-        
-        if(empty($this->roles[$className]))
-        {
-            throw new ApplicationException("Controller class shuld always have a role assigned.\n To prevent this exception assign a role to $className");
-        }
-        
+
         foreach($reflectionClass->getMethods() as $method)
         {
             if($method->isPublic() && !$method->isConstructor())
@@ -172,7 +170,7 @@ class RolesParser
 		$role = $prefix;
 		if(!empty($roleMatches))
 		{
-		    if($prefix)
+		    if(!empty($prefix))
 		    {
 		        $role .= '.';
 		    }
