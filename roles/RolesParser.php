@@ -15,6 +15,13 @@ class RolesParser
     private $roles = array();
     
     /**
+     * Names of all roles used in this class
+     * 
+     * @var array
+     */
+    private $roleNames = array();
+    
+    /**
      * Assigned class name
      *
      * @var string
@@ -47,10 +54,8 @@ class RolesParser
         $this->cacheFile = $cacheFile;
         $this->className = substr(basename($parsedFile), 0, -4);
         
-        if(!class_exists($this->className))
-        {
-            include_once $parsedFile;
-        }
+        
+        @include_once $this->parsedFile;
         
         if($this->isExpired())
         {
@@ -63,6 +68,11 @@ class RolesParser
             $this->roles = $roles;
         }
         
+        // Make role names list
+        foreach($this->roles as $roleName)
+        {
+            $this->addRoleName($roleName);
+        }   
     }
     
     /**
@@ -83,6 +93,16 @@ class RolesParser
     public function getRoles()
     {
         return $this->roles;
+    }
+    
+    /**
+     * Get names of all roles used in this class
+     *
+     * @return array
+     */
+    public function getRolesNames()
+    {
+        return $this->roleNames;
     }
     
     /**
@@ -146,6 +166,11 @@ class RolesParser
                 $this->roles[$className . '::' . $method->getName()] = $this->parseMethod($method, $this->roles[$className]);
             }
         }
+    }
+    
+    private function addRoleName($roleName)
+    {
+        if(!in_array($roleName, $this->roleNames)) $this->roleNames[] = $roleName;
     }
     
     /**
