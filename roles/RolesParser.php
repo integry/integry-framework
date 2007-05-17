@@ -79,7 +79,7 @@ class RolesParser
         foreach($this->roles as $roleName)
         {
             $this->addRoleName($roleName);
-        }   
+        }
     }
     
     /**
@@ -208,7 +208,7 @@ class RolesParser
 	 * @param string $prefix Append a prefix to the role if this value is specified. Also if PHPDoc block doesn't contain role parameter in it use prefix instead
 	 * @return unknown
 	 */
-	private function parsePHPDoc($phpDoc, $prefix = false)
+	private function parsePHPDoc($phpDoc, $prefix = '')
 	{
 		preg_match('/\s*\*\s*'.self::ROLE_TAG.'\s+(\w+)/', $phpDoc, $roleMatches);
 		
