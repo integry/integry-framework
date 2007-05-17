@@ -191,9 +191,7 @@ class Application
 
 			if ($response instanceof Renderable)
 			{
-				//$applicationOutput = $this->render($controllerName, $actionName, $response);
-
-				/* using laypout defined in a controller for action output */
+				// using layout defined in a controller for action output
 				if ($controllerInstance->getLayout() != null)
 				{
 					$structure = $controllerInstance->getLayoutStructure();

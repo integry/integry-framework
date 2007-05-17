@@ -89,7 +89,12 @@ class Router
 	 */
 	private function __construct()
 	{
-		self::$baseDir = dirname($_SERVER['PHP_SELF']) . '/';
+		self::$baseDir = dirname($_SERVER['PHP_SELF']);		
+		if (strlen(self::$baseDir) > 1)
+		{
+            self::$baseDir .= '/';
+        }
+		
 		self::$baseUrl = 'http://' . $_SERVER['SERVER_NAME'] . self::$baseDir;
 		$this->getBaseDirFromUrl();
 	}

@@ -70,7 +70,13 @@ class TemplateRenderer extends Renderer
 	 */
 	public static function setCompileDir($dirPath)
 	{
-		self::$compileDir = $dirPath;
+		if (!is_dir($dirPath))
+		{
+            mkdir($dirPath, 0777, true);
+            chmod($dirPath, 0777);
+        }
+        
+        self::$compileDir = $dirPath;
 	}
 
 	public function setValue($name, $value)
