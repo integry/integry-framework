@@ -43,6 +43,13 @@ class RolesParser
     private $parsedFile;
     
     /**
+     * Shows if roles where expired during this script run
+     * 
+     * @var boolean
+     */
+    private $wereExpired = false;
+    
+    /**
      * Create roles object
      *
      * @param string $parsedFile Path to parsed file
@@ -82,7 +89,20 @@ class RolesParser
      */
     public function isExpired()
     {
-        return !file_exists($this->cacheFile) || filemtime($this->parsedFile) > filemtime($this->cacheFile);
+        $expired = !file_exists($this->cacheFile) || filemtime($this->parsedFile) > filemtime($this->cacheFile);
+        $this->wereExpired = $expired;
+        
+        return $expired;
+    }
+    
+    /**
+     * Returns true if roles where expired during this script run
+     *
+     * @return boolean
+     */
+    public function wereExpired()
+    {
+        return $this->wereExpired;
     }
     
     /**
