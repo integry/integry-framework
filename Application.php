@@ -357,14 +357,7 @@ class Application
 	 */
 	public function getView($controllerName, $actionName)
 	{
-		$controllerPath = explode(".", $controllerName);
-		$controllerName = implode(DIRECTORY_SEPARATOR, $controllerPath);
-
-		return implode(DIRECTORY_SEPARATOR, array(ClassLoader::getBaseDir(), 
-                                              'application', 
-                                              'view', 
-                                              $controllerName, 
-                                              "$actionName.tpl"));
+		return ClassLoader::getRealPath('application.view.' . $controllerName . '.' . $actionName) . '.tpl';
 	}
 
 	/**
@@ -375,11 +368,7 @@ class Application
 	 */
 	public function getLayoutPath($layout)
 	{
-		return implode(DIRECTORY_SEPARATOR, array(ClassLoader::getBaseDir(), 
-												  'application', 
-												  'view', 
-												  'layout', 
-												  "$layout.tpl"));
+		return ClassLoader::getRealPath('application.view.layout.' . $layout) . '.tpl';
 	}
 }
 ?>
