@@ -38,6 +38,8 @@ abstract class Controller
 	protected $layout = "";
 
 	private $blockList = array();
+	
+	private $controllerName;
 
 	/**
 	 * Controller constructor
@@ -184,6 +186,25 @@ abstract class Controller
 		}
 		return $structure;
 	}
+	
+	/**
+	 *  Set controller identification string
+	 *
+	 *  The controller name is used to retrieve resources that are directly associated to a particular
+	 *  controller, for example, view templates.
+	 */	 
+    public final function setControllerName($name)
+	{
+        $this->controllerName = $name;
+    }
+    
+	/**
+	 *  Get controller identification string
+	 */
+    public final function getControllerName()
+    {
+        return $this->controllerName;
+    }
 
 	/**
 	 * Adds a block to a controller layout

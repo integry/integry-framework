@@ -78,7 +78,7 @@ class Application
 	 *
 	 * @see self::getInstance()
 	 */
-	final private function __construct()
+	final protected function __construct()
 	{
 		$this->request = new Request();
 		$this->router = Router::getInstance();
@@ -273,7 +273,9 @@ class Application
 		if (file_exists($controllerSystemPath))
 		{
 			ClassLoader::import("application.controller." . $controllerPath);
-			return new $className($this->getRequest());
+			$instance = new $className($this->getRequest());
+			$instance->setControllerName($controllerName);
+			return $instance;
 		}
 		else
 		{
