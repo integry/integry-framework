@@ -146,20 +146,43 @@ class ClassLoader
 	 */
 	private static function mapToMountPoint($path)
 	{
-		$mountedPath = "";
+		$possiblePoints = array();
 		$pathParts = explode(".", $path);
-		if (!empty($pathParts[0]))
+		
+		$processed = array();
+		foreach ($pathParts as $part)
 		{
-			if (!empty(self::$mountList[$pathParts[0]]))
+			$processed[] = $part;
+			$possiblePoints[implode('.', $processed)] = true;
+		}
+		
+		$res = array_intersect_key(self::$mountList, $possiblePoints);
+				
+		if ($res)
+		{
+			end($res);
+			$found = key($res);
+			$pathParts = array_slice($pathParts, count(explode('.', $found)));
+			$mountedPath = $res[$found] . ($pathParts ? '.' : '');
+		}
+		else
+		{
+			$mountedPath = '';			
+
+			if (!empty($pathParts[0]))
 			{
-				$mountedPath = self::$mountList[$pathParts[0]];
-				unset($pathParts[0]);
-			}
-			else if (!empty(self::$mountList["."]))
-			{
-				$mountedPath = self::$mountList["."];
+				if (!empty(self::$mountList[$pathParts[0]]))
+				{
+					$mountedPath = self::$mountList[$pathParts[0]];
+					unset($pathParts[0]);
+				}
+				else if (!empty(self::$mountList["."]))
+				{
+					$mountedPath = self::$mountList["."];
+				}
 			}
 		}
+
 		return $mountedPath.implode(".", $pathParts);
 	}
 
