@@ -279,7 +279,6 @@ class Application
     			include_once($controllerSystemPath);
     			$instance = new $className($this->getRequest());
     			$instance->setControllerName($controllerName);
-    			$instance->setFilePath($controllerSystemPath);
     			return $instance;
     		}            
         }
