@@ -132,17 +132,6 @@ class Request
 	}
 
 	/**
-	 * Return true if accessed controller is in backend
-	 *
-	 * @return boolean
-	 */	
-	public function isBackend()
-	{
-	    $controllerName = $this->getControllerName();
-	    return preg_match('/^backend\./', $controllerName ? $controllerName : '');
-	}
-
-	/**
 	 * Checks if such a request variable has an assigned value
 	 *
 	 * @param string $name Name of value

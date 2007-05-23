@@ -268,19 +268,23 @@ class Application
 		$controllerPath[$pathLength - 1] = $className;
 		$controllerPath = implode(".", $controllerPath);
 
-		$controllerSystemPath = ClassLoader::getRealPath("application.controller.".$controllerPath).".php";
+		$controllerSystemPaths = array();
+		$controllerSystemPaths[] = ClassLoader::getRealPath("application.controller." . $controllerPath) . ".php";
+		$controllerSystemPaths[] = ClassLoader::getRealPath("application.controller." . $controllerName . '.' . $controllerPath) . ".php";
 
-		if (file_exists($controllerSystemPath))
+		foreach ($controllerSystemPaths as $controllerSystemPath)
 		{
-			ClassLoader::import("application.controller." . $controllerPath);
-			$instance = new $className($this->getRequest());
-			$instance->setControllerName($controllerName);
-			return $instance;
-		}
-		else
-		{
-			throw new ControllerNotFoundException($controllerName);
-		}
+            if (file_exists($controllerSystemPath))
+    		{
+    			include_once($controllerSystemPath);
+    			$instance = new $className($this->getRequest());
+    			$instance->setControllerName($controllerName);
+    			$instance->setFilePath($controllerSystemPath);
+    			return $instance;
+    		}            
+        }
+
+		throw new ControllerNotFoundException($controllerName);
 	}
 
 	/**

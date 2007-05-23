@@ -205,7 +205,7 @@ abstract class Controller
     {
         return $this->controllerName;
     }
-
+    
 	/**
 	 * Adds a block to a controller layout
 	 *
