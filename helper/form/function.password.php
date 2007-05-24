@@ -21,6 +21,17 @@ function smarty_function_password($params, $smarty)
 
 	$output = '<input type="password"';
 	
+	// Check permissions
+	if(isset($formParams['role']))
+	{	
+        ClassLoader::import('framework.roles.AccessStringParser');
+        if(!AccessStringParser::run($formParams['role']))
+        {
+            $params['disabled'] = 'disabled'; 
+        }
+	    unset($params['role']);
+	}
+	
 	if (isset($params['value']))
 	{
 		unset($params['value']);

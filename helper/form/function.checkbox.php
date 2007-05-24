@@ -31,11 +31,10 @@ function smarty_function_checkbox($params, $smarty)
     }	
 
 	// Check permissions
-	if(isset($params['role']))
+	if(isset($formHandler['role']))
 	{
-        ClassLoader::import('application.model.user.User');
-        $currentUser = User::getCurrentUser();
-        if(!$currentUser->hasAccess(explode(',', $params['role'])))
+        ClassLoader::import('framework.roles.AccessStringParser');
+        if(!AccessStringParser::run($formHandler['role']))
         {
             $params['disabled'] = 'disabled'; 
         }
