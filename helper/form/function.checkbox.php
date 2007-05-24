@@ -30,6 +30,18 @@ function smarty_function_checkbox($params, $smarty)
         $params['value'] = 1;    
     }	
 
+	// Check permissions
+	if(isset($params['role']))
+	{
+        ClassLoader::import('application.model.user.User');
+        $currentUser = User::getCurrentUser();
+        if(!$currentUser->hasAccess(explode(',', $params['role'])))
+        {
+            $params['disabled'] = 'disabled'; 
+        }
+	    unset($params['role']);
+	}
+    
     $formValue = $formHandler->getValue($fieldName);
     	
     // get checkbox state if the form has been submitted

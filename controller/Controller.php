@@ -40,6 +40,11 @@ abstract class Controller
 	private $blockList = array();
 	
 	private $controllerName;
+	
+	/**
+	 * @var Controller 
+	 */
+	private static $currentController;
 
 	/**
 	 * Controller constructor
@@ -49,6 +54,20 @@ abstract class Controller
 	public function __construct(Request $request)
 	{
 		$this->request = $request;
+		self::$currentController = $this;
+	}
+	
+	public static function getCurrentController()
+	{
+	    return self::$currentController;
+	}
+	
+	/**
+	 * @return Request
+	 */
+	public function getRequest()
+	{
+	    return $this->request;
 	}
 
 	/**

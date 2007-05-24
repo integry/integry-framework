@@ -153,7 +153,7 @@ class RolesParser
     {
         return $this->roles["{$this->className}::$method"];
     }
-    
+       
     /**
      * Convert roles array into php code which could later be written into file
      *

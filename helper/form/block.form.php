@@ -29,6 +29,22 @@ function smarty_block_form($params, $content, $smarty, &$repeat)
 		throw new HelperException('Form must have a Form instance assigned! (handle=$formInstance)');
 	}
 
+	// Check permissions
+	if(isset($params['role']))
+	{	
+        ClassLoader::import('framework.roles.AccessStringParser');
+        if(!AccessStringParser::run($params['role']))
+        {
+            if(!isset($params['class']))
+            {
+                $params['class'] = '';
+            } 
+            
+            $params['class'] .= ' formReadonly';
+        }
+	    unset($params['role']);
+	}
+	
 	$formAction = $params['action'];
 	unset($params['action']);
 	
