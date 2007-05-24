@@ -20,6 +20,19 @@ function smarty_function_radio($params, $smarty)
 	}
 	$fieldName = $params['name'];
 		
+	
+	// Check permissions
+	if(isset($params['role']))
+	{
+        ClassLoader::import('application.model.user.User');
+        $currentUser = User::getCurrentUser();
+        if(!$currentUser->hasAccess($params['role']))
+        {
+            $params['disabled'] = 'disabled'; 
+        }
+	    unset($params['role']);
+	}
+	
 	// get checked state
 	$formValue = $formHandler->getValue($fieldName);
 	if ($formValue == $params['value'] || (empty($formValue) && $params['checked']))

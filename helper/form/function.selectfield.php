@@ -30,6 +30,19 @@ function smarty_function_selectfield($params, $smarty)
 	  	$params['id'] = $params['name'];
 	}
 	
+	// Check permissions
+	if(isset($params['role']))
+	{
+        ClassLoader::import('application.model.user.User');
+        $currentUser = User::getCurrentUser();
+        if(!$currentUser->hasAccess($params['role']))
+        {
+            $params['disabled'] = 'disabled'; 
+        }
+	    unset($params['role']);
+	}
+	
+	
 	$content = '<select';
 	foreach ($params as $name => $param) {
 		$content .= ' ' . $name . '="' . $param . '"'; 

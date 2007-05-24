@@ -34,6 +34,18 @@ function smarty_function_textfield($params, $smarty)
 		$params['type'] = 'text';
 	}
 	
+	// Check permissions
+	if(isset($params['role']))
+	{
+        ClassLoader::import('application.model.user.User');
+        $currentUser = User::getCurrentUser();
+        if(!$currentUser->hasAccess($params['role']))
+        {
+            $params['readonly'] = 'readonly'; 
+        }
+	    unset($params['role']);
+	}
+	
 	$content = '<input';
 	foreach ($params as $name => $param) {
 		$content .= ' ' . $name . '="' . $param . '"'; 
