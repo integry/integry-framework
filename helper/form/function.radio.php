@@ -25,7 +25,7 @@ function smarty_function_radio($params, $smarty)
 	if(isset($formParams['role']))
 	{
         ClassLoader::import('framework.roles.AccessStringParser');
-        if(!AccessStringParser::run($params['role']))
+        if(!AccessStringParser::run($formParams['role']))
         {
             $params['disabled'] = 'disabled'; 
         }

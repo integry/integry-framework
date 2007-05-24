@@ -3,6 +3,8 @@ class AccessStringParser
 {
 	public static function run($accessString)
 	{
+	    if(empty($accessString)) return true;
+	    
         if(preg_match_all('/([\w\.]+)(?:\(([\w\.]*)(?:\/(\w*))?\))?,?/', $accessString, $roles))
         {        
 	        ClassLoader::import('application.model.user.User');
@@ -35,7 +37,7 @@ class AccessStringParser
 	        return false;
         }
         
-        throw new ApplicationException('Access string has illegal format');
+        throw new ApplicationException('Access string ("'. $accessString .'") has illegal format');
 	}
 }
 ?>
