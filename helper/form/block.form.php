@@ -32,7 +32,7 @@ function smarty_block_form($params, $content, $smarty, &$repeat)
 	// Check permissions
 	if(isset($params['role']))
 	{	
-        ClassLoader::import('framework.roles.AccessStringParser');
+        ClassLoader::import('application.helper.AccessStringParser');
         if(!AccessStringParser::run($params['role']))
         {
             if(!isset($params['class']))

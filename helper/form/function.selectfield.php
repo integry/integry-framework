@@ -33,7 +33,7 @@ function smarty_function_selectfield($params, $smarty)
 	// Check permissions
 	if(isset($formParams['role']))
 	{
-        ClassLoader::import('framework.roles.AccessStringParser');
+        ClassLoader::import('application.helper.AccessStringParser');
         if(!AccessStringParser::run($params['role']))
         {
             $params['disabled'] = 'disabled'; 
