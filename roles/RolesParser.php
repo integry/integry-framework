@@ -181,7 +181,7 @@ class RolesParser
 
         foreach($reflectionClass->getMethods() as $method)
         {
-            if($method->isPublic() && !$method->isConstructor())
+            if($method->isPublic() && !$method->isConstructor() && !$method->isStatic())
             {
                 $this->roles[$className . '::' . $method->getName()] = $this->parseMethod($method, $this->roles[$className]);
             }
@@ -221,7 +221,6 @@ class RolesParser
 		    }
 		    $role .= $roleMatches[1];	    
 		}
-		
 		return $role;
 	}
 }
