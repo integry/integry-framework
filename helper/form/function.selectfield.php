@@ -34,7 +34,7 @@ function smarty_function_selectfield($params, $smarty)
 	if(isset($formParams['role']))
 	{
         ClassLoader::import('application.helper.AccessStringParser');
-        if(!AccessStringParser::run($params['role']))
+        if(!AccessStringParser::run($formParams['role']))
         {
             $params['disabled'] = 'disabled'; 
         }
