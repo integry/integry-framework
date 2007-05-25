@@ -31,7 +31,7 @@ function smarty_function_checkbox($params, $smarty)
     }	
 
 	// Check permissions
-	if(isset($formHandler['role']))
+	if(isset($formParams['role']))
 	{
         ClassLoader::import('framework.roles.AccessStringParser');
         if(!AccessStringParser::run($formHandler['role']))
