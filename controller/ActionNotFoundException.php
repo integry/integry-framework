@@ -7,48 +7,13 @@
  *
  * @package	framework.controller
  */
-class ActionNotFoundException extends ControllerException
+class ActionNotFoundException extends HTTPStatusException
 {
-	/**
-	 * Controller name that contains the action
-	 */
-	private $controllerName;
+	const STATUS_CODE = 404;
 
-	/**
-	 * Action name
-	 */
-	private $actionName;
-
-	/**
-	 * @param string $controllerName
-	 * @param string $actionName
-	 */
-	public function __construct($controllerName, $actionName)
+	public function __construct(Controller $controller, $message = false)
 	{
-		parent::__construct("Specified action does not exist ($controllerName.$actionName)");
-
-		$this->controllerName = $controllerName;
-		$this->actionName = $actionName;
-	}
-
-	/**
-	 * Gets controller name
-	 *
-	 * @return string Controller name
-	 */
-	public function getControllerName()
-	{
-		return $this->controllerName;
-	}
-
-	/**
-	 * Gets action name
-	 *
-	 * @return string Action name
-	 */
-	public function getActionName()
-	{
-		return $this->actionName;
+	    parent::__construct($controller, self::STATUS_CODE, $message);
 	}
 }
 

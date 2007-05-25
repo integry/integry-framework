@@ -40,7 +40,7 @@ abstract class Controller
 	private $blockList = array();
 	
 	private $controllerName;
-	
+
 	/**
 	 * @var Controller 
 	 */
@@ -91,14 +91,7 @@ abstract class Controller
 	 */
 	public final function execute($actionName)
 	{
-		try
-		{
-			$this->init();
-		}
-		catch(ControllerInterruptException $e)
-		{
-			return $e->createActionRedirectResponse();
-		}
+		$this->init();
 
 		if (method_exists($this, $actionName) && $this->isAction($actionName))
 		{
@@ -118,7 +111,7 @@ abstract class Controller
 		}
 		else
 		{
-			throw new ActionNotFoundException(get_class($this), $actionName);
+			throw new ActionNotFoundException($this);
 		}
 	}
 
@@ -265,7 +258,7 @@ abstract class Controller
 		}
 		if (!method_exists($this, $blockMethodName))
 		{
-			throw new ControllerException("Block $blockName not found!");
+			throw new ControllerException($this, "Block $blockName not found!");
 		}
 		$this->blockList[] = array("container" => $containerName, "block" => $blockMethodName, "view" => $viewPath);
 	}
@@ -294,6 +287,7 @@ abstract class Controller
 			}
 		}
 	}
+
 }
 
 ?>

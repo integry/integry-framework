@@ -29,7 +29,9 @@ class Request
 	 * @var array
 	 */
 	private $dataContainer = array();
-
+	
+	private $isAjax = false;
+	
 	/**
 	 * @param array $default Associative array with default values
 	 */
@@ -47,6 +49,14 @@ class Request
 		$this->setValueArray($_COOKIE);
 
 		$this->dataContainer = $this->removeMagicQuotes($this->dataContainer);
+		
+		// Will only work with prototype
+		$this->isAjax = isset($_SERVER['HTTP_X_REQUESTED_WITH']);
+	}
+	
+	public function isAjax()
+	{
+	    return $this->isAjax;
 	}
 
 	/**
