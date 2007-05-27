@@ -38,7 +38,6 @@ class TemplateRenderer extends Renderer
 	{
 		$this->router = $router;
 		$this->tpl = self::getSmartyInstance();
-		//$this->tpl->register_function("link", array($this, "helperFunctionLinkTo"));
 
 		$this->registerHelperList();
 		$this->tpl->load_filter('pre', 'config');

@@ -146,12 +146,15 @@ class RolesParser
     /**
      * Get role by specifying method name
      *
-     * @param stirng $method Required method name
+     * @param string $method Required method name
      * @return string
      */
     public function getRole($method)
     {
-        return $this->roles["{$this->className}::$method"];
+        if (isset($this->roles["{$this->className}::$method"]))
+        {
+			return $this->roles["{$this->className}::$method"];			
+		}
     }
        
     /**
@@ -161,12 +164,7 @@ class RolesParser
      */
     private function toPHPString()
     {
-        $phpString = "";
-        foreach($this->getRoles() as $method => $role)
-        {
-            $phpString .= "\$roles['$method'] = '$role';\n";
-        }
-        return $phpString;
+        return '$roles = ' . var_export($this->getRoles(), true) . ';';
     }
 
     /**
@@ -190,7 +188,10 @@ class RolesParser
     
     private function addRoleName($roleName)
     {
-        if(!in_array($roleName, $this->roleNames)) $this->roleNames[] = $roleName;
+        if(!in_array($roleName, $this->roleNames)) 
+		{
+			$this->roleNames[] = $roleName;			
+		}
     }
     
     /**

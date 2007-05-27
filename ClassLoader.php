@@ -109,7 +109,7 @@ class ClassLoader
 	 *
 	 * To include the whole directory (package) use a "wildcard" identifier:
 	 * <code>
-	 * FwClassLoader::import('site.somedir.someother.*');
+	 * ClassLoader::import('site.somedir.someother.*');
 	 * </code>
 	 *
 	 * this will add [app-dir]/site/somedir/someother/ directory to an include_path. No physical
@@ -117,7 +117,7 @@ class ClassLoader
 	 *
 	 * To include a concrete class file use:
 	 * <code>
-	 * FwClassLoader::import('site.libs.SuperLib');
+	 * ClassLoader::import('site.libs.SuperLib');
 	 * </code>
 	 * This will perform require_once with a parameter '[app-dir]/site/libs/SuperLib.php'
 	 *
@@ -191,7 +191,7 @@ class ClassLoader
 	 *
 	 * Example:
 	 * <code>
-	 * FwClassLoader::remove("site.somedir.someother.*");
+	 * ClassLoader::remove("site.somedir.someother.*");
 	 * </code>
 	 *
 	 * @param string $path

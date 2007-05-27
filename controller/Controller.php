@@ -263,11 +263,6 @@ abstract class Controller
 		$this->blockList[] = array("container" => $containerName, "block" => $blockMethodName, "view" => $viewPath);
 	}
 
-	public final function getBlockList()
-	{
-		return $this->blockList;
-	}
-
 	/**
 	 * Removes a block from a layout so it is not rendered during action axecution
 	 *

@@ -49,7 +49,7 @@ class Application
 	/**
 	 * @var Router
 	 */
-	private $router = null;
+	protected $router = null;
 
 	/**
 	 * Request instance
@@ -61,7 +61,7 @@ class Application
 	 * Renderer instance (usualy a template renderer)
 	 * @var Renderer
 	 */
-	private $renderer = null;
+	protected $renderer = null;
 
 	/**
 	 * Default controller name. It can be changed during a runtime (before run()'ing an

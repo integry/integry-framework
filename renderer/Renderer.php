@@ -66,10 +66,10 @@ abstract class Renderer
 	/**
 	 * Process
 	 *
-	 * @param FwRenderable $object Object to render
+	 * @param Renderable $object Object to render
 	 * @param string $view Path to view
 	 * @return string Rendered output
-	 * @throws FwViewNotFoundException if view does not exists
+	 * @throws ViewNotFoundException if view does not exists
 	 */
 	public function process(Renderable $object, $view)
 	{
@@ -88,7 +88,7 @@ abstract class Renderer
 	 *
 	 * @param string $view Path to view
 	 * @return string Rendered output
-	 * @throws FwViewNotFoundException if view does not exists
+	 * @throws ViewNotFoundException if view does not exists
 	 */
 	abstract public function render($view);
 }
