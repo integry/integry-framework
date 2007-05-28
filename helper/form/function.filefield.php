@@ -21,13 +21,23 @@ function smarty_function_filefield($params, $smarty)
 	  	$params['id'] = $params['name'];
 	}
 	
+	// Check permissions
+	if(isset($formParams['role']))
+	{	
+        ClassLoader::import('application.helper.AccessStringParser');
+        if(!AccessStringParser::run($formParams['role']))
+        {
+            $params['disabled'] = 'disabled'; 
+        }
+	    unset($params['role']);
+	}
+	
 	$content = '<input type="file"';
 	foreach ($params as $name => $param) 
 	{
 		$content .= ' ' . $name . '="' . $param . '"'; 
 	}
-	//$content .= ' validate="' . $handle->getValidator()->getJSValidatorParams($fieldName) . '"'; 
-//	$content .= ' value="' . $handle->getValue($fieldName) . '"';
+
 	$content .= '/>';
 	
 	return $content;
