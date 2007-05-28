@@ -25,7 +25,7 @@ function smarty_function_textarea($params, $smarty)
 	if(isset($formParams['role']))
 	{
         ClassLoader::import('application.helper.AccessStringParser');
-        if(!AccessStringParser::run($params['role']))
+        if(!AccessStringParser::run($formParams['role']))
         {
             $params['readonly'] = 'readonly'; 
         }
@@ -38,7 +38,7 @@ function smarty_function_textarea($params, $smarty)
 	}
 	//$content .= ' validate="' . $handle->getValidator()->getJSValidatorParams($fieldName) . '"'; 
 	$content .= '>' . $handle->getValue($fieldName) . '</textarea>';
-	
+
 	return $content;
 }
 
