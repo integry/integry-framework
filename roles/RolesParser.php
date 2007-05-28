@@ -211,16 +211,24 @@ class RolesParser
 	 */
 	private function parsePHPDoc($phpDoc, $prefix = '')
 	{
-		preg_match('/\s*\*\s*'.self::ROLE_TAG.'\s+(\w+)/', $phpDoc, $roleMatches);
+		preg_match('/\s*\*\s*'.self::ROLE_TAG.'\s+(!)?([\w\.]+)/', $phpDoc, $roleMatches);
 		
 		$role = $prefix;
 		if(!empty($roleMatches))
 		{
-		    if(!empty($prefix))
+		    
+		    if($roleMatches[1] == '!')
 		    {
-		        $role .= '.';
+		        $role = $roleMatches[2];	
 		    }
-		    $role .= $roleMatches[1];	    
+		    else
+		    {
+			    if(!empty($prefix))
+			    {
+			        $role .= '.';
+			    }
+			    $role .= $roleMatches[2];	 
+		    }   
 		}
 		return $role;
 	}
