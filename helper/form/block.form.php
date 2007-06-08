@@ -17,7 +17,7 @@ function smarty_block_form(&$params, $content, $smarty, &$repeat)
     {
         // Check permissions
 	    $params['readonly'] = false;
-	    if(isset($params['readonly']) && !$params['readonly'])
+	    if(isset($params['readonly']) && $params['readonly'])
 	    {
 	            $params['class'] .= ' formReadonly';
 	            $params['readonly'] = true;
@@ -34,11 +34,14 @@ function smarty_block_form(&$params, $content, $smarty, &$repeat)
 		                $params['class'] = '';
 		            } 
 		            
+		            echo 'asdasd';
 		            $params['class'] .= ' formReadonly';
 		            $params['readonly'] = true;
 		        }
 			}
 	    }
+	    
+	    var_dump($params['readonly']);
     }
     else
     {
