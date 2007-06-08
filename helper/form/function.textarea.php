@@ -22,14 +22,9 @@ function smarty_function_textarea($params, $smarty)
 	}
 	
 	// Check permissions
-	if(isset($formParams['role']))
+	if($formParams['readonly'])
 	{
-        ClassLoader::import('application.helper.AccessStringParser');
-        if(!AccessStringParser::run($formParams['role']))
-        {
-            $params['readonly'] = 'readonly'; 
-        }
-	    unset($params['role']);
+        $params['readonly'] = 'readonly'; 
 	}
 	
 	$content = '<textarea';

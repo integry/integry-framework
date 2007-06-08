@@ -35,14 +35,9 @@ function smarty_function_textfield($params, $smarty)
 	}
 	
 	// Check permissions
-	if(isset($formParams['role']))
+	if($formParams['readonly'])
 	{	
-        ClassLoader::import('application.helper.AccessStringParser');
-        if(!AccessStringParser::run($formParams['role']))
-        {
-            $params['readonly'] = 'readonly'; 
-        }
-	    unset($params['role']);
+	    $params['readonly'] = 'readonly'; 
 	}
 	
 	$content = '<input';

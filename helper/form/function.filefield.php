@@ -22,14 +22,9 @@ function smarty_function_filefield($params, $smarty)
 	}
 	
 	// Check permissions
-	if(isset($formParams['role']))
+	if($formParams['readonly'])
 	{	
-        ClassLoader::import('application.helper.AccessStringParser');
-        if(!AccessStringParser::run($formParams['role']))
-        {
-            $params['disabled'] = 'disabled'; 
-        }
-	    unset($params['role']);
+        $params['disabled'] = 'disabled';
 	}
 	
 	$content = '<input type="file"';
