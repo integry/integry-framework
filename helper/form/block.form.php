@@ -34,14 +34,11 @@ function smarty_block_form(&$params, $content, $smarty, &$repeat)
 		                $params['class'] = '';
 		            } 
 		            
-		            echo 'asdasd';
 		            $params['class'] .= ' formReadonly';
 		            $params['readonly'] = true;
 		        }
 			}
 	    }
-	    
-	    var_dump($params['readonly']);
     }
     else
     {
