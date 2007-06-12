@@ -13,7 +13,7 @@
 function smarty_function_textarea($params, $smarty) 
 {
 	$formParams = $smarty->_tag_stack[0][1];
-	$handle = $formParams['handle'];
+	$formHandler = $formParams['handle'];
 	$fieldName = $params['name'];
 	
 	if (!isset($params['id']))
@@ -31,8 +31,8 @@ function smarty_function_textarea($params, $smarty)
 	foreach ($params as $name => $param) {
 		$content .= ' ' . $name . '="' . $param . '"'; 
 	}
-	//$content .= ' validate="' . $handle->getValidator()->getJSValidatorParams($fieldName) . '"'; 
-	$content .= '>' . $handle->getValue($fieldName) . '</textarea>';
+	//$content .= ' validate="' . $formHandler->getValidator()->getJSValidatorParams($fieldName) . '"'; 
+	$content .= '>' . $formHandler->getValue($fieldName) . '</textarea>';
 
 	return $content;
 }

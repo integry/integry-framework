@@ -21,8 +21,12 @@
 function smarty_function_textfield($params, $smarty) 
 {
 	$formParams = $smarty->_tag_stack[0][1];
-	$handle = $formParams['handle'];
+	$formHandler = $formParams['handle'];
 	$fieldName = $params['name'];
+	if (!($formHandler instanceof Form))
+	{
+		throw new HelperException('Element must be placed in {form} block');
+	}
 
 	if (!isset($params['id']))
 	{
@@ -45,9 +49,8 @@ function smarty_function_textfield($params, $smarty)
 		$content .= ' ' . $name . '="' . $param . '"'; 
 	}
 
-	$content .= ' value="' . htmlspecialchars($handle->getValue($fieldName), ENT_QUOTES, 'UTF-8') . '"';
+	$content .= ' value="' . htmlspecialchars($formHandler->getValue($fieldName), ENT_QUOTES, 'UTF-8') . '"';
 	$content .= '/>';
-
 	if (isset($params['autocomplete']))
 	{
 	  	$acparams = array();

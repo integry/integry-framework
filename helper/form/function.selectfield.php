@@ -13,7 +13,7 @@
 function smarty_function_selectfield($params, $smarty) 
 {
 	$formParams = $smarty->_tag_stack[0][1];
-	$handle = $formParams['handle'];
+	$formHandler = $formParams['handle'];
 	
 	$options = $params['options'];
 	if (empty($options))
@@ -42,7 +42,7 @@ function smarty_function_selectfield($params, $smarty)
 		$content .= ' ' . $name . '="' . $param . '"'; 
 	}
 	$content .= ">\n";
-	$fieldValue = $handle->getValue($params['name']);
+	$fieldValue = $formHandler->getValue($params['name']);
 	if (is_null($fieldValue))
 	{
         $fieldValue = $defaultValue;

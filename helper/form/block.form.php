@@ -13,6 +13,7 @@
  */
 function smarty_block_form(&$params, $content, $smarty, &$repeat)
 {
+    var_dump($repeat);
     if ($repeat)
     {
         // Check permissions
@@ -42,7 +43,7 @@ function smarty_block_form(&$params, $content, $smarty, &$repeat)
     }
     else
     {
-		$handle = $params['handle'];
+		$formHandler = $params['handle'];
 		$formAction = $params['action'];
 		$role = isset($params['role']) ? $params['role'] : false;
 		
@@ -99,7 +100,7 @@ function smarty_block_form(&$params, $content, $smarty, &$repeat)
 			unset($params['prevalidate']);
 		}
 		
-		if ($handle->isClientSideValidationEnabled())
+		if ($formHandler->isClientSideValidationEnabled())
 		{
 			if (!empty($customOnSubmit))
 			{
@@ -113,8 +114,8 @@ function smarty_block_form(&$params, $content, $smarty, &$repeat)
 			require_once("function.includeJs.php");
 			smarty_function_includeJs(array("file" => "library/formvalidator.js"), $smarty);
 	
-			$validatorField = '<input type="hidden" disabled="disabled" name="_validator" value="' . $handle->getValidator()->getJSValidatorParams() . '"/>';
-			$filterField = '<input type="hidden" disabled="disabled" name="_filter" value="' . $handle->getValidator()->getJSFilterParams() . '"/>';
+			$validatorField = '<input type="hidden" disabled="disabled" name="_validator" value="' . $formHandler->getValidator()->getJSValidatorParams() . '"/>';
+			$filterField = '<input type="hidden" disabled="disabled" name="_filter" value="' . $formHandler->getValidator()->getJSFilterParams() . '"/>';
 		
 	        $params['onkeyup'] = 'applyFilters(this, event);';
 	    }
@@ -177,12 +178,6 @@ function smarty_block_form(&$params, $content, $smarty, &$repeat)
 		$form .= $filterField;
 		$form .= $content;
 		$form .= "</form>";
-		
-		
-		$params['handle'] = $handle;
-		$params['role'] = $role;
-		$params['action'] = $action;
-		$params['url'] = $actionURL;
 		
 		return $form;
     }

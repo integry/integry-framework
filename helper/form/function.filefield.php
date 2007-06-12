@@ -13,7 +13,7 @@
 function smarty_function_filefield($params, $smarty) 
 {
 	$formParams = $smarty->_tag_stack[0][1];
-	$handle = $formParams['handle'];
+	$formHandler = $formParams['handle'];
 	$fieldName = $params['name'];
 	
 	if (!isset($params['id']))
