@@ -13,7 +13,6 @@
  */
 function smarty_block_form(&$params, $content, $smarty, &$repeat)
 {
-    var_dump($repeat);
     if ($repeat)
     {
         // Check permissions
