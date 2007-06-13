@@ -12,7 +12,6 @@
  */
 function smarty_function_hidden($params, $smarty)
 {
-echo 'asdasd';
 	$formParams = $smarty->_tag_stack[0][1];
 	$formHandler = $formParams['handle'];
 	$fieldName = $params['name'];
