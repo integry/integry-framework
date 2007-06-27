@@ -123,6 +123,11 @@ class Form
 	{
 		return $this->enableClientSideValidation;
 	}
+	
+	public function clearData()
+	{
+        $this->data = array();
+    }
 }
 
 ?>
