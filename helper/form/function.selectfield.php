@@ -50,14 +50,21 @@ function smarty_function_selectfield($params, $smarty)
 	
 	foreach ($options as $value => $title)
 	{
-		if ($fieldValue == $value && (strlen($fieldValue) == strlen($value)))
-		{
-			$content .= "\t" . '<option value="' . $value . '" selected="selected">' . htmlspecialchars($title)  . '</option>' . "\n";
-		}
-		else
-		{
-			$content .= "\t" . '<option value="' . $value . '">' . htmlspecialchars($title) . '</option>' . "\n";
-		}
+	    if(preg_match('/optgroup_\d+/', $value))
+	    {
+	        $content .= "\t" . '<optgroup label="' . htmlspecialchars($title) . '" />' . "\n";
+	    }
+	    else
+	    {
+			if ($fieldValue == $value && (strlen($fieldValue) == strlen($value)))
+			{
+				$content .= "\t" . '<option value="' . $value . '" selected="selected">' . htmlspecialchars($title)  . '</option>' . "\n";
+			}
+			else
+			{
+				$content .= "\t" . '<option value="' . $value . '">' . htmlspecialchars($title) . '</option>' . "\n";
+			}
+	    }
 	}
 	$content .= "</select>";
 	
