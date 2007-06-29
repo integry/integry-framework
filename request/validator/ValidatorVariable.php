@@ -22,7 +22,7 @@ class ValidatorVariable
 	/**
 	 * List of Filter subclass objects
 	 *
-	 * @var Filter[]
+	 * @var RequestFilter[]
 	 */
 	private $filterList = array();
 
@@ -51,7 +51,7 @@ class ValidatorVariable
 		$this->checkList[] = $check;
 	}
 
-	public function addFilter(Filter $filter)
+	public function addFilter(RequestFilter $filter)
 	{
 		$this->filterList[] = $filter;
 	}

@@ -6,7 +6,7 @@
  * @package framework.request.validator.filter
  * @author Saulius Rupainis <saulius@integry.net>
  */
-abstract class FormFilter
+abstract class RequestFilter
 {
 	private $paramList = array();
 	
