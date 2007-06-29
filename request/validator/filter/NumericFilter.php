@@ -6,7 +6,7 @@
  * @package framework.request.validator.filter
  * @author Rinalds Uzkalns <rinalds@integry.net>
  */
-class NumericFilter extends Filter
+class NumericFilter extends RequestFilter
 {
 	public function apply($value)
 	{

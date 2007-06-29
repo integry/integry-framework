@@ -1,6 +1,6 @@
 <?php
 
-include_once('Filter.php');
+include_once('RequestFilter.php');
 
 /**
  * Filter characters from strings using custom regular expressions
@@ -8,7 +8,7 @@ include_once('Filter.php');
  * @package framework.request.validator.filter
  * @author Integry Systems
  */
-class RegexFilter extends Filter
+class RegexFilter extends RequestFilter
 {
 	public function __construct($regex)
 	{

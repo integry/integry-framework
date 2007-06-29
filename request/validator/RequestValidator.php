@@ -118,7 +118,7 @@ class RequestValidator
 	 * @param string $varName
 	 * @param Filter $filter
 	 */
-	public function addFilter($varName, Filter $filter)
+	public function addFilter($varName, RequestFilter $filter)
 	{
 		$this->getValidatorVar($varName)->addFilter($filter);
 	}
