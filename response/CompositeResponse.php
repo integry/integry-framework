@@ -7,7 +7,7 @@ ClassLoader::import('framework.response.ActionResponse');
  *
  * @package	framework.response
  */
-class CompositeResponse extends ActionResponse
+abstract class CompositeResponse extends Response
 {
 	/**
 	 * Controller variable name

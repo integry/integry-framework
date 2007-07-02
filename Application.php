@@ -241,9 +241,9 @@ class Application
 	 */
 	protected function execute($controllerInstance, $actionName)
 	{
-		try
+        try
 		{
-			$response = $controllerInstance->execute($actionName, $this->getRequest());
+            $response = $controllerInstance->execute($actionName, $this->getRequest());
 			$this->processResponse($response);
 			return $response;
 		}
@@ -320,7 +320,7 @@ class Application
 				{
 					$controllerName = $location[CompositeResponse::CONTROLLER_HANDLE];
 					$actionName = $location[CompositeResponse::ACTION_HANDLE];
-					$response->setValue($outputHandle, $this->render($controllerName, $actionName, $this->execute($controllerName, $actionName)));
+					$response->set($outputHandle, $this->render($controllerName, $actionName, $this->execute($this->getControllerInstance($controllerName), $actionName)));
 				}
 			}
 			catch(ApplicationException $ex)

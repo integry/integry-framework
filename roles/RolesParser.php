@@ -60,8 +60,7 @@ class RolesParser
         $this->parsedFile = $parsedFile;
         $this->cacheFile = $cacheFile;
         $this->className = substr(basename($parsedFile), 0, -4);
-        
-        
+             
         @include_once $this->parsedFile;
         
         if($this->isExpired())
@@ -71,7 +70,7 @@ class RolesParser
         }
         else
         {
-            include_once $this->cacheFile;
+            include $this->cacheFile;
             $this->roles = $roles;
         }
         
