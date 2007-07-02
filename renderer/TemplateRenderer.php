@@ -17,6 +17,8 @@ class TemplateRenderer extends Renderer
 	 */
 	private static $compileDir = "";
 
+	private static $helperDirectories = array();
+
 	/**
 	 * Template engine instance
 	 *
@@ -39,7 +41,7 @@ class TemplateRenderer extends Renderer
 		$this->router = $router;
 		$this->tpl = self::getSmartyInstance();
 
-		$this->registerHelperList();
+		$this->registerHelperList(); 
 		$this->tpl->load_filter('pre', 'config');
 		$this->tpl->assign("BASE_URL", Router::getBaseUrl());
 	}
@@ -148,11 +150,18 @@ class TemplateRenderer extends Renderer
 	 */
 	public function registerHelperList()
 	{
-		$helperDirs = array("framework.helper", "framework.helper.form", "application.helper");
+		$helperDirs = array("framework.helper", "framework.helper.form");
 		foreach ($helperDirs as $dir)
 		{
             $this->tpl->plugins_dir[] = ClassLoader::getRealPath($dir);            
         }
+        
+        $this->tpl->plugins_dir = array_merge($this->tpl->plugins_dir, self::$helperDirectories);
+	}
+	
+	public static function registerHelperDirectory($directory)
+	{
+		self::$helperDirectories[] = $directory;
 	}
 
 	/**
