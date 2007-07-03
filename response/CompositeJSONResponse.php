@@ -17,6 +17,7 @@ class CompositeJSONResponse extends CompositeResponse
 	{
 	    $this->setHeader('Cache-Control', 'no-cache, must-revalidate');
 	    $this->setHeader('Expires', 'Mon, 26 Jul 1997 05:00:00 GMT');
+	    $this->setHeader('Content-type', 'text/javascript');	    
 	}
 
 	public function set($key, $value)
