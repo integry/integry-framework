@@ -1,32 +1,23 @@
 <?php
 
 /**
- * Session wrapper class
+ * Session class. Since it is basically a wrapper class for the global $_SESSION array
+ * it is implemented as a Monostate - there can be multiple Session instances sharing
+ * the same data.
  *
  * @package framework.request
  */
 class Session
 {
-	protected static $instance;
-    	
-    protected function __construct($name = null)
+    public function __construct($name = null)
 	{
 		if (!empty($name))
 		{
 			session_name($name);
 		}
+		
 		@session_start();
 	}
-
-    public static function getInstance($name = null)
-    {
-        if (!self::$instance)     
-        {
-            self::$instance = new self($name);    
-        }   
-        
-        return self::$instance;
-    }
 
 	/**
 	 * Registers a session variable

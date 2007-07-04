@@ -161,9 +161,19 @@ class Application
 	}
 
 	/**
+	 * Return a router instance
+	 *
+	 * @return Request
+	 */
+	public function getRouter()
+	{
+		return $this->router;
+	}
+
+	/**
 	 * Executes an application and generates an output if any.
 	 *
-	 * @throws ApplicationException Rethowed framework level exception (should be handled manually)
+	 * @throws ApplicationException Rethrowed framework level exception (should be handled manually)
 	 */
 	public function run()
 	{
