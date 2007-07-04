@@ -44,7 +44,7 @@ class Form
 	{
 		foreach ($data as $name => $value)
 		{
-			$this->setValue($name, $value);
+			$this->set($name, $value);
 		}
 	}
 
@@ -54,7 +54,7 @@ class Form
 	 * @param string $name
 	 * @param mixed $value
 	 */
-	public function setValue($name, $value)
+	public function set($name, $value)
 	{
 		$oldRequest = $this->validator->getRestoredRequest();
 		if ($oldRequest != null)
@@ -75,7 +75,7 @@ class Form
 	 *
 	 * @param string $fieldName
 	 */
-	public function getValue($fieldName)
+	public function get($fieldName)
 	{
 		if (isset($this->data[$fieldName]))
 		{

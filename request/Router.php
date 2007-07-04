@@ -228,11 +228,11 @@ class Router
 		{
 			if (!$request->isValueSet("action"))
 			{
-				$request->setValue("action", self::$defaultAction);
+				$request->set("action", self::$defaultAction);
 			}
 			if (!$request->isValueSet("controller"))
 			{
-				$request->setValue("controller", self::$defaultController);
+				$request->set("controller", self::$defaultController);
 			}
 			return false;
 		}
@@ -247,13 +247,13 @@ class Router
 				
 				foreach ($varList as $key => $value)
 				{
-				  	$request->setValue($value, $result[$key + 1]);
+				  	$request->set($value, $result[$key + 1]);
 				}
 				
 				$requestValueAssigments = $route->getRequestValueAssigments();
 				foreach ($requestValueAssigments as $paramName => $value)
 				{
-					$request->setValue($paramName, $value);
+					$request->set($paramName, $value);
 				}
 				
 				return $route;

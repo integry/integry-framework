@@ -80,7 +80,7 @@ class TemplateRenderer extends Renderer
         self::$compileDir = $dirPath;
 	}
 
-	public function setValue($name, $value)
+	public function set($name, $value)
 	{
 		$this->tpl->assign($name, $value);
 	}

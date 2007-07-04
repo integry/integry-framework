@@ -27,7 +27,7 @@ function smarty_function_hidden($params, $smarty)
 	
 	if (!isset($params['value']))
 	{
-		$params['value'] = $formHandler->getValue($fieldName);
+		$params['value'] = $formHandler->get($fieldName);
 	}
 	
 	foreach ($params as $name => $value)

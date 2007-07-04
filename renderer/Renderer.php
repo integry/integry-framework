@@ -21,7 +21,7 @@ abstract class Renderer
 	 * @param scalar $value Value
 	 * @return void
 	 */
-	abstract public function setValue($name, $value);
+	abstract public function set($name, $value);
 
 	/**
 	 * Appends a template variable by a given value

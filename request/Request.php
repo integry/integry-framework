@@ -66,7 +66,7 @@ class Request
 	 * @param scalar $value Value
 	 * @return void
 	 */
-	function setValue($name, $value)
+	function set($name, $value)
 	{
 		$this->dataContainer[$name] = $value;
 	}
@@ -99,7 +99,7 @@ class Request
 		{
 			if ($this->isValueSet($name))
 			{
-				$varList[$name] = $this->getValue($name);
+				$varList[$name] = $this->get($name);
 			}
 		}
 		return $varList;
@@ -112,7 +112,7 @@ class Request
 	 * @param mixed $default Default value to return
 	 * @return mixed
 	 */
-	function getValue($name, $default = null)
+	function get($name, $default = null)
 	{
 		if (isset($this->dataContainer[$name]))
 		{
@@ -128,7 +128,7 @@ class Request
 	 */
 	public function getActionName()
 	{
-		return $this->getValue(self::ACTION_NAME);
+		return $this->get(self::ACTION_NAME);
 	}
 
 	/**
@@ -138,7 +138,7 @@ class Request
 	 */
 	public function getControllerName()
 	{
-		return $this->getValue(self::CONTROLLER_NAME);
+		return $this->get(self::CONTROLLER_NAME);
 	}
 
 	/**

@@ -25,7 +25,7 @@ class Session
 	 * @param string $name
 	 * @param mixed $value
 	 */
-	public function setValue($name, $value)
+	public function set($name, $value)
 	{
 		if (is_object($value))
 		{
@@ -51,7 +51,7 @@ class Session
 	 * @param string $name
 	 * @return mixed
 	 */
-	public function getValue($name)
+	public function get($name)
 	{
 		if (!empty($_SESSION[$name]))
 		{
@@ -71,7 +71,7 @@ class Session
 	 */
     public function pullValue($name)
     {
-        $value = $this->getValue($name);
+        $value = $this->get($name);
         $this->unsetValue($name);
         
         return $value;

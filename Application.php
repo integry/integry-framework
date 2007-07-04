@@ -220,7 +220,7 @@ class Application
 					
 					$applicationOutput = $this->render($controllerName, $actionName, $response);
 					
-					$this->getRenderer()->setValue("ACTION_VIEW", $applicationOutput);
+					$this->getRenderer()->set("ACTION_VIEW", $applicationOutput);
 					echo $this->getRenderer()->render($this->getLayoutPath($controllerInstance->getLayout()));
 					/* end layout renderer block */
 				}

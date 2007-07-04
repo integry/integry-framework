@@ -36,10 +36,10 @@ function smarty_function_checkbox($params, $smarty)
         $params['disabled'] = 'disabled'; 
 	}
     
-    $formValue = $formHandler->getValue($fieldName);
+    $formValue = $formHandler->get($fieldName);
     	
     // get checkbox state if the form has been submitted
-    if (1 == $formHandler->getValue('checkbox_' . $fieldName))
+    if (1 == $formHandler->get('checkbox_' . $fieldName))
     {
         if ($formValue == $params['value'] || ('on' == $params['value'] && 1 == $formValue))
         {

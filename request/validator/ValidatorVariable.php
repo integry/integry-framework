@@ -70,7 +70,7 @@ class ValidatorVariable
 	{
 		foreach ($this->checkList as $check)
 		{
-			if (!$check->isValid($this->request->getValue($this->varName)))
+			if (!$check->isValid($this->request->get($this->varName)))
 			{
 				throw new CheckException($check->getViolationMsg());
 			}
@@ -85,8 +85,8 @@ class ValidatorVariable
 	{
 		foreach ($this->filterList as $filter)
 		{
-			$this->request->setValue($this->varName, 
-									 $filter->apply($this->request->getValue($this->varName)));
+			$this->request->set($this->varName, 
+									 $filter->apply($this->request->get($this->varName)));
 		}
 	}
 	

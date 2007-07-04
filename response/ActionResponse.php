@@ -41,20 +41,8 @@ class ActionResponse extends Response implements Renderable
 		}
 		else
 		{
-			$this->setValue($name, $value);
+			$this->dataContainer[$name] = $value;
 		}
-	}
-
-	/**
-	 * Registers value to response
-	 *
-	 * @param string $name Name of value
-	 * @param scalar $value Value
-	 * @return void
-	 */
-	public function setValue($name, $value)
-	{
-		$this->dataContainer[$name] = $value;
 	}
 
 	/**
@@ -63,7 +51,7 @@ class ActionResponse extends Response implements Renderable
 	 * @param string $name
 	 * @return mixed
 	 */
-	public function getValue($name)
+	public function get($name)
 	{
 		return $this->dataContainer[$name];
 	}
@@ -84,13 +72,13 @@ class ActionResponse extends Response implements Renderable
 			}
 			else
 			{
-				$arr = array_merge($value, $this->getValue($name));
-				$this->setValue($name, $arr);
+				$arr = array_merge($value, $this->get($name));
+				$this->set($name, $arr);
 			}
 		}
 		else
 		{
-			$this->setValue($name, $value);
+			$this->set($name, $value);
 		}
 	}
 
@@ -122,7 +110,7 @@ class ActionResponse extends Response implements Renderable
 		/* Set values */
 		foreach($this->dataContainer as $name => $value)
 		{
-			$renderer->setValue($name, $value);
+			$renderer->set($name, $value);
 		}
 
 		/* Set value arrays */

@@ -32,7 +32,7 @@ function smarty_function_textarea($params, $smarty)
 		$content .= ' ' . $name . '="' . $param . '"'; 
 	}
 	//$content .= ' validate="' . $formHandler->getValidator()->getJSValidatorParams($fieldName) . '"'; 
-	$content .= '>' . $formHandler->getValue($fieldName) . '</textarea>';
+	$content .= '>' . $formHandler->get($fieldName) . '</textarea>';
 
 	return $content;
 }

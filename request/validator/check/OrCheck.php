@@ -49,7 +49,7 @@ class OrCheck extends Check
         
         foreach ($this->fieldNames as $key => $fieldName)
 		{
-            if ($this->checks[$key]->isValid($this->request->getValue($fieldName)))
+            if ($this->checks[$key]->isValid($this->request->get($fieldName)))
             {
                 $isValid = true;
                 break;

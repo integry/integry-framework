@@ -100,7 +100,7 @@ abstract class Controller
 			{
 				if ($response instanceof ActionResponse)
 				{
-					$response->setValue("request", $this->request->toArray());
+					$response->set("request", $this->request->toArray());
 				}
 				return $response;
 			}

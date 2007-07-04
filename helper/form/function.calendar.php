@@ -41,7 +41,7 @@ function smarty_function_calendar($params, $smarty)
     }
     else
     {
-        $value = $formHandler->getValue($fieldName);
+        $value = $formHandler->get($fieldName);
     }
     unset($params['noform']);
     unset($params['value']);
