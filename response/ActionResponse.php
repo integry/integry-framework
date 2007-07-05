@@ -53,7 +53,16 @@ class ActionResponse extends Response implements Renderable
 	 */
 	public function get($name)
 	{
-		return $this->dataContainer[$name];
+		if(isset($this->dataContainer[$name]))
+		{
+		    return $this->dataContainer[$name];
+		} 
+		else if(isset($this->objectContainer[$name]))
+		{
+		    return $this->objectContainer[$name];
+		}
+		
+		return null;
 	}
 
 	/**
