@@ -26,7 +26,15 @@ class ActionResponse extends Response implements Renderable
 	 */
 	protected $objectContainer = array();
 
-	/**
+	public function __construct($name = '', $value = '')
+	{
+        if ($name)
+        {
+            $this->set($name, $value);
+        }
+    }
+    
+    /**
 	 * A smarter way to set response data - this method automaticaly recognizes type of a
 	 * given data and chooses a proper method to register it
 	 *
