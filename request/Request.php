@@ -112,7 +112,7 @@ class Request
 	 * @param mixed $default Default value to return
 	 * @return mixed
 	 */
-	function get($name, $default = null)
+	public function get($name, $default = null)
 	{
 		if (isset($this->dataContainer[$name]))
 		{
@@ -120,6 +120,14 @@ class Request
 		}
 		return $default;
 	}
+
+	/**
+	 * Returns clients IP address
+	 */
+	public function getIP()
+	{
+		return $_SERVER['REMOTE_ADDR'];
+	}	
 
 	/**
 	 * Gets an action name from a request
@@ -161,7 +169,7 @@ class Request
 	 *
 	 * @return array
 	 */
-	public function & toArray()
+	public function toArray()
 	{
 		return $this->dataContainer;
 	}

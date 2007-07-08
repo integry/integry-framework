@@ -39,6 +39,20 @@ class ClassLoader
 	 */
 	private static $mountList = array();
 
+	/**
+	 * Reserve mount point list
+	 *
+	 * Provides ability to specify multiple file paths under the same mount path. If the main path
+	 * is not found, reserve paths are checked. This allows to set multiple directories for controllers,
+	 * views, models, etc.
+	 *
+	 * @see self::mountReservePath()
+	 * @see self::mountPath()
+	 * @see self::unmountPath()
+	 * @var array
+	 */
+	private static $reserveMountList = array();
+
 	private static $autoLoadFunctions = array();
 
 	/**
@@ -92,6 +106,24 @@ class ClassLoader
 	}
 
 	/**
+	 * Registers a new reserve path. Multiple reserve paths can be used for each mount point.
+	 *
+	 * @param string $mountName
+	 * @param string $fullDirPath
+	 */
+	public static function mountReservePath($mountName, $fullDirPath)
+	{
+		if (is_dir($fullDirPath))
+		{
+			self::$reserveMountList[$mountName][] = $fullDirPath;
+		}
+		else
+		{
+			throw new ClassLoaderException("No such directory: $fullDirPath");
+		}
+	}
+	
+	/**
 	 * Removes a mount point
 	 *
 	 * @param string $mountName
@@ -99,6 +131,7 @@ class ClassLoader
 	public static function unmountPath($mountName)
 	{
 		unset(self::$mountList[$mountName]);
+		unset(self::$reserveMountList[$mountName]);
 	}
 
 	/**
@@ -125,8 +158,8 @@ class ClassLoader
 	 */
 	public static function import($path)
 	{
-		$path = self::mapToMountPoint($path);
-		$path = str_replace('.', DIRECTORY_SEPARATOR, $path);
+		$path = self::getRealPath($path);
+
 		if (strpos($path, '*'))
 		{
 			$path = str_replace('*', '', $path);
@@ -147,7 +180,7 @@ class ClassLoader
 	private static function mapToMountPoint($path)
 	{
 		$possiblePoints = array();
-		$pathParts = explode(".", $path);
+		$parts = $pathParts = explode(".", $path);
 		
 		$processed = array();
 		foreach ($pathParts as $part)
@@ -157,7 +190,7 @@ class ClassLoader
 		}
 		
 		$res = array_intersect_key(self::$mountList, $possiblePoints);
-				
+		
 		if ($res)
 		{
 			end($res);
@@ -167,8 +200,6 @@ class ClassLoader
 		}
 		else
 		{
-			$mountedPath = '';			
-
 			if (!empty($pathParts[0]))
 			{
 				if (!empty(self::$mountList[$pathParts[0]]))
@@ -183,8 +214,22 @@ class ClassLoader
 			}
 		}
 
-		return $mountedPath.implode(".", $pathParts);
-	}
+		$mountPoints[] = $mountedPath . implode(".", $pathParts);
+
+		$reserve = array_intersect_key(self::$reserveMountList, $possiblePoints);
+		if ($reserve)
+		{
+			end($reserve);
+			$found = key($reserve);
+			$reserveParts = array_slice($parts, count(explode('.', $found)));
+			foreach ($reserve[$found] as $reservePath)
+			{
+				$mountPoints[] = $reservePath . ($reserveParts ? '.' . implode(".", $reserveParts) : '');
+			}			
+		}
+		
+		return $mountPoints;
+	}	
 
 	/**
 	 * Removes a path from an include_path
@@ -199,10 +244,7 @@ class ClassLoader
 	 */
 	public static function remove($path)
 	{
-		$path = self::mapToMountPoint($path);
-		$path = str_replace('*', '', str_replace('.', DIRECTORY_SEPARATOR, $path));
-
-		self::removePath($path);
+		self::removePath(str_replace('*', '', self::getRealPath($path)));
 	}
 
 	/**
@@ -230,8 +272,18 @@ class ClassLoader
 	 */
 	public static function getRealPath($path)
 	{
-		$path = self::mapToMountPoint($path);
-		return str_replace('.', DIRECTORY_SEPARATOR, $path);
+		$mounted = self::mapToMountPoint($path); 
+		foreach ($mounted as $path)
+		{
+			$path = str_replace('.', DIRECTORY_SEPARATOR, $path);
+			$replaced = str_replace('*', '', $path);
+			if (file_exists($replaced) || file_exists($replaced . '.php'))
+			{
+				return $path;
+			}
+		}
+		
+		return str_replace('.', DIRECTORY_SEPARATOR, $mounted[0]);			
 	}
 
 	/**

@@ -8,7 +8,7 @@ ClassLoader::import('framework.renderer.Renderer');
  * @package	framework.renderer
  * @author Saulius Rupainis <saulius@integry.net>
  */
-class TemplateRenderer extends Renderer
+class SmartyRenderer extends Renderer
 {
 	/**
 	 * Path of a directory where compiled smarty templates are stored

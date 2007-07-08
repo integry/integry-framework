@@ -24,11 +24,18 @@ abstract class Controller
 	const DEFAULT_ACTION = 'index';
 
 	/**
-	 * Intance of request that can be accessed by actions
+	 * Instance of request that can be accessed by actions
 	 *
 	 * @var Request
 	 */
 	protected $request = null;
+	
+	/**
+	 * Application instance
+	 *
+	 * @var Request
+	 */
+	protected $application = null;
 
 	/**
 	 * Controller layout name
@@ -51,9 +58,10 @@ abstract class Controller
 	 *
 	 * @param Request $request
 	 */
-	public function __construct(Request $request)
+	public function __construct(Application $application)
 	{
-		$this->request = $request;
+		$this->application = $application;
+		$this->request = $this->application->getRequest();
 		self::$currentController = $this;
 	}
 	

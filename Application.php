@@ -40,12 +40,6 @@ ClassLoader::import('framework.controller.*');
  */
 class Application
 {
-
-	/**
-	 * Application instance (based on a singleton pattern)
-	 */
-	private static $instance = null;
-
 	/**
 	 * @var Router
 	 */
@@ -74,30 +68,14 @@ class Application
 
 
 	/**
-	 * Application constructor. Use self::getInstance() method instead of "new" operator
+	 * Application constructor.
 	 *
 	 * @see self::getInstance()
 	 */
-	final protected function __construct()
+	public function __construct()
 	{
 		$this->request = new Request();
 		$this->router = Router::getInstance();
-	}
-
-	/**
-	 * Returns an instance of Application
-	 *
-	 * Method prevents of creating multiple application instances during one request
-	 *
-	 * @return Application
-	 */
-	public static function getInstance()
-	{
-		if (is_null(self::$instance))
-		{
-			self::$instance = new Application();
-		}
-		return self::$instance;
 	}
 
 	/**
@@ -141,7 +119,7 @@ class Application
 	{
 		if (is_null($this->renderer))
 		{
-			$this->renderer = new TemplateRenderer($this->router);
+			$this->renderer = new SmartyRenderer($this->router);
 		}
 		return $this->renderer;
 	}
@@ -209,6 +187,7 @@ class Application
 					{
 						if ($block['response'] instanceof BlockResponse)
 						{
+							$block['response']->set('application', $this);
 							$blockOutput = $this->getRenderer()->process($block['response'], $block['view']);
 							$this->getRenderer()->appendValue($block['container'], $blockOutput);
 						}
@@ -287,7 +266,7 @@ class Application
             if (file_exists($controllerSystemPath))
     		{
     			include_once($controllerSystemPath);
-    			$instance = new $className($this->getRequest());
+    			$instance = new $className($this);
     			$instance->setControllerName($controllerName);
     			return $instance;
     		}            
@@ -353,6 +332,7 @@ class Application
 	{
 		try
 		{
+			$response->set('application', $this);
 			return $this->getRenderer()->process($response, $this->getView($controllerName, $actionName));
 		}
 		catch(ViewNotFoundException $ex)
@@ -370,7 +350,7 @@ class Application
 	 */
 	public function getView($controllerName, $actionName)
 	{
-		return ClassLoader::getRealPath('application.view.' . $controllerName . '.' . $actionName) . '.tpl';
+		return ClassLoader::getRealPath('application.view.' . $controllerName) . '/' . $actionName . '.tpl';
 	}
 
 	/**
