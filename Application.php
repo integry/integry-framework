@@ -20,7 +20,7 @@ ClassLoader::import('framework.controller.*');
  * A common application execution:
  * <code>
  * try {
- * 		$myApplication = Application::getInstance();
+ * 		$myApplication = new Application();
  * 		$myApplication->run();
  * } catch(ApplicationException $ex) {
  * 		echo $ex->getMessage();
