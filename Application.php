@@ -75,7 +75,7 @@ class Application
 	public function __construct()
 	{
 		$this->request = new Request();
-		$this->router = Router::getInstance();
+		$this->router = new Router();
 	}
 
 	/**

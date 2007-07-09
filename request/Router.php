@@ -12,13 +12,6 @@ ClassLoader::import("framework.request.Route");
 class Router
 {
 	/**
-	 * Router instance (sigleton)
-	 *
-	 * @var Router
-	 */
-	private static $instance = null;
-
-	/**
 	 * The list of defined routes
 	 *
 	 * @var Route[]
@@ -37,14 +30,14 @@ class Router
 	 *
 	 * @var string
 	 */
-	public static $defaultController = "index";
+	private $defaultController = "index";
 
 	/**
 	 * Default action name
 	 *
 	 * @var string
 	 */
-	public static $defaultAction = "index";
+	private $defaultAction = "index";
 
 	/**
 	 * Application base dir
@@ -52,14 +45,14 @@ class Router
 	 *
 	 * @var string
 	 */
-	public static $baseDir = "";
+	private $baseDir = "";
 
 	/**
 	 * Base url
 	 *
 	 * @var string
 	 */
-	public static $baseUrl = "";
+	private $baseUrl = "";
 
 	/**
 	 * Identifies if mod_rewrite is enabled
@@ -78,24 +71,24 @@ class Router
 	 */
 	private $returnPath;
 
-	private static $autoAppendVariableList = array();
+	private $autoAppendVariableList = array();
 	
-	private static $autoAppendQueryVariableList = array();	
+	private $autoAppendQueryVariableList = array();	
 
 	/**
 	 * Router constructor
 	 *
 	 * @todo Add https and port to baseUrl
 	 */
-	private function __construct()
+	public function __construct()
 	{
-		self::$baseDir = dirname($_SERVER['PHP_SELF']);		
-		if (strlen(self::$baseDir) > 1)
+		$this->baseDir = dirname($_SERVER['PHP_SELF']);		
+		if (strlen($this->baseDir) > 1)
 		{
-            self::$baseDir .= '/';
+            $this->baseDir .= '/';
         }
 		
-		self::$baseUrl = 'http://' . $_SERVER['SERVER_NAME'] . self::$baseDir;
+		$this->baseUrl = 'http://' . $_SERVER['SERVER_NAME'] . $this->baseDir;
 		$this->getBaseDirFromUrl();
 	}
 
@@ -106,7 +99,7 @@ class Router
 	 */
 	public function getBaseDir()
 	{
-		return self::$baseDir;
+		return $this->baseDir;
 	}
 
 	public function getBaseDirFromUrl()
@@ -139,23 +132,8 @@ class Router
 	 */
 	public function getBaseUrl()
 	{
-		return self::$baseUrl;
+		return $this->baseUrl;
 	}
-
-	/**
-	 * Creates a singleton instance
-	 *
-	 * @return Router
-	 */
-	public static function getInstance()
-	{
-		if (self::$instance == null)
-		{
-			self::$instance = new Router();
-		}
-		return self::$instance;
-	}
-
 
 	/**
 	 * Connects a new route to some URL pattern.
@@ -228,11 +206,11 @@ class Router
 		{
 			if (!$request->isValueSet("action"))
 			{
-				$request->set("action", self::$defaultAction);
+				$request->set("action", $this->defaultAction);
 			}
 			if (!$request->isValueSet("controller"))
 			{
-				$request->set("controller", self::$defaultController);
+				$request->set("controller", $this->defaultController);
 			}
 			return false;
 		}
@@ -272,22 +250,22 @@ class Router
 	{
 		if (!isset($URLParamList['controller']))
 		{
-			$URLParamList['controller'] = self::$defaultController;
+			$URLParamList['controller'] = $this->defaultController;
 		}
 
 		if (!isset($URLParamList['action']))
 		{
-			$URLParamList['action'] = self::$defaultAction;
+			$URLParamList['action'] = $this->defaultAction;
 		}
 
 		// merging persisted variables into an URL variable array
-		$URLParamList = array_merge(self::$autoAppendVariableList, $URLParamList);
+		$URLParamList = array_merge($this->autoAppendVariableList, $URLParamList);
 
 		$queryToAppend = "";
 		
-		if (self::$autoAppendQueryVariableList)
+		if ($this->autoAppendQueryVariableList)
 		{
-            $queryVars = implode('&', array_keys(self::$autoAppendQueryVariableList));
+            $queryVars = implode('&', array_keys($this->autoAppendQueryVariableList));
     		if (!empty($URLParamList['query']))
     		{
                 $URLParamList['query'] .= '&' . $queryVars;                
@@ -329,8 +307,8 @@ class Router
 		/* end */
 
 		/* Handling special case: route to a default controller/action */
-		if (($URLParamList['controller'] == self::$defaultController) &&
-		    ($URLParamList['action'] == self::$defaultAction))
+		if (($URLParamList['controller'] == $this->defaultController) &&
+		    ($URLParamList['action'] == $this->defaultAction))
 		{
 			return $this->getBaseDirFromUrl() . $queryToAppend;
 		}
@@ -360,7 +338,7 @@ class Router
 
         if ($addReturnPath)
         {
-            $url = self::setUrlQueryParam($url, 'return', $this->getReturnPath());
+            $url = $this->setUrlQueryParam($url, 'return', $this->getReturnPath());
         }
 
 		return $url;
@@ -368,7 +346,7 @@ class Router
 	
 	public function createFullUrl($relativeUrl)
 	{
-		$parts = parse_url(self::$baseUrl);
+		$parts = parse_url($this->baseUrl);
 		
 		return $parts['scheme'] . '://' . $parts['host'] . (isset($parts['port']) ? ':' . $parts['port'] : '') . $relativeUrl;
 	}
@@ -488,7 +466,7 @@ class Router
 	
     public function createUrlFromRoute($route)
 	{
-		$query = implode('&', array_keys(self::$autoAppendQueryVariableList));
+		$query = implode('&', array_keys($this->autoAppendQueryVariableList));
 		if ($query)
 		{
 			$query = '?' . $query;
@@ -500,7 +478,7 @@ class Router
 	/**
 	 *	A helper function for manipulating URL query parameters
 	 */
-	public static function setUrlQueryParam($url, $param, $paramValue)
+	public function setUrlQueryParam($url, $param, $paramValue)
 	{
         $parts = explode('?', $url, 2);
         $params = array();
@@ -534,9 +512,9 @@ class Router
 	 *
 	 * @param array $assocArray VariableName => VarValue
 	 */
-	public static function setAutoAppendVariables($assocArray)
+	public function setAutoAppendVariables($assocArray)
 	{
-		self::$autoAppendVariableList = $assocArray;
+		$this->autoAppendVariableList = $assocArray;
 	}
 
 	/**
@@ -547,9 +525,9 @@ class Router
 	 * @param string $value $key Variable name
 	 * @param string $value $value Variable value
 	 */
-	public static function addAutoAppendQueryVariable($key, $value)
+	public function addAutoAppendQueryVariable($key, $value)
 	{
-		self::$autoAppendQueryVariableList[$key . '=' . $value] = true;
+		$this->autoAppendQueryVariableList[$key . '=' . $value] = true;
 	}
 }
 

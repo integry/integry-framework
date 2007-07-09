@@ -71,11 +71,9 @@ function smarty_block_form(&$params, $content, $smarty, &$repeat)
 	    		$URLVars[$parts[0]] = $parts[1];
 	    	}
 	    
-	    	$router = Router::getInstance();
-	    
 	    	try
 	    	{
-	    		$actionURL = $router->createURL($URLVars);
+	    		$actionURL = $smarty->getApplication()->getRouter()->createURL($URLVars);
 	    	}
 	    	catch (RouterException $e)
 	    	{

@@ -46,7 +46,7 @@ class SmartyRenderer extends Renderer
 
 		$this->tpl = $this->getSmartyInstance();
 		$this->tpl->load_filter('pre', 'config');
-		$this->tpl->assign("BASE_URL", Router::getBaseUrl());
+		$this->tpl->assign("BASE_URL", $this->application->getRouter()->getBaseUrl());
 		$this->registerHelperList(); 
 	}
 	

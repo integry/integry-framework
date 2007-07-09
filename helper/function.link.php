@@ -17,9 +17,9 @@ ClassLoader::import("framework.request.Router");
  * 
  * @package framework.helper
  */
-function smarty_function_link($params, $smarty)
+function smarty_function_link($params, LiveCartSmarty $smarty)
 {
-	$router = Router::getInstance();
+	$router = $smarty->getApplication()->getRouter();
 	
 	if (isset($params['url']))
 	{

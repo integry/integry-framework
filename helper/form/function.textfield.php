@@ -18,7 +18,7 @@
  * @package application.helper
  * @author Integry Systems
  */
-function smarty_function_textfield($params, $smarty) 
+function smarty_function_textfield($params, LiveCartSmarty $smarty) 
 {
 	$formParams = $smarty->_tag_stack[0][1];
 	$formHandler = $formParams['handle'];
@@ -60,7 +60,7 @@ function smarty_function_textfield($params, $smarty)
 			$acparams[$p] = $v;
 		}
 		 
-		$url = Router::getInstance()->createURL(array('controller' => $acparams['controller'], 
+		$url = $smarty->getApplication()->getRouter()->createURL(array('controller' => $acparams['controller'], 
 													  'action' => 'autoComplete', 
 													  'query' => 'field=' . $acparams['field']));
 		  
