@@ -1,6 +1,7 @@
 <?php
 
 ClassLoader::import('framework.renderer.Renderer');
+ClassLoader::import('library.smarty.libs.Smarty');
 
 /**
  * Renderer implementation based in Smarty template engine (Smarty wrapper)
@@ -15,20 +16,23 @@ class SmartyRenderer extends Renderer
 	 *
 	 * @var string
 	 */
-	private static $compileDir = "";
+	protected static $compileDir = "";
 
-	private static $helperDirectories = array();
+	protected static $helperDirectories = array();
 
 	/**
 	 * Template engine instance
 	 *
 	 * @var Smarty
 	 */
-	private $tpl = null;
+	protected $tpl;
 
-	private static $smartyInstance = null;
-
-	private $router = null;
+	/**
+	 * Application instance
+	 *
+	 * @var Smarty
+	 */
+	private $application;
 
 	/**
 	 * Template renderer constructor
@@ -36,32 +40,41 @@ class SmartyRenderer extends Renderer
 	 * Creates a smarty instance and sets a compile directory path (this is required
 	 * by smarty)
 	 */
-	public function __construct(Router $router)
+	public function __construct(Application $application)
 	{
-		$this->router = $router;
-		$this->tpl = self::getSmartyInstance();
+		$this->application = $application;
 
-		$this->registerHelperList(); 
+		$this->tpl = $this->getSmartyInstance();
 		$this->tpl->load_filter('pre', 'config');
 		$this->tpl->assign("BASE_URL", Router::getBaseUrl());
+		$this->registerHelperList(); 
 	}
-
+	
 	/**
-	 * Gets a smarty instance (singleton)
+	 * Gets application instance
 	 *
 	 * @return Smarty
 	 */
-	public static function getSmartyInstance()
+	public function getApplication()
 	{
-		if (self::$smartyInstance == null)
+        return $this->application;
+    }
+
+	/**
+	 * Gets a smarty instance
+	 *
+	 * @return Smarty
+	 */
+	public function getSmartyInstance()
+	{
+		if (!$this->tpl)
 		{
-			ClassLoader::import('library.smarty.libs.Smarty');
-			self::$smartyInstance = new Smarty();
-			self::$smartyInstance->compile_dir = self::$compileDir;
-			self::$smartyInstance->template_dir = ClassLoader::getRealPath("application.view");
+			$this->tpl = new Smarty();
+			$this->tpl->compile_dir = self::$compileDir;
+			$this->tpl->template_dir = ClassLoader::getRealPath("application.view");
 		}
 
-		return self::$smartyInstance;
+		return $this->tpl;
 	}
 
 	/**
@@ -164,21 +177,6 @@ class SmartyRenderer extends Renderer
 		self::$helperDirectories[] = $directory;
 	}
 
-	/**
-	 * Smarty helper function for creating hyperlinks in application.
-	 * As the format of application part addresing migth vary, links should be created
-	 * by using this helper method. When the addressing schema changes, all lionks
-	 * will be regenerated
-	 *
-	 * @param array $params List of parameters passed to a function
-	 * @param Smarty $smarty Smarty instance
-	 * @return string Smarty function resut (formatted link)
-	 */
-	public function helperFunctionLinkTo($params, Smarty $smarty)
-	{
-		$result = $this->router->createURL($params);
-		return $result;
-	}
 }
 
 ?>

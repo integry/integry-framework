@@ -119,7 +119,7 @@ class Application
 	{
 		if (is_null($this->renderer))
 		{
-			$this->renderer = new SmartyRenderer($this->router);
+			$this->renderer = new SmartyRenderer($this);
 		}
 		return $this->renderer;
 	}
@@ -187,7 +187,6 @@ class Application
 					{
 						if ($block['response'] instanceof BlockResponse)
 						{
-							$block['response']->set('application', $this);
 							$blockOutput = $this->getRenderer()->process($block['response'], $block['view']);
 							$this->getRenderer()->appendValue($block['container'], $blockOutput);
 						}
@@ -332,7 +331,6 @@ class Application
 	{
 		try
 		{
-			$response->set('application', $this);
 			return $this->getRenderer()->process($response, $this->getView($controllerName, $actionName));
 		}
 		catch(ViewNotFoundException $ex)
