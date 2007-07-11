@@ -32,6 +32,8 @@ class ActionResponse extends Response implements Renderable
         {
             $this->set($name, $value);
         }
+        
+	    $this->setHeader('Content-type', 'text/html');
     }
     
     /**
