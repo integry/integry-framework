@@ -7,6 +7,7 @@ ClassLoader::import('framework.controller.*');
 
 /**
  * Class for running an application.
+ * I made a small change to this file
  *
  * This class handles the whole application execution life-cycle:
  *  + request data collection
