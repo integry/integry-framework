@@ -15,6 +15,7 @@ function smarty_function_hidden($params, $smarty)
 	$formParams = $smarty->_tag_stack[0][1];
 	$formHandler = $formParams['handle'];
 	$fieldName = $params['name'];
+	
 	if (!($formHandler instanceof Form))
 	{
 		throw new HelperException('Element must be placed in {form} block');

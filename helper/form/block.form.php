@@ -24,10 +24,10 @@ function smarty_block_form(&$params, $content, $smarty, &$repeat)
 	    }
 	    else
 	    {
-	        if(isset($role))
+	        if(isset($params['role']))
 			{	
 		        ClassLoader::import('application.helper.AccessStringParser');
-		        if(!AccessStringParser::run($role))
+		        if(!AccessStringParser::run($params['role']))
 		        {
 		            if(!isset($params['class']))
 		            {
