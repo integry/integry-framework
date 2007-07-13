@@ -19,6 +19,7 @@ class RawResponse extends Response
 	 */
 	public function __construct($content = '')
 	{
+	    $this->setHeader('Content-type', 'text/html');
 		$this->setContent($content);
 	}
 
