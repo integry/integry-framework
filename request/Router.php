@@ -156,7 +156,9 @@ class Router
 	 * a range [_.a-zA-Z0-9]. When you pass array("id" => "[0-9]") as varRequirements
 	 * id is required to be only numeric.
 	 *
-	 *
+	 * Routes are evaluated (mapToRoute(), createUrl() functions) in the order they were
+	 * added. To add a route to the beginning of the route list, use connectPriority()
+	 * 
 	 * @link http://www.symfony-project.com/book/trunk/routing
 	 *
 	 * @param string $routeDefinitionPattern
@@ -169,6 +171,13 @@ class Router
 		$route = new Route($routeDefinitionPattern, $paramValueAssigments, $paramValueRequirements);
 		$this->routeListByParamCount[count($route->getParamList())][] = $route;
 		$this->routeList[] = $route;
+	}
+
+	public function connectPriority($routeDefinitionPattern, $paramValueAssigments = array(), $paramValueRequirements = array())
+	{
+		$route = new Route($routeDefinitionPattern, $paramValueAssigments, $paramValueRequirements);
+		array_unshift($this->routeListByParamCount[count($route->getParamList())], $route);
+		array_unshift($this->routeList, $route);
 	}
 
 	/**
@@ -222,7 +231,7 @@ class Router
 				unset($result[0]);
 				
 				$varList = $route->getVariableList();
-				
+
 				foreach ($varList as $key => $value)
 				{
 				  	$request->set($value, $result[$key + 1]);
