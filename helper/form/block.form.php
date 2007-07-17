@@ -108,9 +108,6 @@ function smarty_block_form(&$params, $content, $smarty, &$repeat)
 				$onSubmit = 'return validateForm(this);';
 			}		
 			
-			require_once("function.includeJs.php");
-			smarty_function_includeJs(array("file" => "library/formvalidator.js"), $smarty);
-	
 			$validatorField = '<input type="hidden" disabled="disabled" name="_validator" value="' . $formHandler->getValidator()->getJSValidatorParams() . '"/>';
 			$filterField = '<input type="hidden" disabled="disabled" name="_filter" value="' . $formHandler->getValidator()->getJSFilterParams() . '"/>';
 		
