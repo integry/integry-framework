@@ -157,7 +157,7 @@ class ActionResponse extends Response implements Renderable
 
 	public function getData()
 	{
-		return ;
+		return array_merge($this->dataContainer, $this->arrayContainer, $this->objectContainer);
 	}
 
 }
