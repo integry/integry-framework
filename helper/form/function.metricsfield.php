@@ -14,6 +14,11 @@ function smarty_function_metricsfield($params, LiveCartSmarty $smarty)
     
     $formParams = $smarty->_tag_stack[0][1];
     $formHandler = $formParams['handle'];
+    if (!isset($params['value']) && !($formHandler instanceof Form))
+    {
+        throw new HelperException('Element must be placed in {form} block');
+    }
+    
     $fieldName = $params['name'];
     unset($params['name']);
     $application = $smarty->getApplication();
@@ -22,14 +27,23 @@ function smarty_function_metricsfield($params, LiveCartSmarty $smarty)
     {
         $params['class'] = '';
     }
-       
-    $content .= '<span id="UnitConventer_Root_' . $fieldNumber . '">';
+    
+    $hideSwitch = false;
+    if(isset($params['hideSwitch']))
+    {
+        unset($params['hideSwitch']);
+        $hideSwitch = true;
+    }
+    
+    $rootID = 'UnitConventer_Root_' . (isset($params['id']) ? $params['id'] : $fieldNumber);
+    
+    $content .= '<span id="' . $rootID . '">';
     $content .= '    <span style="display: none">';
     $content .= '        <span class="UnitConventer_SwitcgToEnglishTitle">' . $application->translate('_switch_to_english_units') . '</span>';
     $content .= '        <span class="UnitConventer_SwitcgToMetricTitle">' . $application->translate('_switch_to_metric_units') . '</span>';
     $content .= '        <span class="UnitConventer_MetricHiUnit">' . $application->translate('_units_kg') . '</span>';
     $content .= '        <span class="UnitConventer_MetricLoUnit">' . $application->translate('_units_g') . '</span>';
-    $content .= '        <span class="UnitConventer_EnglishHiUnit">' . $application->translate(' _units_pounds') . '</span>';
+    $content .= '        <span class="UnitConventer_EnglishHiUnit">' . $application->translate('_units_pounds') . '</span>';
     $content .= '        <span class="UnitConventer_EnglishLoUnit">' . $application->translate('_units_ounces') . '</span>';
     $content .= '    </span>';
 
@@ -54,8 +68,8 @@ function smarty_function_metricsfield($params, LiveCartSmarty $smarty)
 
     $output .= " />";
     
-    $content .= '    <a href="#" class="UnitConventer_SwitchUnits">' . $application->translate($application->getConfig()->get('UNIT_SYSTEM') == 'ENGLISH' ? '_switch_to_english_units' : '_switch_to_metric_units') . '</a>';		
-    $content .= '    <script type="text/javascript">new Backend.UnitConventer("UnitConventer_Root_' . $fieldNumber . '");</script>';
+    $content .= '    <a href="#" class="UnitConventer_SwitchUnits" ' . ($hideSwitch ? 'style="display: none;"' : '') . '>' . $application->translate($application->getConfig()->get('UNIT_SYSTEM') == 'ENGLISH' ? '_switch_to_english_units' : '_switch_to_metric_units') . '</a>';		
+    $content .= '    <script type="text/javascript">Backend.UnitConventer.prototype.getInstance("' . $rootID . '");</script>';
     $content .= '</span>';
     
     
