@@ -392,19 +392,16 @@ class Router
 					}
 					else
 					{
-					  	$matchingRoute = $route;
+                        $matchingRoute = $route;
 					}
 				}
 				
 				if ($matchingRoute)
 				{
-				  	break;
-				}
-				
+				  	return $matchingRoute;
+				}				
 			}
-		}
-		
-		return $matchingRoute;		
+		}		
 	}
 
 	private function createQueryString($URLParamList)

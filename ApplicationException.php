@@ -1,8 +1,4 @@
 <?php
-class Test
-{
-    
-}
 
 /**
  * General exception which might be raised within an application context

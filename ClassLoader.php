@@ -254,13 +254,9 @@ class ClassLoader
 	 */
 	public static function getBaseDir()
 	{
-		if (!empty(self::$mountList["."]))
+        if (!empty(self::$mountList["."]))
 		{
 			return self::$mountList["."];
-		}
-		else
-		{
-			return "";
 		}
 	}
 
@@ -277,7 +273,7 @@ class ClassLoader
 		{
 			$path = str_replace('.', DIRECTORY_SEPARATOR, $path);
 			$replaced = str_replace('*', '', $path);
-			if (file_exists($replaced) || file_exists($replaced . '.php'))
+			if (is_file($replaced . '.php') || is_dir($replaced))
 			{
 				return $path;
 			}
@@ -340,7 +336,6 @@ class ClassLoader
 			ini_set('include_path', implode(PATH_SEPARATOR, $oldPath));
 		}
 	}
-
 }
 
 ?>
