@@ -33,7 +33,7 @@ abstract class Controller
 	/**
 	 * Application instance
 	 *
-	 * @var Request
+	 * @var LiveCart
 	 */
 	protected $application = null;
 

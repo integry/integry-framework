@@ -1,0 +1,66 @@
+<?php
+/**
+ * Display a tip block
+ *
+ * @package application.helper
+ * @author Rinalds Uzkalns <rinalds@integry.net>
+ *
+ * @package application.helper
+ */
+function smarty_function_metricsfield($params, LiveCartSmarty $smarty)
+{
+    static $fieldNumber = 0;
+    $content = '';
+    
+    $formParams = $smarty->_tag_stack[0][1];
+    $formHandler = $formParams['handle'];
+    $fieldName = $params['name'];
+    unset($params['name']);
+    $application = $smarty->getApplication();
+    
+    if(!isset($params['class']))
+    {
+        $params['class'] = '';
+    }
+       
+    $content .= '<span id="UnitConventer_Root_' . $fieldNumber . '">';
+    $content .= '    <span style="display: none">';
+    $content .= '        <span class="UnitConventer_SwitcgToEnglishTitle">' . $application->translate('_switch_to_english_units') . '</span>';
+    $content .= '        <span class="UnitConventer_SwitcgToMetricTitle">' . $application->translate('_switch_to_metric_units') . '</span>';
+    $content .= '        <span class="UnitConventer_MetricHiUnit">' . $application->translate('_units_kg') . '</span>';
+    $content .= '        <span class="UnitConventer_MetricLoUnit">' . $application->translate('_units_g') . '</span>';
+    $content .= '        <span class="UnitConventer_EnglishHiUnit">' . $application->translate(' _units_pounds') . '</span>';
+    $content .= '        <span class="UnitConventer_EnglishLoUnit">' . $application->translate('_units_ounces') . '</span>';
+    $content .= '    </span>';
+
+    $content .= '<input type="hidden" name="' . $fieldName . '" value="' . (isset($params['value']) ? $params['value'] : $formHandler->get($fieldName)) . '"  class="UnitConventer_NormalizedWeight" />';
+    $content .= '<input type="hidden" class="UnitConventer_UnitsType" value="' . $application->getConfig()->get('UNIT_SYSTEM') . '" />';
+    
+    unset($params['value']);
+    
+    // Hi value
+    $hiParams = $params;
+    $hiParams['class'] .= ' number UnitConventer_HiValue';
+    $content .= '<input type="text"';   
+    foreach ($hiParams as $name => $value) $content .= ' ' . $name . '="' . htmlspecialchars($value, ENT_QUOTES) . '"';
+    $content .= ' />';
+    
+    // Lo value
+    $loParams = $params;
+    $loParams['class'] .= ' number UnitConventer_LoValue';
+    $content .= '<input type="text"';   
+    foreach ($loParams as $name => $value) $content .= ' ' . $name . '="' . htmlspecialchars($value, ENT_QUOTES) . '"';
+    $content .= ' />';
+
+    $output .= " />";
+    
+    $content .= '    <a href="#" class="UnitConventer_SwitchUnits">' . $application->translate($application->getConfig()->get('UNIT_SYSTEM') == 'ENGLISH' ? '_switch_to_english_units' : '_switch_to_metric_units') . '</a>';		
+    $content .= '    <script type="text/javascript">new Backend.UnitConventer("UnitConventer_Root_' . $fieldNumber . '");</script>';
+    $content .= '</span>';
+    
+    
+    $fieldNumber++;
+    
+    return $content; 
+}
+?>

@@ -71,6 +71,17 @@ class Request
 		$this->dataContainer[$name] = $value;
 	}
 
+    /**
+     * Unset a value
+     *
+     * @param string $name Name of value
+     * @return void
+     */
+    function remove($name)
+    {
+        unset($this->dataContainer[$name]);
+    }
+	
 	/**
 	 * Register an array of values to a request
 	 *
