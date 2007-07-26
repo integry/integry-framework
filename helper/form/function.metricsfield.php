@@ -37,7 +37,7 @@ function smarty_function_metricsfield($params, LiveCartSmarty $smarty)
     
     $rootID = 'UnitConventer_Root_' . (isset($params['id']) ? $params['id'] : $fieldNumber);
     
-    $content .= '<span id="' . $rootID . '" class="UnitConventer_Root">';
+    $content .= '<fieldset  id="' . $rootID . '" class="error UnitConventer_Root">';
     $content .= '    <span style="display: none">';
     $content .= '        <span class="UnitConventer_SwitcgToEnglishTitle">' . $application->translate('_switch_to_english_units') . '</span>';
     $content .= '        <span class="UnitConventer_SwitcgToMetricTitle">' . $application->translate('_switch_to_metric_units') . '</span>';
@@ -73,12 +73,13 @@ function smarty_function_metricsfield($params, LiveCartSmarty $smarty)
     $content .= '<input type="text"';   
     foreach ($loParams as $name => $value) $content .= ' ' . $name . '="' . htmlspecialchars($value, ENT_QUOTES) . '"';
     $content .= ' />';
-
-    $output .= " />";
     
-    $content .= '    <a href="#" class="UnitConventer_SwitchUnits" ' . ($hideSwitch ? 'style="display: none;"' : '') . '>' . $application->translate($application->getConfig()->get('UNIT_SYSTEM') == 'ENGLISH' ? '_switch_to_english_units' : '_switch_to_metric_units') . '</a>';		
-    $content .= '    <script type="text/javascript">Backend.UnitConventer.prototype.getInstance("' . $rootID . '");</script>';
-    $content .= '</span>';
+    $content .= '<div class="errorText hidden"></div>';
+    
+    $content .= '   <a href="#" class="UnitConventer_SwitchUnits" ' . ($hideSwitch ? 'style="display: none;"' : '') . '>' . $application->translate($application->getConfig()->get('UNIT_SYSTEM') == 'ENGLISH' ? '_switch_to_english_units' : '_switch_to_metric_units') . '</a>';		
+    $content .= '   <script type="text/javascript">Backend.UnitConventer.prototype.getInstance("' . $rootID . '");</script>';
+    $content .= '</fieldset >';
+    
     
     
     $fieldNumber++;
