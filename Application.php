@@ -267,6 +267,11 @@ class Application
             if (file_exists($controllerSystemPath))
     		{
     			include_once($controllerSystemPath);
+    			$refl = new ReflectionClass($className);
+    			if (!$refl->isInstantiable())
+    			{
+                    continue;
+                }
     			$instance = new $className($this);
     			$instance->setControllerName($controllerName);
     			return $instance;

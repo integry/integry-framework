@@ -373,11 +373,10 @@ class Router
 	private function findRoute($URLParamList)
 	{
 		$urlParamNames = array_keys($URLParamList);		
-		$urlParamCount = count($urlParamNames);
 			
 		$matchingRoute = null;
 		
-		foreach ($this->routeListByParamCount[$urlParamCount] as $route)
+		foreach ($this->routeListByParamCount[count($urlParamNames)] as $route)
 		{
 			$routeExpectedParamList = $route->getParamList();
 
@@ -441,14 +440,7 @@ class Router
 	 */
 	public function getRequestedRoute()
 	{
-		if (!empty($_GET['route']))
-		{
-			return $_GET['route'];
-		}
-		else
-		{
-			return null;
-		}
+		return !empty($_GET['route']) ? $_GET['route'] : null;
 	}
 	
 	public function setRequestedRoute($route)
