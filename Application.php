@@ -4,6 +4,7 @@ ClassLoader::import('framework.request.*');
 ClassLoader::import('framework.renderer.*');
 ClassLoader::import('framework.response.*');
 ClassLoader::import('framework.controller.*');
+ClassLoader::import('framework.ApplicationException');
 
 /**
  * Class for running an application.
@@ -182,7 +183,8 @@ class Application
 				// using layout defined in a controller for action output
 				if ($controllerInstance->getLayout() != null)
 				{
-					$structure = $controllerInstance->getLayoutStructure();
+					ClassLoader::import('framework.response.BlockResponse');
+                    $structure = $controllerInstance->getLayoutStructure();
 					foreach($structure as $block)
 					{
 						if ($block['response'] instanceof BlockResponse)
