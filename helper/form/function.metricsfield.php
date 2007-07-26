@@ -37,7 +37,7 @@ function smarty_function_metricsfield($params, LiveCartSmarty $smarty)
     
     $rootID = 'UnitConventer_Root_' . (isset($params['id']) ? $params['id'] : $fieldNumber);
     
-    $content .= '<span id="' . $rootID . '">';
+    $content .= '<span id="' . $rootID . '" class="UnitConventer_Root">';
     $content .= '    <span style="display: none">';
     $content .= '        <span class="UnitConventer_SwitcgToEnglishTitle">' . $application->translate('_switch_to_english_units') . '</span>';
     $content .= '        <span class="UnitConventer_SwitcgToMetricTitle">' . $application->translate('_switch_to_metric_units') . '</span>';
@@ -55,6 +55,10 @@ function smarty_function_metricsfield($params, LiveCartSmarty $smarty)
     // Hi value
     $hiParams = $params;
     $hiParams['class'] .= ' number UnitConventer_HiValue';
+    if($hiParams['id'])
+    {
+        $hiParams['id'] = $hiParams['id'] . '_HiValue';
+    }
     $content .= '<input type="text"';   
     foreach ($hiParams as $name => $value) $content .= ' ' . $name . '="' . htmlspecialchars($value, ENT_QUOTES) . '"';
     $content .= ' />';
@@ -62,6 +66,10 @@ function smarty_function_metricsfield($params, LiveCartSmarty $smarty)
     // Lo value
     $loParams = $params;
     $loParams['class'] .= ' number UnitConventer_LoValue';
+    if($hiParams['id'])
+    {
+        $loParams['id'] = $loParams['id'] . '_HiValue';
+    }
     $content .= '<input type="text"';   
     foreach ($loParams as $name => $value) $content .= ' ' . $name . '="' . htmlspecialchars($value, ENT_QUOTES) . '"';
     $content .= ' />';
