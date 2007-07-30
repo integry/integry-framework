@@ -55,6 +55,17 @@ class Router
 	private $baseUrl = "";
 
 	/**
+	 * https Base url
+	 *
+	 * @var string
+	 */
+	private $httpsBaseUrl = "";
+
+    private $isHttps = false;
+
+    private $urlScheme = 'http://';
+
+	/**
 	 * Identifies if mod_rewrite is enabled
 	 * Should be set manually by using enableURLRewrite(flag)
 	 *
@@ -75,20 +86,29 @@ class Router
 	
 	private $autoAppendQueryVariableList = array();	
 
+    private $sslActions = array();
+
 	/**
 	 * Router constructor
 	 *
-	 * @todo Add https and port to baseUrl
+	 * @todo Add port to baseUrl
 	 */
 	public function __construct()
 	{
-		$this->baseDir = dirname($_SERVER['PHP_SELF']);		
+		if (!empty($_SERVER['HTTPS']) && 'off' != $_SERVER['HTTPS'])
+		{
+            $this->urlScheme = 'https://';
+            $this->isHttps = true;
+        }
+		
+        $this->baseDir = dirname($_SERVER['PHP_SELF']);		
 		if (strlen($this->baseDir) > 1)
 		{
             $this->baseDir .= '/';
         }
 		
-		$this->baseUrl = 'http://' . $_SERVER['SERVER_NAME'] . $this->baseDir;
+		$this->baseUrl = $this->urlScheme . $_SERVER['SERVER_NAME'] . $this->baseDir;
+		$this->httpsBaseUrl = 'https://' . $_SERVER['SERVER_NAME'] . $this->baseDir;
 		$this->getBaseDirFromUrl();
 	}
 
@@ -342,8 +362,13 @@ class Router
 		
 		$values = array_values($URLParamList);
 		$url = str_replace($p, $values, $url);
-
+        
         $url = $this->getBaseDirFromUrl() . $url . $queryToAppend;
+
+        if ($this->isSsl($URLParamList['controller'], $URLParamList['action']))
+        {
+            $url = $this->createFullUrl($url, true);
+        }
 
         if ($addReturnPath)
         {
@@ -353,9 +378,9 @@ class Router
 		return $url;
 	}
 	
-	public function createFullUrl($relativeUrl)
+	public function createFullUrl($relativeUrl, $https = false)
 	{
-		$parts = parse_url($this->baseUrl);
+		$parts = parse_url($https ? $this->httpsBaseUrl : $this->baseUrl);
 		
 		return $parts['scheme'] . '://' . $parts['host'] . (isset($parts['port']) ? ':' . $parts['port'] : '') . $relativeUrl;
 	}
@@ -527,6 +552,42 @@ class Router
 	{
 		$this->autoAppendQueryVariableList[$key . '=' . $value] = true;
 	}
+	
+	public function setSslAction($controller = '', $action = '')
+	{
+        if (!isset($this->sslActions[$controller]))
+        {
+            $this->sslActions[$controller] = array();
+        }
+        //var_dump($controller);
+        if ($action)
+        {
+            $this->sslActions[$controller][$action] = true;
+        }
+        else
+        {
+            $this->sslActions[$controller] = array();
+        }
+    }
+    
+    public function isSSL($controller, $action)
+    {
+        return
+                    
+            // all actions are SSL
+            isset($this->sslActions['']) 
+            
+            // the particular action
+            || isset($this->sslActions[$controller][$action]) 
+            
+            // all actions for the particular controller
+            || (isset($this->sslActions[$controller]) && empty($this->sslActions[$controller]));
+    }
+    
+    public function isHttps()
+    {
+        return $this->isHttps;
+    }
 }
 
 ?>

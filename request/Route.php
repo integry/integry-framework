@@ -96,17 +96,17 @@ class Route
 		}
 	}
 	
-	function getVariableList()
+	public function getVariableList()
 	{
 		return $this->varList;
 	}
 
-	function setVariableList($varList)
+	public function setVariableList($varList)
 	{
 		$this->varList = $varList;
 	}
 
-	function setParamList($paramList)
+	public function setParamList($paramList)
 	{
 		$this->paramList = $paramList;
 	}
