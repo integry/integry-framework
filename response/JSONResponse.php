@@ -27,7 +27,7 @@ class JSONResponse extends Response
 	        $data['status'] = strtolower($status);
 	    }
 	    
-        $this->content = json_encode($data);
+        $this->content = @json_encode($data);
 	}
 
 	public function getData()
