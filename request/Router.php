@@ -380,7 +380,12 @@ class Router
 	
 	public function createFullUrl($relativeUrl, $https = false)
 	{
-		$parts = parse_url($https ? $this->httpsBaseUrl : $this->baseUrl);
+		if (preg_match('/^http[s]{0,1}:\/\//i', $relativeUrl))
+		{
+            return $relativeUrl;
+        }
+        
+        $parts = parse_url($https ? $this->httpsBaseUrl : $this->baseUrl);
 		
 		return $parts['scheme'] . '://' . $parts['host'] . (isset($parts['port']) ? ':' . $parts['port'] : '') . $relativeUrl;
 	}
