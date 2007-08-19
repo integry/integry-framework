@@ -534,6 +534,21 @@ class Router
 	}
 
 	/**
+	 *	Append all query parameters from the request URL to the supplied URL
+	 */
+	public function addQueryParams($url)
+	{
+		$pairs = explode('&', $_SERVER['QUERY_STRING']);
+		foreach ($pairs as $pair)
+		{
+			list($param, $value) = explode('=', $pair, 2);
+			$url = $this->setUrlQueryParam($url, $param, $value);
+		}
+		
+		return $url;
+	}
+
+	/**
 	 * Set variable that gets automatically assigned when creating URL
 	 * (self::createURL()) (there will be no need to assign such variables
 	 * manually. E.x.current language code for a multilingual webapp)
