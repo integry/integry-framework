@@ -189,7 +189,8 @@ class Application
 					{
 						if ($block['response'] instanceof BlockResponse)
 						{
-							$blockOutput = $this->getRenderer()->process($block['response'], $block['view']);
+							$this->postProcessResponse($block['response'], $controllerInstance);
+                            $blockOutput = $this->getRenderer()->process($block['response'], $block['view']);
 							$this->getRenderer()->appendValue($block['container'], $blockOutput);
 						}
 						else
@@ -224,6 +225,16 @@ class Application
 	/**
 	 * Executes controllers action and returns response
 	 *
+	 * @param Response $response Response object instance
+	 * @return void
+	 */
+	protected function postProcessResponse(Response $response, Controller $controllerInstance)
+    {        
+    }
+
+	/**
+	 * Executes controllers action and returns response
+	 *
 	 * @param string $controllerName Controller name
 	 * @param string $actionName Action name
 	 * @return Response
@@ -235,6 +246,7 @@ class Application
 		{
             $response = $controllerInstance->execute($actionName, $this->getRequest());
 			$this->processResponse($response);
+			$this->postProcessResponse($response, $controllerInstance);
 			return $response;
 		}
 		catch(ApplicationException $ex)
