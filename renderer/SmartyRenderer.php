@@ -163,12 +163,6 @@ class SmartyRenderer extends Renderer
 	 */
 	public function registerHelperList()
 	{
-		$helperDirs = array("framework.helper", "framework.helper.form");
-		foreach ($helperDirs as $dir)
-		{
-            $this->tpl->plugins_dir[] = ClassLoader::getRealPath($dir);            
-        }
-        
         $this->tpl->plugins_dir = array_merge($this->tpl->plugins_dir, self::$helperDirectories);
 	}
 	
