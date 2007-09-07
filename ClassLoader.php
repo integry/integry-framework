@@ -62,8 +62,10 @@ class ClassLoader
 	 */
 	public static function load($class)
 	{
-		$className = substr($class, strrpos($class, DIRECTORY_SEPARATOR));
-		
+
+	    preg_match('/([^' . preg_quote(DIRECTORY_SEPARATOR) . ']+)$/', $class, $matches); //substr($class, strrpos($class, DIRECTORY_SEPARATOR));
+		$className = $matches[1];
+	
 		// try custom autoload functions
 		foreach (self::$autoLoadFunctions as $func => $isEnabled)
 		{
@@ -95,13 +97,14 @@ class ClassLoader
 	 */
 	public static function mountPath($mountName, $fullDirPath)
 	{
+	    $fullDirPath = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $fullDirPath);
 		if (is_dir($fullDirPath))
 		{
 			self::$mountList[$mountName] = $fullDirPath;
 		}
 		else
 		{
-			throw new ClassLoaderException("No such directory: $fullDirPath");
+		    throw new ClassLoaderException("No such directory: $fullDirPath");
 		}
 	}
 
@@ -190,7 +193,7 @@ class ClassLoader
 		}
 		
 		$res = array_intersect_key(self::$mountList, $possiblePoints);
-		
+	
 		if ($res)
 		{
 			end($res);
@@ -269,6 +272,7 @@ class ClassLoader
 	public static function getRealPath($path)
 	{
 		$mounted = self::mapToMountPoint($path); 
+        
 		foreach ($mounted as $path)
 		{
 			$path = str_replace('.', DIRECTORY_SEPARATOR, $path);
