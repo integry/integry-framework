@@ -6,16 +6,18 @@
  */
 class IsLengthBetweenCheck extends Check
 {
-	public function __construct($violationMsg, $minLength, $maxLength)
+	public function __construct($violationMsg, $minLength, $maxLength, $allowEmpty = false)
 	{
 		parent::__construct($violationMsg);
 		$this->setParam('minLength', $minLength);
 		$this->setParam('maxLength', $maxLength);
+        $this->setParam('allowEmpty', $allowEmpty);
 	}
 	
 	public function isValid($value)
 	{
-		if ((strlen($value) >= $this->getParam('minLength')) && (strlen($value) <= $this->getParam("maxLength")))
+	    $len = strlen($value);
+		if (($len >= $this->getParam('minLength') && $len <= $this->getParam("maxLength")) || ($len == 0 && $this->getParam("allowEmpty")))
 		{
 			return true;
 		}
