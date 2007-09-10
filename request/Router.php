@@ -106,7 +106,7 @@ class Router
 		{
             $this->baseDir .= '/';
         }
-		
+
 		$this->baseUrl = $this->urlScheme . $_SERVER['SERVER_NAME'] . $this->baseDir;
 		$this->httpsBaseUrl = 'https://' . $_SERVER['SERVER_NAME'] . $this->baseDir;
 		$this->getBaseDirFromUrl();
@@ -137,9 +137,10 @@ class Router
 			{
 				$URIBase = $URI;
 			}
-				
+
 			$route = $this->getRequestedRoute();
-			$this->virtualBaseDir = str_replace($route, "", $URIBase);			
+//		var_dump($route);
+			$this->virtualBaseDir = str_replace($route, "", urldecode($URIBase));
 		}
 
 		return $this->virtualBaseDir;
@@ -188,7 +189,7 @@ class Router
 	 */
 	public function connect($routeDefinitionPattern, $paramValueAssigments = array(), $paramValueRequirements = array())
 	{
-		$route = new Route($routeDefinitionPattern, $paramValueAssigments, $paramValueRequirements);
+        $route = new Route($routeDefinitionPattern, $paramValueAssigments, $paramValueRequirements);
 		$this->routeListByParamCount[count($route->getParamList())][] = $route;
 		$this->routeList[] = $route;
 	}
@@ -246,7 +247,7 @@ class Router
 
 		foreach ($this->routeList as $route)
 		{
-			if (preg_match("/^" . $route->getRecognitionPattern() . "$/", $URLStr, $result))
+			if (preg_match("/^" . $route->getRecognitionPattern() . "$/U", $URLStr, $result))
 			{
 				unset($result[0]);
 				
@@ -419,7 +420,7 @@ class Router
 			{
 				foreach ($routeExpectedParamList as $paramName => $paramRequirement)
 				{
-					if (!preg_match('/^' . $paramRequirement . '/' , $URLParamList[$paramName]))
+					if (!preg_match('/^' . $paramRequirement . '/U' , $URLParamList[$paramName]))
 					{
 						$matchingRoute = null;
 						break;
@@ -584,7 +585,7 @@ class Router
         {
             $this->sslActions[$controller] = array();
         }
-        //var_dump($controller);
+
         if ($action)
         {
             $this->sslActions[$controller][$action] = true;
