@@ -247,7 +247,8 @@ class Router
 
 		foreach ($this->routeList as $route)
 		{
-			if (preg_match("/^" . $route->getRecognitionPattern() . "$/U", $URLStr, $result))
+		    $routePattern = str_replace('\047', '\/', $route->getRecognitionPattern());
+		    if (preg_match("/^" . $routePattern . "$/U", $URLStr, $result))
 			{
 				unset($result[0]);
 				
