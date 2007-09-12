@@ -77,7 +77,10 @@ class RolesParser
         // Make role names list
         foreach($this->roles as $roleName)
         {
-            $this->addRoleName($roleName);
+            if ($roleName)
+            {
+				$this->addRoleName($roleName);
+			}
         }
     }
     
