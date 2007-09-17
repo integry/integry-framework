@@ -98,7 +98,7 @@ class ClassLoader
 	public static function mountPath($mountName, $fullDirPath)
 	{
 	    $fullDirPath = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $fullDirPath);
-		if (is_dir($fullDirPath))
+		if (file_exists($fullDirPath))
 		{
 			self::$mountList[$mountName] = $fullDirPath;
 		}

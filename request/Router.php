@@ -232,6 +232,11 @@ class Router
 	 */
 	public function mapToRoute($URLStr, Request $request)
 	{
+		if ('/' == substr($URLStr, -1))
+		{
+			$URLStr = substr($URLStr, 0, -1);
+		}
+		
 		if (empty($URLStr) || !$this->isURLRewriteEnabled)
 		{
 			if (!$request->isValueSet("action"))
