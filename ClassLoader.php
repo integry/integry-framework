@@ -62,8 +62,7 @@ class ClassLoader
 	 */
 	public static function load($class)
 	{
-
-	    preg_match('/([^' . preg_quote(DIRECTORY_SEPARATOR) . ']+)$/', $class, $matches); //substr($class, strrpos($class, DIRECTORY_SEPARATOR));
+		preg_match('/([^\\' . DIRECTORY_SEPARATOR . ']+)$/', $class, $matches); //substr($class, strrpos($class, DIRECTORY_SEPARATOR));
 		$className = $matches[1];
 	
 		// try custom autoload functions
