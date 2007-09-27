@@ -373,7 +373,7 @@ class Router
         $url = $this->getBaseDirFromUrl() . $url . $queryToAppend;
 
         // double slashes in front of relative URL
-        $url = preg_replace('/^\/\/', '\/', $url);
+        $url = preg_replace('/^\/{2,}/', '/', $url);
 
         if ($this->isSsl($URLParamList['controller'], $URLParamList['action']))
         {
