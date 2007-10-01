@@ -139,8 +139,11 @@ class Router
 			}
 
 			$route = $this->getRequestedRoute();
-//		var_dump($route);
+
 			$this->virtualBaseDir = str_replace($route, "", urldecode($URIBase));
+			
+            // strip double slashes
+            $this->virtualBaseDir = preg_replace('/\/{2,}$/', '/', $this->virtualBaseDir);			
 		}
 
 		return $this->virtualBaseDir;
@@ -371,9 +374,6 @@ class Router
 		$url = str_replace($p, $values, $url);
         
         $url = $this->getBaseDirFromUrl() . $url . $queryToAppend;
-
-        // double slashes in front of relative URL
-        $url = preg_replace('/^\/{2,}/', '/', $url);
 
         if ($this->isSsl($URLParamList['controller'], $URLParamList['action']))
         {
