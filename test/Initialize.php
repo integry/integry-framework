@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @package	framework.test
+ * @author	Integry Systems 
+ */
+
 define('FW_DIR', dirname(dirname(__FILE__)) . '/');
 
 $dir = dirname(__FILE__) . '/_library/';

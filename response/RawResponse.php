@@ -6,6 +6,7 @@ ClassLoader::import('framework.response.*');
  * Class for creating response from raw output.
  *
  * @package	framework.response
+ * @author	Integry Systems 
  */
 class RawResponse extends Response
 {

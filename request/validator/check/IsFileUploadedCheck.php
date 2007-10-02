@@ -6,7 +6,7 @@ ClassLoader::import("framework.request.validator.check.Check");
  * Checks if a file has been uploaded 
  *
  * @package framework.request.validator.check
- * @author Rinalds Uzkalns <rinalds@integry.net>
+ * @author Integry Systems
  */
 class IsFileUploadedCheck extends Check
 {

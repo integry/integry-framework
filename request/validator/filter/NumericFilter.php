@@ -4,7 +4,7 @@
  * Strip non-numeric characters from a string
  *
  * @package framework.request.validator.filter
- * @author Rinalds Uzkalns <rinalds@integry.net>
+ * @author Integry Systems
  */
 class NumericFilter extends RequestFilter
 {

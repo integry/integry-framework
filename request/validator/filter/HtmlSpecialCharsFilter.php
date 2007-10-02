@@ -4,7 +4,7 @@
  * Converts special HTML characters to appropriate display representations
  *
  * @package framework.request.validator.filter
- * @author Rinalds Uzkalns <rinalds@integry.net>
+ * @author Integry Systems
  */
 class HtmlSpecialCharsFilter extends RequestFilter
 {

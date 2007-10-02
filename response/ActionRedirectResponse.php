@@ -10,7 +10,7 @@ ClassLoader::import('framework.response.RedirectResponse');
  *
  * @see Application
  * @package	framework.response
- * @author Saulius Rupainis
+ * @author	Integry Systems
  */
 class ActionRedirectResponse extends RedirectResponse
 {

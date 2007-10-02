@@ -3,6 +3,7 @@
 /**
  * 
  * @package framework.request.validator.check
+ * @author Integry Systems
  */
 class MaxValueCheck extends Check
 {

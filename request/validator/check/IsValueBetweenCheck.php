@@ -4,7 +4,7 @@
  * 
  *
  * @package framework.request.validator.check
- * @author Saulius Rupainis <saulius@integry.net>
+ * @author Integry Systems
  */
 class IsValueBetweenCheck extends Check
 {

@@ -6,6 +6,7 @@ ClassLoader::import('framework.response.ActionResponse');
  * Response for carying instructions to an application to render some other action(s)
  *
  * @package	framework.response
+ * @author	Integry Systems
  */
 abstract class CompositeResponse extends Response
 {

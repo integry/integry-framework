@@ -7,7 +7,7 @@ ClassLoader::import('library.smarty.libs.Smarty');
  * Renderer implementation based in Smarty template engine (Smarty wrapper)
  *
  * @package	framework.renderer
- * @author Saulius Rupainis <saulius@integry.net>
+ * @author Integry Systems
  */
 class SmartyRenderer extends Renderer
 {

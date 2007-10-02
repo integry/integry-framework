@@ -7,7 +7,7 @@ ClassLoader::import('framework.renderer.Renderable');
  * Class for creating a response that containes action specific data (results) which should be rendered in some way (i.e. TemplateRenderer)
  *
  * @package	framework.response
- * @author Saulius Rupainis <saulius@integry.net>
+ * @author Integry Systems
  */
 class ActionResponse extends Response implements Renderable
 {

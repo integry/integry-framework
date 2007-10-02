@@ -1,6 +1,10 @@
 <?php
 ClassLoader::import("framework.roles.RolesParser");
 
+/**
+ * @package	framework.roles
+ * @author	Integry Systems 
+ */
 class RolesDirectoryParser
 {
     private $fileFilters;

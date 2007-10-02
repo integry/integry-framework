@@ -6,7 +6,7 @@ ClassLoader::import('framework.renderer.RendererException');
  * Thrown when view file for a requested controller's action does not exist.
  *
  * @package	framework.renderer
- * @author Saulius Rupainis <saulius@integry.net>
+ * @author Integry Systems
  */
 class ViewNotFoundException extends RendererException
 {

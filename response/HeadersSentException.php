@@ -6,6 +6,7 @@ ClassLoader::import('framework.response.ResponseException');
  * ...
  *
  * @package		framework.response
+ * @author	Integry Systems
  */
 class HeadersSentException extends ResponseException 
 {

@@ -4,6 +4,10 @@ require_once (dirname(__FILE__) . '/../Initialize.php');
 
 require_once (FW_DIR . 'request/validator/filter/RegexFilter.php');
 
+/**
+ * @package	framework.test
+ * @author	Integry Systems 
+ */
 class TestRegexFilter extends UnitTest
 {
 	public function testFilter()

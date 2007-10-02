@@ -8,6 +8,7 @@ ClassLoader::import("framework.response.CompositeResponse");
  * Useful with AJAX calls for which a single request may affect several parts of the user interface
  *
  * @package framework.response
+ * @author	Integry Systems
  */
 class CompositeJSONResponse extends CompositeResponse
 {

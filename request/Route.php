@@ -3,7 +3,7 @@
 /**
  * Application route
  *
- * @author Saulius Rupainis <saulius@integry.net>
+ * @author Integry Systems
  * @package framework.request
  */
 class Route

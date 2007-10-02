@@ -3,7 +3,7 @@
 /**
  * Controller level exception.
  *
- * @author	Saulius Rupainis <saulius.rupainis@artogama.lt>
+ * @author	Integry Systems
  * @package	framework.controller
  */
 class ControllerException extends HTTPStatusException

@@ -2,6 +2,9 @@
 
 /**
  *  Decorates Check object
+ *
+ *  @package framework.request.validator.check
+ *  @author Integry Systems
  */
 class ConditionalCheck extends Check
 {

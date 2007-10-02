@@ -14,7 +14,7 @@
  * Note: when action does not return anything it is considered that a RawResponse is returned
  *
  * @package	framework.controller
- * @author Saulius Rupainis <saulius@integry.net>
+ * @author Integry Systems
  */
 abstract class Controller
 {

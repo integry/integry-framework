@@ -5,6 +5,7 @@
  * it is implemented as a Monostate - there can be multiple Session instances sharing
  * the same data.
  *
+ * @author Integry Systems
  * @package framework.request
  */
 class Session

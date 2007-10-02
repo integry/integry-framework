@@ -6,6 +6,7 @@ ClassLoader::import('framework.response.Response');
  * Class for creating redirect response.
  *
  * @package	framework.response
+ * @author	Integry Systems 
  */
 class RedirectResponse extends Response
 {

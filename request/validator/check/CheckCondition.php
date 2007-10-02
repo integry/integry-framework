@@ -7,6 +7,9 @@
  *  differ depending on a value that is entered in another field.
  *
  *  Conditional checks are only available at server side (for now)
+ *
+ *  @package framework.request.validator.check
+ *  @author Integry Systems
  */
 abstract class CheckCondition
 {

@@ -6,6 +6,7 @@ ClassLoader::import("framework.response.Response");
  * JSON response
  *
  * @package framework.response
+ * @author	Integry Systems 
  */
 class ObjectFileResponse extends Response
 {

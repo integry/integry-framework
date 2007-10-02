@@ -4,7 +4,7 @@
  * Strip HTML tags from a string
  *
  * @package framework.request.validator.filter
- * @author Rinalds Uzkalns <rinalds@integry.net>
+ * @author Integry Systems
  */
 class StripHtmlFilter extends RequestFilter
 {

@@ -6,7 +6,7 @@ ClassLoader::import("framework.ApplicationException");
  * Thrown when controller specified in request does not exists.
  *
  * @package	framework
- * @author Saulius Rupainis <saulius@integry.net>
+ * @author Integry Systems
  */
 class ControllerNotFoundException extends ApplicationException
 {

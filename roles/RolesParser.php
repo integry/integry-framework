@@ -1,4 +1,9 @@
 <?php
+
+/**
+ * @package	framework.roles
+ * @author	Integry Systems 
+ */
 class RolesParser
 {
     /**

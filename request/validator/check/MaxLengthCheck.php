@@ -6,7 +6,7 @@ ClassLoader::import("framework.request.validator.check.Check");
  * Check for max string length validation (fails if string is longer than $maxLength)
  *
  * @package framework.request.validator.check
- * @author Saulius Rupainis <saulius@integry.net>
+ * @author Integry Systems
  */
 class MaxLengthCheck extends Check
 {

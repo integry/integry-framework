@@ -10,7 +10,7 @@ ClassLoader::import("framework.response.ActionResponse");
  * @see Controller::addBlock()
  * 
  * @package framework.response
- * @author Saulius Rupainis <saulius@integry.com>
+ * @author	Integry Systems
  */
 class BlockResponse extends ActionResponse 
 {

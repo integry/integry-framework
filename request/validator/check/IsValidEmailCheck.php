@@ -6,7 +6,7 @@ ClassLoader::import("framework.request.validator.check.Check");
  * E-mail address validator class
  *
  * @package framework.request.validator.check
- * @author Saulius Rupainis <saulius@integry.net>
+ * @author Integry Systems
  */
 class IsValidEmailCheck extends Check
 {

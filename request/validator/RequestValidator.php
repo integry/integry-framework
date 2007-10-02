@@ -9,7 +9,7 @@ ClassLoader::import("framework.request.validator.filter.*");
  * Request data validator
  *
  * @package framework.request.validator
- * @author Saulius Rupainis <saulius@integry.net>
+ * @author Integry Systems
  *
  */
 class RequestValidator

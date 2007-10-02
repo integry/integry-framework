@@ -5,6 +5,7 @@ ClassLoader::import("framework.request.validator.check.Check");
 /**
  * 
  * @package framework.request.validator.check
+ * @author Integry Systems
  */
 class MinLengthCheck extends Check
 {

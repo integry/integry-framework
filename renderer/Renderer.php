@@ -10,7 +10,7 @@ ClassLoader::import('framework.response.Response');
  * Renderer is kind of template engine wrapper.
  *
  * @package	framework.renderer
- * @author Saulius Rupainis <saulius@integry.net>
+ * @author Integry Systems
  */
 abstract class Renderer
 {

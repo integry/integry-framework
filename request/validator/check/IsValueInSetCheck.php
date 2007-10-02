@@ -6,7 +6,7 @@ ClassLoader::import("framework.request.validator.check.Check");
  * Checks if a value exists in a given set
  *
  * @package framework.request.validator.check
- * @author Saulius Rupainis <saulius@integry.net>
+ * @author Integry Systems
  */
 class IsValueInSetCheck extends Check
 {

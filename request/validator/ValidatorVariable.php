@@ -8,7 +8,7 @@
  *
  * @see RequestValidator
  * @package framework.request.validator
- * @author Saulius Rupainis <saulius@integry.net>
+ * @author Integry Systems
  */
 class ValidatorVariable
 {

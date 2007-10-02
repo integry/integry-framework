@@ -6,6 +6,7 @@
  * Response is a data carrier between different actions and different parts of applications
  *
  * @package	framework.response
+ * @author	Integry Systems 
  */
 abstract class Response
 {

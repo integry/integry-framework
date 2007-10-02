@@ -13,6 +13,8 @@
  *
  * @param string $className Class Name
  * @link  http://www.php.net/__autoload
+ * @package framework
+ * @author Integry Systems
  */
 function __autoload($className)
 {
@@ -23,7 +25,7 @@ function __autoload($className)
  * Application class loader
  *
  * @package	framework
- * @author Saulius Rupainis <saulius@integry.net>
+ * @author Integry Systems
  */
 class ClassLoader
 {

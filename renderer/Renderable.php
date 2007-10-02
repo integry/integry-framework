@@ -6,6 +6,7 @@ ClassLoader::import("framework.renderer.Renderable");
  * Renderable object interface
  *
  * @package	framework.renderer
+ * @author Integry Systems
  */
 interface Renderable
 {

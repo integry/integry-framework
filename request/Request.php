@@ -10,7 +10,7 @@
  * @see self::getActionName()
  *
  * @package	framework.request
- * @author Saulius Rupainis <saulius@integry.net>
+ * @author Integry Systems
  */
 class Request
 {

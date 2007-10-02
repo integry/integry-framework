@@ -4,7 +4,7 @@
  * General exception which might be raised within an application context
  *
  * @package framework
- * @author Saulius Rupainis <saulius@integry.net>
+ * @author Integry Systems
  */
 class ApplicationException extends Exception 
 {

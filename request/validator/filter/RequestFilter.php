@@ -4,7 +4,7 @@
  * Abstract request value filter
  *
  * @package framework.request.validator.filter
- * @author Saulius Rupainis <saulius@integry.net>
+ * @author Integry Systems
  */
 abstract class RequestFilter
 {

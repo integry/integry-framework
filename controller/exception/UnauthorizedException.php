@@ -5,8 +5,8 @@ ClassLoader::import("framework.ApplicationException");
 /**
  * Exception that indicates an attempt to execute a restricted controller/action
  *
- * @package application.model
- * @author Saulius Rupainis <saulius@integry.net>
+ * @package framework.controller.exception
+ * @author Integry Systems
  */
 class UnauthorizedException extends HTTPStatusException
 {

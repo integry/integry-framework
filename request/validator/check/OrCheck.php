@@ -6,7 +6,8 @@ ClassLoader::import("framework.request.validator.check.Check");
  * A composite check - at least one of the checks must pass
  *
  * @package framework.request.validator.check
-  */
+ * @author Integry Systems 
+ */
 class OrCheck extends Check
 {
 	protected $fieldNames = array();

@@ -36,7 +36,7 @@ ClassLoader::import('framework.ApplicationException');
  * @see self::setRequestFormatter()
  *
  * @package framework
- * @author Saulius Rupainis <saulius@integry.net>
+ * @author Integry Systems
  *
  */
 class Application
