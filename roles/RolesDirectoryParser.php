@@ -53,11 +53,12 @@ class RolesDirectoryParser
     {
         if ($dir = opendir($this->directoryPath)) {
 	        while (($controllerFile = readdir($dir)) !== false) {
+
 	            if(!$this->matchFilters($controllerFile)) continue;
-	
+	                
 	            $controllerName = substr($controllerFile, 0, -4);
 	            $this->classParsers[] = new RolesParser(
-	                $this->directoryPath . DIRECTORY_SEPARATOR . $controllerFile, 
+                    $this->directoryPath . DIRECTORY_SEPARATOR . $controllerFile, 
 	                $this->cacheDirectoryPath . DIRECTORY_SEPARATOR . $controllerName . 'Roles.php'
                 );
 	        }

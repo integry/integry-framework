@@ -66,7 +66,7 @@ class RolesParser
         $this->cacheFile = $cacheFile;
         $this->className = substr(basename($parsedFile), 0, -4);
              
-        @include_once $this->parsedFile;
+        include_once $this->parsedFile;
         
         if($this->isExpired())
         {
@@ -147,7 +147,7 @@ class RolesParser
      */
     public function cache()
     {
-        @file_put_contents($this->cacheFile, "<?php\n" . $this->toPHPString() . "\n?>");
+        file_put_contents($this->cacheFile, "<?php\n" . $this->toPHPString() . "\n?>");
     }
        
     /**
@@ -223,7 +223,6 @@ class RolesParser
 		$role = $prefix;
 		if(!empty($roleMatches))
 		{
-		    
 		    if($roleMatches[1] == '!')
 		    {
 		        $role = $roleMatches[2];	
