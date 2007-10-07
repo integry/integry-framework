@@ -553,7 +553,13 @@ class Router
 	 */
 	public function addQueryParams($url)
 	{
+		if (!$_SERVER['QUERY_STRING'])
+		{
+			return $url;
+		}
+	
 		$pairs = explode('&', $_SERVER['QUERY_STRING']);
+		
 		foreach ($pairs as $pair)
 		{
 			list($param, $value) = explode('=', $pair, 2);

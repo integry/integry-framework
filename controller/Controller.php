@@ -252,7 +252,7 @@ abstract class Controller
 	 *
 	 * @see self::removeBlock()
 	 */
-	protected final function addBlock($containerName, $blockName, $viewName = null)
+	public final function addBlock($containerName, $blockName, $viewName = null)
 	{
 		$blockMethodName = $blockName."Block";
 
@@ -276,7 +276,7 @@ abstract class Controller
 	 *
 	 * @param string $blockName
 	 */
-	protected final function removeBlock($blockName)
+	public final function removeBlock($blockName)
 	{
 		$blockMethodName = $blockName."Block";
 		foreach($this->blockList as $index => $block)
