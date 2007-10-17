@@ -64,6 +64,8 @@ class Router
     private $isHttps = false;
 
     private $urlScheme = 'http://';
+    
+    private $variableSeparator = '&amp;';
 
 	/**
 	 * Identifies if mod_rewrite is enabled
@@ -307,7 +309,7 @@ class Router
             $queryVars = implode('&', array_keys($this->autoAppendQueryVariableList));
     		if (!empty($URLParamList['query']))
     		{
-                $URLParamList['query'] .= '&' . $queryVars;                
+                $URLParamList['query'] .= $this->variableSeparator . $queryVars;                
             }
             else
             {
@@ -331,7 +333,7 @@ class Router
                 {
                     $pairs[] = urlencode($key) . '=' . urlencode($value);
                 }   
-                $URLParamList['query'] = implode('&', $pairs);
+                $URLParamList['query'] = implode($this->variableSeparator, $pairs);
             }
             
             $queryToAppend = "?" . $URLParamList['query'];
@@ -409,6 +411,11 @@ class Router
 	{
 		$this->returnPath = $returnRoute;
 	}
+	
+	public function setVariableSeparator($separator)
+	{
+        $this->variableSeparator = $separator;
+    }
 
 	private function getReturnPath()
 	{
@@ -509,7 +516,7 @@ class Router
 	
     public function createUrlFromRoute($route)
 	{
-		$query = implode('&', array_keys($this->autoAppendQueryVariableList));
+		$query = implode($this->variableSeparator, array_keys($this->autoAppendQueryVariableList));
 		if ($query)
 		{
 			$query = '?' . $query;
@@ -527,7 +534,7 @@ class Router
         $params = array();
 		if (isset($parts[1]))
         {
-			$pairs = explode('&', $parts[1]);
+			$pairs = explode($this->variableSeparator, $parts[1]);
 			foreach ($pairs as $pair)
 			{
 				list($key, $value) = explode('=', $pair, 2);
@@ -543,7 +550,7 @@ class Router
 			$pairs[] = $key . '=' . $value;
 		}
 		
-		$url = $parts[0] . '?' . implode('&', $pairs);
+		$url = $parts[0] . '?' . implode($this->variableSeparator, $pairs);
 		
 		return $url;
 	}
