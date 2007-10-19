@@ -347,13 +347,15 @@ class Router
 		}
 		/* end */
 
-		/* Handling special case: route to a default controller/action */
+		/* Handling special case: route to a default controller/action
+		
 		if (($URLParamList['controller'] == $this->defaultController) &&
 		    ($URLParamList['action'] == $this->defaultAction))
 		{
 			return $this->getBaseDirFromUrl() . $queryToAppend;
 		}
-		/* end */
+		
+        end */
 
 		$matchingRoute = $this->findRoute($URLParamList);
 		
