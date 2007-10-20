@@ -50,7 +50,7 @@ class Application
 	 * Request instance
 	 * @var Request
 	 */
-	private $request = null;
+	protected $request = null;
 
 	/**
 	 * Renderer instance (usualy a template renderer)
@@ -67,7 +67,6 @@ class Application
 	 */
 	private $defaultControllerName = "index";
 
-
 	/**
 	 * Application constructor.
 	 *
@@ -76,7 +75,7 @@ class Application
 	public function __construct()
 	{
 		$this->request = new Request();
-		$this->router = new Router();
+		$this->router = new Router($this->request);
 	}
 
 	/**

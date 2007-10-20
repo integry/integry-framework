@@ -12,6 +12,13 @@ ClassLoader::import("framework.request.Route");
 class Router
 {
 	/**
+	 * Request object instance
+	 *
+	 * @var Request
+	 */
+	private $request;
+	
+	/**
 	 * The list of defined routes
 	 *
 	 * @var Route[]
@@ -95,8 +102,10 @@ class Router
 	 *
 	 * @todo Add port to baseUrl
 	 */
-	public function __construct()
+	public function __construct(Request $request)
 	{
+		$this->request = $request;
+		
 		if (!empty($_SERVER['HTTPS']) && 'off' != $_SERVER['HTTPS'])
 		{
             $this->urlScheme = 'https://';
@@ -149,6 +158,15 @@ class Router
 		}
 
 		return $this->virtualBaseDir;
+	}
+
+	public function setBaseDir($dir, $virtualBaseDir)
+	{
+		$this->baseDir = $dir;
+		$this->virtualBaseDir = $virtualBaseDir;
+				
+		$this->baseUrl = $this->urlScheme . $_SERVER['SERVER_NAME'] . $this->baseDir;
+		$this->httpsBaseUrl = 'https://' . $_SERVER['SERVER_NAME'] . $this->baseDir;		
 	}
 
 	/**
@@ -336,7 +354,7 @@ class Router
                 $URLParamList['query'] = implode($this->variableSeparator, $pairs);
             }
             
-            $queryToAppend = "?" . $URLParamList['query'];
+            $queryToAppend = ((strpos($this->virtualBaseDir, '?') === false) ? '?' : '&') . $URLParamList['query'];
 			unset($URLParamList['query']);
 		}
 		
@@ -346,16 +364,6 @@ class Router
 			return $this->createQueryString($URLParamList) . "&" . substr($queryToAppend, 1);
 		}
 		/* end */
-
-		/* Handling special case: route to a default controller/action
-		
-		if (($URLParamList['controller'] == $this->defaultController) &&
-		    ($URLParamList['action'] == $this->defaultAction))
-		{
-			return $this->getBaseDirFromUrl() . $queryToAppend;
-		}
-		
-        end */
 
 		$matchingRoute = $this->findRoute($URLParamList);
 		
@@ -464,7 +472,8 @@ class Router
 		{
 			$assigmentList[] = $paramName . "=" . urlencode($value);
 		}
-		return "?" . implode("&", $assigmentList);
+						
+		return ((strpos($this->virtualBaseDir, '?') === false) ? '?' : '&') . implode("&", $assigmentList);
 	}
 
 	/**
@@ -494,12 +503,12 @@ class Router
 	 */
 	public function getRequestedRoute()
 	{
-		return !empty($_GET['route']) ? $_GET['route'] : null;
+		return $this->request->get('route', null);
 	}
 	
 	public function setRequestedRoute($route)
 	{
-		$_GET['route'] = $route;	
+		$this->request->set('route', $route);
 	}
 
     /**
@@ -532,7 +541,7 @@ class Router
 	 */
 	public function setUrlQueryParam($url, $param, $paramValue)
 	{
-        $parts = explode('?', $url, 2);
+		$parts = explode('?', $url, 2);
         $params = array();
 		if (isset($parts[1]))
         {
@@ -568,7 +577,7 @@ class Router
 		}
 	
 		$pairs = explode('&', $_SERVER['QUERY_STRING']);
-		
+
 		foreach ($pairs as $pair)
 		{
 			list($param, $value) = explode('=', $pair, 2);
