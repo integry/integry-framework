@@ -303,11 +303,14 @@ class Router
 	 * Creates an URL by using a supplied URL param list
 	 *
 	 * @param array $URLParamList
+	 * @param bool $isXHtml        Generate XHTML valid URL's (use &amp; as variable separator)
 	 * @return string
 	 */
-	public function createURL($URLParamList)
+	public function createURL($URLParamList, $isXHtml = false)
 	{
-		if (!isset($URLParamList['controller']))
+		$variableSeparator = $isXHtml ? '&amp;' : '&';
+        
+        if (!isset($URLParamList['controller']))
 		{
 			$URLParamList['controller'] = $this->defaultController;
 		}
@@ -324,10 +327,10 @@ class Router
 		
 		if ($this->autoAppendQueryVariableList)
 		{
-            $queryVars = implode('&', array_keys($this->autoAppendQueryVariableList));
+            $queryVars = implode($variableSeparator, array_keys($this->autoAppendQueryVariableList));
     		if (!empty($URLParamList['query']))
     		{
-                $URLParamList['query'] .= $this->variableSeparator . $queryVars;                
+                $URLParamList['query'] .= $variableSeparator . $queryVars;                
             }
             else
             {
@@ -351,7 +354,7 @@ class Router
                 {
                     $pairs[] = urlencode($key) . '=' . urlencode($value);
                 }   
-                $URLParamList['query'] = implode($this->variableSeparator, $pairs);
+                $URLParamList['query'] = implode($variableSeparator, $pairs);
             }
             
             $queryToAppend = ((strpos($this->virtualBaseDir, '?') === false) ? '?' : '&') . $URLParamList['query'];
@@ -361,7 +364,7 @@ class Router
 		/* Handling special case: URL rewrite is not enabled */
 		if (!$this->isURLRewriteEnabled)
 		{
-			return $this->createQueryString($URLParamList) . "&" . substr($queryToAppend, 1);
+			return $this->createQueryString($URLParamList) . $variableSeparator . substr($queryToAppend, 1);
 		}
 		/* end */
 
@@ -525,9 +528,11 @@ class Router
         return $route;
     }
 	
-    public function createUrlFromRoute($route)
+    public function createUrlFromRoute($route, $isXHtml = false)
 	{
-		$query = implode($this->variableSeparator, array_keys($this->autoAppendQueryVariableList));
+		$variableSeparator = $isXHtml ? '&amp;' : '&';
+		
+		$query = implode($variableSeparator, array_keys($this->autoAppendQueryVariableList));
 		if ($query)
 		{
 			$query = '?' . $query;
