@@ -10,7 +10,9 @@ ClassLoader::import("framework.response.Response");
  */
 class JSONResponse extends Response
 {
-    private $content = "";
+    private $content;
+
+    private $data;
 
 	public function __construct($data, $status = false, $message = false)
 	{
@@ -28,12 +30,22 @@ class JSONResponse extends Response
 	        $data['status'] = strtolower($status);
 	    }
 	    
-        $this->content = @json_encode($data);
+        $this->data = $data;
 	}
+
+    public function getValue()
+    {
+        return $this->data;
+    }
 
 	public function getData()
 	{
-	    return $this->content;
+	    if (!$this->content)
+	    {
+            $this->content = @json_encode($this->data);
+        }
+        
+        return $this->content;
 	}
 }
 
