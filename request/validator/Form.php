@@ -126,8 +126,8 @@ class Form
 	
 	public function clearData()
 	{
-        $this->data = array();
-    }
+		$this->data = array();
+	}
 }
 
 ?>

@@ -8,15 +8,15 @@
  */
 class ConditionalCheck extends Check
 {
-    protected $check;
-    protected $condition;
-        
-    function __construct(CheckCondition $condition, Check $check)
-    {
-        $this->check = $check;    
-        $this->condition = $condition;    
-    }    
-    
+	protected $check;
+	protected $condition;
+		
+	function __construct(CheckCondition $condition, Check $check)
+	{
+		$this->check = $check;	
+		$this->condition = $condition;	
+	}	
+	
 	public function getViolationMsg()
 	{
 		return $this->check->getViolationMsg();
@@ -39,16 +39,16 @@ class ConditionalCheck extends Check
 	
 	public function isValid($value)
 	{
-        if ($this->condition->isSatisfied())
-        {
-            return $this->check->isValid($value);         
-        }
-        else
-        {
-            // skip validation if the condition is not satisfied
-            return true;
-        }
-    }    
+		if ($this->condition->isSatisfied())
+		{
+			return $this->check->isValid($value);		 
+		}
+		else
+		{
+			// skip validation if the condition is not satisfied
+			return true;
+		}
+	}	
 }
 
 ?>

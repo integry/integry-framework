@@ -36,7 +36,7 @@ abstract class CompositeResponse extends Response
 	public function addAction($actionOutputHandle, $controllerName, $actionName)
 	{
 		$this->requestedActionList[$actionOutputHandle] = array(self::CONTROLLER_HANDLE => $controllerName, 
-                                                            self::ACTION_HANDLE => $actionName);
+															self::ACTION_HANDLE => $actionName);
 	}
 
 	/**

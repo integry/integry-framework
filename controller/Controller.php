@@ -67,7 +67,7 @@ abstract class Controller
 	
 	public static function getCurrentController()
 	{
-	    return self::$currentController;
+		return self::$currentController;
 	}
 	
 	/**
@@ -75,7 +75,7 @@ abstract class Controller
 	 */
 	public function getRequest()
 	{
-	    return $this->request;
+		return $this->request;
 	}
 
 	/**
@@ -213,19 +213,19 @@ abstract class Controller
 	 *  The controller name is used to retrieve resources that are directly associated to a particular
 	 *  controller, for example, view templates.
 	 */	 
-    public final function setControllerName($name)
+	public final function setControllerName($name)
 	{
-        $this->controllerName = $name;
-    }
-    
+		$this->controllerName = $name;
+	}
+	
 	/**
 	 *  Get controller identification string
 	 */
-    public final function getControllerName()
-    {
-        return $this->controllerName;
-    }
-    
+	public final function getControllerName()
+	{
+		return $this->controllerName;
+	}
+	
 	/**
 	 * Adds a block to a controller layout
 	 *

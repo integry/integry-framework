@@ -13,14 +13,14 @@
  */
 abstract class CheckCondition
 {
-    protected $request;
-    
-    function __construct(Request $request)
-    {
-        $this->request = $request;              
-    }
-    
-    abstract function isSatisfied();
+	protected $request;
+	
+	function __construct(Request $request)
+	{
+		$this->request = $request;			  
+	}
+	
+	abstract function isSatisfied();
 }
 
 ?>

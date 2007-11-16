@@ -57,8 +57,8 @@ class SmartyRenderer extends Renderer
 	 */
 	public function getApplication()
 	{
-        return $this->application;
-    }
+		return $this->application;
+	}
 
 	/**
 	 * Gets a smarty instance
@@ -86,11 +86,11 @@ class SmartyRenderer extends Renderer
 	{
 		if (!is_dir($dirPath))
 		{
-            mkdir($dirPath, 0777, true);
-            chmod($dirPath, 0777);
-        }
-        
-        self::$compileDir = $dirPath;
+			mkdir($dirPath, 0777, true);
+			chmod($dirPath, 0777);
+		}
+		
+		self::$compileDir = $dirPath;
 	}
 
 	public function set($name, $value)
@@ -163,7 +163,7 @@ class SmartyRenderer extends Renderer
 	 */
 	public function registerHelperList()
 	{
-        $this->tpl->plugins_dir = array_merge($this->tpl->plugins_dir, self::$helperDirectories);
+		$this->tpl->plugins_dir = array_merge($this->tpl->plugins_dir, self::$helperDirectories);
 	}
 	
 	public static function registerHelperDirectory($directory)

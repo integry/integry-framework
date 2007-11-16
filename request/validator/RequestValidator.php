@@ -242,10 +242,10 @@ class RequestValidator
 		}
 	}
 
-    public function triggerError($fieldName, $errorMessage)
-    {
-        $this->errorList[$fieldName] = $errorMessage;
-    }
+	public function triggerError($fieldName, $errorMessage)
+	{
+		$this->errorList[$fieldName] = $errorMessage;
+	}
 
 	protected function encode($data)
 	{

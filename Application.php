@@ -183,13 +183,13 @@ class Application
 				if ($controllerInstance->getLayout() != null)
 				{
 					ClassLoader::import('framework.response.BlockResponse');
-                    $structure = $controllerInstance->getLayoutStructure();
+					$structure = $controllerInstance->getLayoutStructure();
 					foreach($structure as $block)
 					{
 						if ($block['response'] instanceof BlockResponse)
 						{
 							$this->postProcessResponse($block['response'], $controllerInstance);
-                            $blockOutput = $this->getRenderer()->process($block['response'], $block['view']);
+							$blockOutput = $this->getRenderer()->process($block['response'], $block['view']);
 							$this->getRenderer()->appendValue($block['container'], $blockOutput);
 						}
 						else
@@ -228,8 +228,8 @@ class Application
 	 * @return void
 	 */
 	protected function postProcessResponse(Response $response, Controller $controllerInstance)
-    {        
-    }
+	{		
+	}
 
 	/**
 	 * Executes controllers action and returns response
@@ -241,9 +241,9 @@ class Application
 	 */
 	protected function execute($controllerInstance, $actionName)
 	{
-        try
+		try
 		{
-            $response = $controllerInstance->execute($actionName, $this->getRequest());
+			$response = $controllerInstance->execute($actionName, $this->getRequest());
 			$this->processResponse($response);
 			$this->postProcessResponse($response, $controllerInstance);
 			return $response;
@@ -275,19 +275,19 @@ class Application
 
 		foreach ($controllerSystemPaths as $controllerSystemPath)
 		{
-            if (file_exists($controllerSystemPath))
-    		{
-    			include_once($controllerSystemPath);
-    			$refl = new ReflectionClass($className);
-    			if (!$refl->isInstantiable())
-    			{
-                    continue;
-                }
-    			$instance = new $className($this);
-    			$instance->setControllerName($controllerName);
-    			return $instance;
-    		}            
-        }
+			if (file_exists($controllerSystemPath))
+			{
+				include_once($controllerSystemPath);
+				$refl = new ReflectionClass($className);
+				if (!$refl->isInstantiable())
+				{
+					continue;
+				}
+				$instance = new $className($this);
+				$instance->setControllerName($controllerName);
+				return $instance;
+			}			
+		}
 
 		throw new ControllerNotFoundException($controllerName);
 	}

@@ -18,8 +18,8 @@ class ApplicationException extends Exception
 		$ajax = false; //isset($_SERVER['HTTP_X_REQUESTED_WITH']) ? true : false;
 		
 				
-    	// Get new line
-    	$newLine = $ajax ? "\n" : "<br />\n";
+		// Get new line
+		$newLine = $ajax ? "\n" : "<br />\n";
 				
 		foreach($trace as $call)
 		{
@@ -30,21 +30,21 @@ class ApplicationException extends Exception
 				// Get file name and line
 				if($ajax) 
 				{
-				    $position = ($i++).": {$call['file']}:{$call['line']}";
+					$position = ($i++).": {$call['file']}:{$call['line']}";
 				}
 				else 
 				{
-				    $position = "<strong>".($i++)."</strong>: \"{$call['file']}\":{$call['line']}";
+					$position = "<strong>".($i++)."</strong>: \"{$call['file']}\":{$call['line']}";
 				}
 				
 				// Get function name
 				if(isset($call['class']) && isset($call['type']) && isset($call['function']))
 				{
-				    $functionName = "{$call['class']}{$call['type']}{$call['function']}";
+					$functionName = "{$call['class']}{$call['type']}{$call['function']}";
 				} 
 				else 
 				{
-				    $functionName = $call['function'];
+					$functionName = $call['function'];
 				}
 				
 				// Get function arguments
@@ -52,30 +52,30 @@ class ApplicationException extends Exception
 				$j = 1;
 				foreach($call['args'] as $argv) 
 				{
-				    switch(gettype($argv)) 
-				    {
-				        case 'string':
-				            $arguments .= "\"$argv\"";
-			            break;
-				        case 'boolean':
-				             $arguments .= ($argv ? 'true' : 'false');
-			            break;
-				        case 'integer':
-				        case 'double':
-				             $arguments .= $argv;
-			            break;
-				        case 'object':
-				             $arguments .= "(object)" . get_class($argv);
-				        break;
-				        case 'array':
-				             $arguments .= "Array";
-			            break;
-				        default:
-				            $arguments .= $argv;
-			            break;
-				    }
-				    
-				    if($j < count($call['args'])) $arguments .= ", "; $j++;
+					switch(gettype($argv)) 
+					{
+						case 'string':
+							$arguments .= "\"$argv\"";
+						break;
+						case 'boolean':
+							 $arguments .= ($argv ? 'true' : 'false');
+						break;
+						case 'integer':
+						case 'double':
+							 $arguments .= $argv;
+						break;
+						case 'object':
+							 $arguments .= "(object)" . get_class($argv);
+						break;
+						case 'array':
+							 $arguments .= "Array";
+						break;
+						default:
+							$arguments .= $argv;
+						break;
+					}
+					
+					if($j < count($call['args'])) $arguments .= ", "; $j++;
 				}
 
 				

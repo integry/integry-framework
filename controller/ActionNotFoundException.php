@@ -13,7 +13,7 @@ class ActionNotFoundException extends HTTPStatusException
 
 	public function __construct(Controller $controller, $message = false)
 	{
-	    parent::__construct($controller, self::STATUS_CODE, $message);
+		parent::__construct($controller, self::STATUS_CODE, $message);
 	}
 }
 

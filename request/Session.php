@@ -10,7 +10,7 @@
  */
 class Session
 {
-    public function __construct($name = null)
+	public function __construct($name = null)
 	{
 		if (!empty($name))
 		{
@@ -70,25 +70,25 @@ class Session
 	 * @param string $name
 	 * @return mixed
 	 */
-    public function pullValue($name)
-    {
-        $value = $this->get($name);
-        $this->unsetValue($name);
-        
-        return $value;
-    }
+	public function pullValue($name)
+	{
+		$value = $this->get($name);
+		$this->unsetValue($name);
+		
+		return $value;
+	}
 
-    public function getObject($name)
-    {
+	public function getObject($name)
+	{
 		if (!empty($_SESSION[$name]))
 		{			
-            return unserialize($_SESSION[$name]);
+			return unserialize($_SESSION[$name]);
 		}
 		else
 		{
 			return null;
-		}        
-    }
+		}		
+	}
 
 	public function isValueSet($value)
 	{

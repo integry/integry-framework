@@ -98,14 +98,14 @@ class ClassLoader
 	 */
 	public static function mountPath($mountName, $fullDirPath)
 	{
-	    $fullDirPath = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $fullDirPath);
+		$fullDirPath = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $fullDirPath);
 		if (file_exists($fullDirPath))
 		{
 			self::$mountList[$mountName] = $fullDirPath;
 		}
 		else
 		{
-		    throw new ClassLoaderException("No such directory: $fullDirPath");
+			throw new ClassLoaderException("No such directory: $fullDirPath");
 		}
 	}
 
@@ -258,7 +258,7 @@ class ClassLoader
 	 */
 	public static function getBaseDir()
 	{
-        if (!empty(self::$mountList["."]))
+		if (!empty(self::$mountList["."]))
 		{
 			return self::$mountList["."];
 		}
@@ -273,7 +273,7 @@ class ClassLoader
 	public static function getRealPath($path)
 	{
 		$mounted = self::mapToMountPoint($path); 
-        
+		
 		foreach ($mounted as $path)
 		{
 			$path = str_replace('.', DIRECTORY_SEPARATOR, $path);

@@ -79,7 +79,7 @@ class Route
 			foreach ($matches[1] as $paramName)
 		  	{
 				$rules[$paramName] = !empty($paramValueRequirements[$paramName]) ? $paramValueRequirements[$paramName] : $this->defaulParamValueRequirement;
-				$recognitionPattern = str_replace(':' . $paramName, '(' . $rules[$paramName] . ')', $recognitionPattern);	    		
+				$recognitionPattern = str_replace(':' . $paramName, '(' . $rules[$paramName] . ')', $recognitionPattern);				
 			}
 		}
 		

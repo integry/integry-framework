@@ -10,12 +10,12 @@ ClassLoader::import("framework.response.Response");
  */
 class AutoCompleteResponse extends Response
 {
-    private $content = "";
+	private $content = "";
 
 	public function __construct($data)
 	{
-        if (!is_array($data))
-        {
+		if (!is_array($data))
+		{
 		  	throw new Exception('AutoCompleteResponse::__construct needs an array passed!');
 		}
 				
@@ -24,7 +24,7 @@ class AutoCompleteResponse extends Response
 
 	public function getData()
 	{
-	    $listHtml = array('<ul>');
+		$listHtml = array('<ul>');
 	   	
 	  	$li = new HtmlElement('li');
 		foreach ($this->content as $key => $value)
@@ -34,7 +34,7 @@ class AutoCompleteResponse extends Response
 			$listHtml[] = $li->render();
 		} 
 	   
-	    $listHtml[] = '</ul>';
+		$listHtml[] = '</ul>';
 
 		return implode("\n", $listHtml);
 	}

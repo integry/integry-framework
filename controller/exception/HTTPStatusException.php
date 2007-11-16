@@ -10,9 +10,9 @@ ClassLoader::import("framework.ApplicationException");
  */
 abstract class HTTPStatusException extends ApplicationException
 {
-    /**
-     * @var BaseController
-     */
+	/**
+	 * @var BaseController
+	 */
 	private $controller = null;
 	private $statusCode = 200;
 
@@ -33,7 +33,7 @@ abstract class HTTPStatusException extends ApplicationException
 
 	public function getStatusCode()
 	{
-	    return $this->statusCode;
+		return $this->statusCode;
 	}
 	
 	/**
@@ -41,13 +41,13 @@ abstract class HTTPStatusException extends ApplicationException
 	 */
 	public function getController()
 	{
-	    return $this->controller;
+		return $this->controller;
 	}
 	
 	public static function getCodeMeaning($code)
 	{
-	    $meanings = array (
-		    100 => 'Continue',
+		$meanings = array (
+			100 => 'Continue',
 			101 => 'Switching Protocols',
 			102 => 'Processing (WebDAV)',
 			200 => 'OK. Standard response for HTTP successful requests.',
@@ -100,9 +100,9 @@ abstract class HTTPStatusException extends ApplicationException
 			507 => 'Insufficient Storage (WebDAV)',
 			509 => 'Bandwidth Limit Exceeded',
 			510 => 'Not Extended (RFC 2774)',
-	    );
-	    
-	    return isset($meanings[$code]) ? $meanings[$code] : 'Unknown code';
+		);
+		
+		return isset($meanings[$code]) ? $meanings[$code] : 'Unknown code';
 	}
 }
 

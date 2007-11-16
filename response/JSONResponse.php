@@ -10,42 +10,42 @@ ClassLoader::import("framework.response.Response");
  */
 class JSONResponse extends Response
 {
-    private $content;
+	private $content;
 
-    private $data;
+	private $data;
 
 	public function __construct($data, $status = false, $message = false)
 	{
-	    $this->setHeader('Cache-Control', 'no-cache, must-revalidate');
-	    $this->setHeader('Expires', 'Mon, 26 Jul 1997 05:00:00 GMT');
-	    $this->setHeader('Content-type', 'text/javascript');
-        
-	    if($message)
-	    {
-	        $data['message'] = $message;
-	    }
-	    
-	    if($status)
-	    {
-	        $data['status'] = strtolower($status);
-	    }
-	    
-        $this->data = $data;
+		$this->setHeader('Cache-Control', 'no-cache, must-revalidate');
+		$this->setHeader('Expires', 'Mon, 26 Jul 1997 05:00:00 GMT');
+		$this->setHeader('Content-type', 'text/javascript');
+		
+		if($message)
+		{
+			$data['message'] = $message;
+		}
+		
+		if($status)
+		{
+			$data['status'] = strtolower($status);
+		}
+		
+		$this->data = $data;
 	}
 
-    public function getValue()
-    {
-        return $this->data;
-    }
+	public function getValue()
+	{
+		return $this->data;
+	}
 
 	public function getData()
 	{
-	    if (!$this->content)
-	    {
-            $this->content = @json_encode($this->data);
-        }
-        
-        return $this->content;
+		if (!$this->content)
+		{
+			$this->content = @json_encode($this->data);
+		}
+		
+		return $this->content;
 	}
 }
 

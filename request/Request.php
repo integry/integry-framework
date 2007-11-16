@@ -41,11 +41,11 @@ class Request
 		$this->setValueArray($_POST);
 		
 		foreach($_FILES as $varName => $value) 
-        { 
-            $_FILES[$varName]['uploaded_file_array'] = true; 
-        }
+		{ 
+			$_FILES[$varName]['uploaded_file_array'] = true; 
+		}
 		
-        $this->setValueArray($_FILES);
+		$this->setValueArray($_FILES);
 		$this->setValueArray($_COOKIE);
 
 		$this->dataContainer = $this->removeMagicQuotes($this->dataContainer);
@@ -56,7 +56,7 @@ class Request
 	
 	public function isAjax()
 	{
-	    return $this->isAjax;
+		return $this->isAjax;
 	}
 
 	/**
@@ -71,16 +71,16 @@ class Request
 		$this->dataContainer[$name] = $value;
 	}
 
-    /**
-     * Unset a value
-     *
-     * @param string $name Name of value
-     * @return void
-     */
-    function remove($name)
-    {
-        unset($this->dataContainer[$name]);
-    }
+	/**
+	 * Unset a value
+	 *
+	 * @param string $name Name of value
+	 * @return void
+	 */
+	function remove($name)
+	{
+		unset($this->dataContainer[$name]);
+	}
 	
 	/**
 	 * Register an array of values to a request
@@ -92,9 +92,9 @@ class Request
 	{
 		if (!is_array($dataArray))
 		{
-            $dataArray = array();    
-        }
-        $this->dataContainer = array_merge($this->dataContainer, $dataArray);
+			$dataArray = array();	
+		}
+		$this->dataContainer = array_merge($this->dataContainer, $dataArray);
 	}
 
 	/**
@@ -168,10 +168,10 @@ class Request
 	 */
 	public function isValueSet($name)
 	{
-	    if(isset($this->dataContainer[$name]) && is_array($this->dataContainer[$name]) && isset($this->dataContainer[$name]['uploaded_file_array'])) {
-	        return 0 == $this->dataContainer[$name]['error'];
-	    }
-	    
+		if(isset($this->dataContainer[$name]) && is_array($this->dataContainer[$name]) && isset($this->dataContainer[$name]['uploaded_file_array'])) {
+			return 0 == $this->dataContainer[$name]['error'];
+		}
+		
 		return isset($this->dataContainer[$name]);
 	}
 
@@ -189,32 +189,32 @@ class Request
 	{
 	   if (get_magic_quotes_gpc() == 1)
 	   {
-	       $newArray = array();   
-	      
-	       foreach ($postArray as $key => $val)
-	       {
-	           if (is_array($val))
-	           {
-	               $newArray[$key] = $this->removeMagicQuotes ($val, $trim, isset($val['uploaded_file_array']));
-	           }
-	           else
-	           {
-	               if ($trim == true)
-	               {
-	                   $val = trim($val);
-	               }
-	               
-	               if($isFile && 'tmp_name' == $key) $newArray[$key] = $val;
-	               else $newArray[$key] = stripslashes($val);
-	           }
-	       }   
-	      
-	       return $newArray;   
+		   $newArray = array();   
+		  
+		   foreach ($postArray as $key => $val)
+		   {
+			   if (is_array($val))
+			   {
+				   $newArray[$key] = $this->removeMagicQuotes ($val, $trim, isset($val['uploaded_file_array']));
+			   }
+			   else
+			   {
+				   if ($trim == true)
+				   {
+					   $val = trim($val);
+				   }
+				   
+				   if($isFile && 'tmp_name' == $key) $newArray[$key] = $val;
+				   else $newArray[$key] = stripslashes($val);
+			   }
+		   }   
+		  
+		   return $newArray;   
 	   }
 	   else
 	   {
-	       return $postArray;   
-	   }       
+		   return $postArray;   
+	   }	   
 	}	
 }
 
