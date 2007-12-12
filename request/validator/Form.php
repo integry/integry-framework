@@ -26,6 +26,8 @@ class Form
 
 	private $enableClientSideValidation = true;
 
+	private $params = array();
+
 	public function __construct(RequestValidator $validator)
 	{
 		$this->validator = $validator;
@@ -123,10 +125,20 @@ class Form
 	{
 		return $this->enableClientSideValidation;
 	}
-	
+
 	public function clearData()
 	{
 		$this->data = array();
+	}
+
+	public function setParam($key, $value)
+	{
+		$this->params[$key] = $value;
+	}
+
+	public function getParams()
+	{
+		return $this->params;
 	}
 }
 
