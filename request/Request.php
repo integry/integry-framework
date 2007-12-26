@@ -160,6 +160,21 @@ class Request
 		return $this->get(self::CONTROLLER_NAME);
 	}
 
+	public function setActionName($actionName)
+	{
+		return $this->set(self::ACTION_NAME, $actionName);
+	}
+
+	/**
+	 * Gets a controller name from a request
+	 *
+	 * @return mixed null if there is no controller name value
+	 */
+	public function setControllerName($controllerName)
+	{
+		return $this->set(self::CONTROLLER_NAME, $controllerName);
+	}
+
 	/**
 	 * Checks if such a request variable has an assigned value
 	 *

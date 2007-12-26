@@ -17,7 +17,7 @@ class Router
 	 * @var Request
 	 */
 	private $request;
-	
+
 	/**
 	 * The list of defined routes
 	 *
@@ -71,7 +71,7 @@ class Router
 	private $isHttps = false;
 
 	private $urlScheme = 'http://';
-	
+
 	private $variableSeparator = '&amp;';
 
 	/**
@@ -83,7 +83,7 @@ class Router
 	private $isURLRewriteEnabled = true;
 
 	private $virtualBaseDir;
-	
+
 	/**
 	 * Custom return route
 	 *
@@ -92,8 +92,8 @@ class Router
 	private $returnPath;
 
 	private $autoAppendVariableList = array();
-	
-	private $autoAppendQueryVariableList = array();	
+
+	private $autoAppendQueryVariableList = array();
 
 	private $sslActions = array();
 
@@ -105,14 +105,14 @@ class Router
 	public function __construct(Request $request)
 	{
 		$this->request = $request;
-		
+
 		if (!empty($_SERVER['HTTPS']) && 'off' != $_SERVER['HTTPS'])
 		{
 			$this->urlScheme = 'https://';
 			$this->isHttps = true;
 		}
-		
-		$this->baseDir = dirname($_SERVER['PHP_SELF']);		
+
+		$this->baseDir = dirname($_SERVER['PHP_SELF']);
 		if (strlen($this->baseDir) > 1)
 		{
 			$this->baseDir .= '/';
@@ -138,7 +138,7 @@ class Router
 		if (!$this->virtualBaseDir)
 		{
 			$URI = $_SERVER['REQUEST_URI'];
-				
+
 			$queryStartPos = strpos($URI, '?');
 			if ($queryStartPos !== false)
 			{
@@ -152,9 +152,9 @@ class Router
 			$route = $this->getRequestedRoute();
 
 			$this->virtualBaseDir = str_replace($route, "", urldecode($URIBase));
-			
+
 			// strip double slashes
-			$this->virtualBaseDir = preg_replace('/\/{2,}$/', '/', $this->virtualBaseDir);			
+			$this->virtualBaseDir = preg_replace('/\/{2,}$/', '/', $this->virtualBaseDir);
 		}
 
 		return $this->virtualBaseDir;
@@ -164,9 +164,9 @@ class Router
 	{
 		$this->baseDir = $dir;
 		$this->virtualBaseDir = $virtualBaseDir;
-				
+
 		$this->baseUrl = $this->urlScheme . $_SERVER['SERVER_NAME'] . $this->baseDir;
-		$this->httpsBaseUrl = 'https://' . $_SERVER['SERVER_NAME'] . $this->baseDir;		
+		$this->httpsBaseUrl = 'https://' . $_SERVER['SERVER_NAME'] . $this->baseDir;
 	}
 
 	/**
@@ -202,7 +202,7 @@ class Router
 	 *
 	 * Routes are evaluated (mapToRoute(), createUrl() functions) in the order they were
 	 * added. To add a route to the beginning of the route list, use connectPriority()
-	 * 
+	 *
 	 * @link http://www.symfony-project.com/book/trunk/routing
 	 *
 	 * @param string $routeDefinitionPattern
@@ -259,7 +259,7 @@ class Router
 		{
 			$URLStr = substr($URLStr, 0, -1);
 		}
-		
+
 		if (empty($URLStr) || !$this->isURLRewriteEnabled)
 		{
 			if (!$request->isValueSet("action"))
@@ -279,20 +279,20 @@ class Router
 			if (preg_match("/^" . $routePattern . "$/U", $URLStr, $result))
 			{
 				unset($result[0]);
-				
+
 				$varList = $route->getVariableList();
 
 				foreach ($varList as $key => $value)
 				{
 				  	$request->set($value, $result[$key + 1]);
 				}
-				
+
 				$requestValueAssigments = $route->getRequestValueAssigments();
 				foreach ($requestValueAssigments as $paramName => $value)
 				{
 					$request->set($paramName, $value);
 				}
-				
+
 				return $route;
 			}
 		}
@@ -309,7 +309,7 @@ class Router
 	public function createURL($URLParamList, $isXHtml = false)
 	{
 		$variableSeparator = $isXHtml ? '&amp;' : '&';
-		
+
 		if (!isset($URLParamList['controller']))
 		{
 			$URLParamList['controller'] = $this->defaultController;
@@ -320,31 +320,6 @@ class Router
 			$URLParamList['action'] = $this->defaultAction;
 		}
 
-		// merging persisted variables into an URL variable array
-		$URLParamList = array_merge($this->autoAppendVariableList, $URLParamList);
-
-		$queryToAppend = "";
-		
-		if ($this->autoAppendQueryVariableList)
-		{
-			$queryVars = implode($variableSeparator, array_keys($this->autoAppendQueryVariableList));
-			if (!empty($URLParamList['query']))
-			{
-				$URLParamList['query'] .= $variableSeparator . $queryVars;				
-			}
-			else
-			{
-				$URLParamList['query'] = $queryVars;
-			}
-		}
-		
-		$addReturnPath = false;
-		if (!empty($URLParamList['returnPath']))
-		{
-			$addReturnPath = true;
-			unset($URLParamList['returnPath']);
-		}
-		
 		if (!empty($URLParamList['query']))
 		{
 			if (is_array($URLParamList['query']))
@@ -353,14 +328,42 @@ class Router
 				foreach ($URLParamList['query'] as $key => $value)
 				{
 					$pairs[] = urlencode($key) . '=' . urlencode($value);
-				}   
+				}
 				$URLParamList['query'] = implode($variableSeparator, $pairs);
 			}
-			
+		}
+
+		// merging persisted variables into an URL variable array
+		$URLParamList = array_merge($this->autoAppendVariableList, $URLParamList);
+
+		$queryToAppend = "";
+
+		if ($this->autoAppendQueryVariableList)
+		{
+			$queryVars = implode($variableSeparator, array_keys($this->autoAppendQueryVariableList));
+			if (!empty($URLParamList['query']))
+			{
+				$URLParamList['query'] = $queryVars . $variableSeparator . $URLParamList['query'];
+			}
+			else
+			{
+				$URLParamList['query'] = $queryVars;
+			}
+		}
+
+		$addReturnPath = false;
+		if (!empty($URLParamList['returnPath']))
+		{
+			$addReturnPath = true;
+			unset($URLParamList['returnPath']);
+		}
+
+		if (!empty($URLParamList['query']))
+		{
 			$queryToAppend = ((strpos($this->virtualBaseDir, '?') === false) ? '?' : '&') . $URLParamList['query'];
 			unset($URLParamList['query']);
 		}
-		
+
 		/* Handling special case: URL rewrite is not enabled */
 		if (!$this->isURLRewriteEnabled)
 		{
@@ -369,25 +372,25 @@ class Router
 		/* end */
 
 		$matchingRoute = $this->findRoute($URLParamList);
-		
+
 		if ($matchingRoute == null)
 		{
-			throw new RouterException("Router::createURL - Unable to find matching route <Br />" . 
+			throw new RouterException("Router::createURL - Unable to find matching route <Br />" .
 									  var_export($URLParamList, true));
 		}
-		
+
 		$url = $matchingRoute->getDefinitionPattern();
-		
+
 		$params = array_keys($URLParamList);
 		$p = array();
 		foreach ($params as $value)
 		{
 			$p[] = ':' . $value;
 		}
-		
+
 		$values = array_values($URLParamList);
 		$url = str_replace($p, $values, $url);
-		
+
 		$url = $this->getBaseDirFromUrl() . $url . $queryToAppend;
 
 		if ($this->isSsl($URLParamList['controller'], $URLParamList['action']))
@@ -402,29 +405,29 @@ class Router
 
 		return $url;
 	}
-	
+
 	public function createFullUrl($relativeUrl, $https = null)
 	{
 		if (preg_match('/^http[s]{0,1}:\/\//i', $relativeUrl))
 		{
 			return $relativeUrl;
 		}
-		
+
 		$parts = parse_url($https ? $this->httpsBaseUrl : $this->baseUrl);
-		
+
 		if (false === $https)
 		{
 			$parts['scheme'] = 'http';
 		}
-		
+
 		return $parts['scheme'] . '://' . $parts['host'] . (isset($parts['port']) ? ':' . $parts['port'] : '') . $relativeUrl;
 	}
-	
+
 	public function setReturnPath($returnRoute)
 	{
 		$this->returnPath = $returnRoute;
 	}
-	
+
 	public function setVariableSeparator($separator)
 	{
 		$this->variableSeparator = $separator;
@@ -437,10 +440,10 @@ class Router
 
 	private function findRoute($URLParamList)
 	{
-		$urlParamNames = array_keys($URLParamList);		
-			
+		$urlParamNames = array_keys($URLParamList);
+
 		$matchingRoute = null;
-		
+
 		foreach ($this->routeListByParamCount[count($urlParamNames)] as $route)
 		{
 			$routeExpectedParamList = $route->getParamList();
@@ -459,13 +462,13 @@ class Router
 						$matchingRoute = $route;
 					}
 				}
-				
+
 				if ($matchingRoute)
 				{
 				  	return $matchingRoute;
-				}				
+				}
 			}
-		}		
+		}
 	}
 
 	private function createQueryString($URLParamList)
@@ -475,7 +478,7 @@ class Router
 		{
 			$assigmentList[] = $paramName . "=" . urlencode($value);
 		}
-						
+
 		return ((strpos($this->virtualBaseDir, '?') === false) ? '?' : '&') . implode("&", $assigmentList);
 	}
 
@@ -508,7 +511,7 @@ class Router
 	{
 		return $this->request->get('route', null);
 	}
-	
+
 	public function setRequestedRoute($route)
 	{
 		$this->request->set('route', $route);
@@ -524,20 +527,20 @@ class Router
 		{
 			$route = substr($route, 0, strpos($route, '?'));
 		}
-		
+
 		return $route;
 	}
-	
+
 	public function createUrlFromRoute($route, $isXHtml = false)
 	{
 		$variableSeparator = $isXHtml ? '&amp;' : '&';
-		
+
 		$query = implode($variableSeparator, array_keys($this->autoAppendQueryVariableList));
 		if ($query)
 		{
 			$query = '?' . $query;
 		}
-		
+
 		return $this->getBaseDirFromUrl() . $route . $query;
 	}
 
@@ -557,17 +560,17 @@ class Router
 				$params[$key] = $value;
 			}
 		}
-		
-		$params[$param] = $paramValue; 
-		
+
+		$params[$param] = $paramValue;
+
 		$pairs = array();
 		foreach ($params as $key => $value)
 		{
 			$pairs[] = $key . '=' . $value;
 		}
-		
+
 		$url = $parts[0] . '?' . implode($this->variableSeparator, $pairs);
-		
+
 		return $url;
 	}
 
@@ -580,7 +583,7 @@ class Router
 		{
 			return $url;
 		}
-	
+
 		$pairs = explode('&', $_SERVER['QUERY_STRING']);
 
 		foreach ($pairs as $pair)
@@ -588,7 +591,7 @@ class Router
 			list($param, $value) = explode('=', $pair, 2);
 			$url = $this->setUrlQueryParam($url, $param, $value);
 		}
-		
+
 		return $url;
 	}
 
@@ -605,7 +608,7 @@ class Router
 	}
 
 	/**
-	 * Set variable list that will automatically be appended to URL query part 
+	 * Set variable list that will automatically be appended to URL query part
 	 * (for example, ?currency=USD). This method should be used when there are no
 	 * special routing cases defined for the particular variable.
 	 *
@@ -616,7 +619,7 @@ class Router
 	{
 		$this->autoAppendQueryVariableList[$key . '=' . $value] = true;
 	}
-	
+
 	public function setSslAction($controller = '', $action = '')
 	{
 		if (!isset($this->sslActions[$controller]))
@@ -633,21 +636,21 @@ class Router
 			$this->sslActions[$controller] = array();
 		}
 	}
-	
+
 	public function isSSL($controller, $action)
 	{
 		return
-					
+
 			// all actions are SSL
-			isset($this->sslActions['']) 
-			
+			isset($this->sslActions[''])
+
 			// the particular action
-			|| isset($this->sslActions[$controller][$action]) 
-			
+			|| isset($this->sslActions[$controller][$action])
+
 			// all actions for the particular controller
 			|| (isset($this->sslActions[$controller]) && empty($this->sslActions[$controller]));
 	}
-	
+
 	public function isHttps()
 	{
 		return $this->isHttps;

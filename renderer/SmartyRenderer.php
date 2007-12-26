@@ -47,9 +47,9 @@ class SmartyRenderer extends Renderer
 		$this->tpl = $this->getSmartyInstance();
 		$this->tpl->load_filter('pre', 'config');
 		$this->tpl->assign("BASE_URL", $this->application->getRouter()->getBaseUrl());
-		$this->registerHelperList(); 
+		$this->registerHelperList();
 	}
-	
+
 	/**
 	 * Gets application instance
 	 *
@@ -67,6 +67,7 @@ class SmartyRenderer extends Renderer
 	 */
 	public function getSmartyInstance()
 	{
+		die('dead');
 		if (!$this->tpl)
 		{
 			$this->tpl = new Smarty();
@@ -86,10 +87,12 @@ class SmartyRenderer extends Renderer
 	{
 		if (!is_dir($dirPath))
 		{
-			mkdir($dirPath, 0777, true);
-			chmod($dirPath, 0777);
+			if (mkdir($dirPath, 0777, true))
+			{
+				chmod($dirPath, 0777);
+			}
 		}
-		
+
 		self::$compileDir = $dirPath;
 	}
 
@@ -165,7 +168,7 @@ class SmartyRenderer extends Renderer
 	{
 		$this->tpl->plugins_dir = array_merge($this->tpl->plugins_dir, self::$helperDirectories);
 	}
-	
+
 	public static function registerHelperDirectory($directory)
 	{
 		self::$helperDirectories[] = $directory;

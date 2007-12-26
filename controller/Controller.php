@@ -29,7 +29,7 @@ abstract class Controller
 	 * @var Request
 	 */
 	protected $request = null;
-	
+
 	/**
 	 * Application instance
 	 *
@@ -45,11 +45,11 @@ abstract class Controller
 	protected $layout = "";
 
 	private $blockList = array();
-	
+
 	private $controllerName;
 
 	/**
-	 * @var Controller 
+	 * @var Controller
 	 */
 	private static $currentController;
 
@@ -64,12 +64,12 @@ abstract class Controller
 		$this->request = $this->application->getRequest();
 		self::$currentController = $this;
 	}
-	
+
 	public static function getCurrentController()
 	{
 		return self::$currentController;
 	}
-	
+
 	/**
 	 * @return Request
 	 */
@@ -99,7 +99,11 @@ abstract class Controller
 	 */
 	public final function execute($actionName)
 	{
-		$this->init();
+		$result = $this->init();
+		if ($result instanceof Response)
+		{
+			return $result;
+		}
 
 		if (method_exists($this, $actionName) && $this->isAction($actionName))
 		{
@@ -206,18 +210,18 @@ abstract class Controller
 		}
 		return $structure;
 	}
-	
+
 	/**
 	 *  Set controller identification string
 	 *
 	 *  The controller name is used to retrieve resources that are directly associated to a particular
 	 *  controller, for example, view templates.
-	 */	 
+	 */
 	public final function setControllerName($name)
 	{
 		$this->controllerName = $name;
 	}
-	
+
 	/**
 	 *  Get controller identification string
 	 */
@@ -225,7 +229,7 @@ abstract class Controller
 	{
 		return $this->controllerName;
 	}
-	
+
 	/**
 	 * Adds a block to a controller layout
 	 *

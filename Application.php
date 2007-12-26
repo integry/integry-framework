@@ -197,18 +197,24 @@ class Application
 							throw new ApplicationException("Unknown response flom a block");
 						}
 					}
-					
+
 					$applicationOutput = $this->render($controllerName, $actionName, $response);
-					
+
 					$this->getRenderer()->set("ACTION_VIEW", $applicationOutput);
 					echo $this->getRenderer()->render($this->getLayoutPath($controllerInstance->getLayout()));
 					/* end layout renderer block */
 				}
 				else
 				{
-					$applicationOutput = $this->render($controllerName, $actionName, $response);
-					echo $applicationOutput;
+					echo $this->render($controllerName, $actionName, $response);
 				}
+			}
+			else if ($response instanceof InternalRedirectResponse)
+			{
+				$this->request->setControllerName($response->getControllerName());
+				$this->request->setActionName($response->getActionName());
+				$this->request->setValueArray($response->getParamList());
+				return $this->run();
 			}
 			else
 			{
@@ -228,7 +234,7 @@ class Application
 	 * @return void
 	 */
 	protected function postProcessResponse(Response $response, Controller $controllerInstance)
-	{		
+	{
 	}
 
 	/**
@@ -286,7 +292,7 @@ class Application
 				$instance = new $className($this);
 				$instance->setControllerName($controllerName);
 				return $instance;
-			}			
+			}
 		}
 
 		throw new ControllerNotFoundException($controllerName);
