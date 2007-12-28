@@ -6,7 +6,7 @@
  * Response is a data carrier between different actions and different parts of applications
  *
  * @package	framework.response
- * @author	Integry Systems 
+ * @author	Integry Systems
  */
 abstract class Response
 {
@@ -113,17 +113,19 @@ abstract class Response
 	{
 		if (headers_sent())
 		{
-			//throw new HeadersSentException();
+			return false;
 		}
+
 		/* Raw header */
 		foreach((array)$this->rawHeaderData as $header)
 		{
 			header($header);
 		}
+
 		/* Headers */
 		foreach((array)$this->headerData as $name => $value)
 		{
-			header("$name: $value");
+			header($name . ': ' . $value);
 		}
 	}
 

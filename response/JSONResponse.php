@@ -6,7 +6,7 @@ ClassLoader::import("framework.response.Response");
  * JSON response
  *
  * @package framework.response
- * @author	Integry Systems 
+ * @author	Integry Systems
  */
 class JSONResponse extends Response
 {
@@ -19,18 +19,29 @@ class JSONResponse extends Response
 		$this->setHeader('Cache-Control', 'no-cache, must-revalidate');
 		$this->setHeader('Expires', 'Mon, 26 Jul 1997 05:00:00 GMT');
 		$this->setHeader('Content-type', 'text/javascript');
-		
+
 		if($message)
 		{
 			$data['message'] = $message;
 		}
-		
+
 		if($status)
 		{
 			$data['status'] = strtolower($status);
 		}
-		
+
 		$this->data = $data;
+	}
+
+	public function flush($string)
+	{
+		if (!headers_sent())
+		{
+			$this->sendHeaders();
+		}
+
+		echo $string;
+		flush();
 	}
 
 	public function getValue()
@@ -44,7 +55,7 @@ class JSONResponse extends Response
 		{
 			$this->content = @json_encode($this->data);
 		}
-		
+
 		return $this->content;
 	}
 }
