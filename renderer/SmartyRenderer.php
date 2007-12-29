@@ -67,7 +67,6 @@ class SmartyRenderer extends Renderer
 	 */
 	public function getSmartyInstance()
 	{
-		die('dead');
 		if (!$this->tpl)
 		{
 			$this->tpl = new Smarty();
