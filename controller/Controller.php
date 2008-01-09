@@ -187,7 +187,7 @@ abstract class Controller
 	 */
 	//abstract public function prepareLayout();
 
-	public function init()
+	protected function init()
 	{
 		return ;
 	}
@@ -197,12 +197,12 @@ abstract class Controller
 	 *
 	 * @return array
 	 */
-	public final function getLayoutStructure()
+	public function getLayoutStructure()
 	{
 		$structure = array();
 		foreach($this->blockList as $value)
 		{
-			$response = call_user_func(array($this, $value['block']));
+			$response = call_user_func($value['call']);
 			if ($response != null && $response instanceof ActionResponse)
 			{
 				$structure[] = array('container' => $value['container'], 'response' => $response, 'view' => $value['view'], 'name' => $value['block']);
@@ -258,21 +258,28 @@ abstract class Controller
 	 */
 	public final function addBlock($containerName, $blockName, $viewName = null)
 	{
-		$blockMethodName = $blockName."Block";
+		if (!is_array($blockName))
+		{
+			$blockName = array($this, $blockName);
+		}
+
+		$blockMethodName = $blockName[1] . 'Block';
 
 		if (empty($viewName))
 		{
-			$viewPath = "block".DIRECTORY_SEPARATOR.$blockName.".tpl";
+			$viewPath = "block" . DIRECTORY_SEPARATOR . $blockName[1] . ".tpl";
 		}
 		else
 		{
-			$viewPath = $viewName.".tpl";
+			$viewPath = $viewName . ".tpl";
 		}
-		if (!method_exists($this, $blockMethodName))
+
+		if (!method_exists($blockName[0], $blockMethodName))
 		{
-			throw new ControllerException($this, "Block $blockName not found!");
+			throw new ControllerException($this, "Block $blockName[1] not found!");
 		}
-		$this->blockList[] = array("container" => $containerName, "block" => $blockMethodName, "view" => $viewPath);
+
+		$this->blockList[] = array("container" => $containerName, "block" => $blockMethodName, "view" => $viewPath, 'call' => array($blockName[0], $blockMethodName));
 	}
 
 	/**

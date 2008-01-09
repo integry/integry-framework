@@ -20,7 +20,7 @@ class Request
 	const CONTROLLER_NAME = 'controller';
 
 	/**
-	 * Action variable name iun request array
+	 * Action variable name in request array
 	 */
 	const ACTION_NAME = 'action';
 
@@ -37,6 +37,8 @@ class Request
 	 */
 	public function __construct()
 	{
+		$this->sanitizeArray($_GET);
+
 		$this->setValueArray($_GET);
 		$this->setValueArray($_POST);
 
@@ -203,6 +205,21 @@ class Request
 	public function clearData()
 	{
 		$this->dataContainer = array();
+	}
+
+	private function sanitizeArray(&$data)
+	{
+		foreach ($data as &$value)
+		{
+			if (is_array($value))
+			{
+				$this->sanitizeArray($value);
+			}
+			else
+			{
+				$value = strip_tags($value);
+			}
+		}
 	}
 
 	private function removeMagicQuotes ($postArray, $trim = false, $isFile = false)

@@ -66,7 +66,7 @@ class ClassLoader
 	{
 		preg_match('/([^\\' . DIRECTORY_SEPARATOR . ']+)$/', $class, $matches); //substr($class, strrpos($class, DIRECTORY_SEPARATOR));
 		$className = $matches[1];
-	
+
 		// try custom autoload functions
 		foreach (self::$autoLoadFunctions as $func => $isEnabled)
 		{
@@ -75,7 +75,7 @@ class ClassLoader
 				return true;
 			}
 		}
-		
+
 		if (!class_exists($className, false))
 		{
 			if(!(include_once($class.'.php')))
@@ -126,7 +126,7 @@ class ClassLoader
 			throw new ClassLoaderException("No such directory: $fullDirPath");
 		}
 	}
-	
+
 	/**
 	 * Removes a mount point
 	 *
@@ -185,16 +185,16 @@ class ClassLoader
 	{
 		$possiblePoints = array();
 		$parts = $pathParts = explode(".", $path);
-		
+
 		$processed = array();
 		foreach ($pathParts as $part)
 		{
 			$processed[] = $part;
 			$possiblePoints[implode('.', $processed)] = true;
 		}
-		
+
 		$res = array_intersect_key(self::$mountList, $possiblePoints);
-	
+
 		if ($res)
 		{
 			end($res);
@@ -229,11 +229,11 @@ class ClassLoader
 			foreach ($reserve[$found] as $reservePath)
 			{
 				$mountPoints[] = $reservePath . ($reserveParts ? '.' . implode(".", $reserveParts) : '');
-			}			
+			}
 		}
-		
+
 		return $mountPoints;
-	}	
+	}
 
 	/**
 	 * Removes a path from an include_path
@@ -272,8 +272,8 @@ class ClassLoader
 	 */
 	public static function getRealPath($path)
 	{
-		$mounted = self::mapToMountPoint($path); 
-		
+		$mounted = self::mapToMountPoint($path);
+
 		foreach ($mounted as $path)
 		{
 			$path = str_replace('.', DIRECTORY_SEPARATOR, $path);
@@ -283,8 +283,8 @@ class ClassLoader
 				return $path;
 			}
 		}
-		
-		return str_replace('.', DIRECTORY_SEPARATOR, $mounted[0]);			
+
+		return str_replace('.', DIRECTORY_SEPARATOR, $mounted[0]);
 	}
 
 	/**
