@@ -86,7 +86,7 @@ class SmartyRenderer extends Renderer
 	{
 		if (!is_dir($dirPath))
 		{
-			if (mkdir($dirPath, 0777, true))
+			if (@mkdir($dirPath, 0777, true))
 			{
 				chmod($dirPath, 0777);
 			}
