@@ -540,7 +540,8 @@ class Router
 			$query = '?' . $query;
 		}
 
-		return $this->getBaseDirFromUrl() . strip_tags($route) . $query;
+		$url = $this->getBaseDirFromUrl() . $route . $query;
+		return strip_tags($url);
 	}
 
 	/**
