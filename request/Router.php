@@ -507,11 +507,12 @@ class Router
 	 */
 	public function getRequestedRoute()
 	{
-		return $this->request->get('route', null);
+		return strip_tags($this->request->get('route', null));
 	}
 
 	public function setRequestedRoute($route)
 	{
+		$route = strip_tags($route);
 		$this->request->set('route', $route);
 	}
 
