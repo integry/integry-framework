@@ -288,10 +288,8 @@ class Router
 				}
 
 				$requestValueAssigments = $route->getRequestValueAssigments();
-				foreach ($requestValueAssigments as $paramName => $value)
-				{
-					$request->set($paramName, $value);
-				}
+				$request->sanitizeArray($requestValueAssigments);
+				$request->setValueArray($requestValueAssigments);
 
 				return $route;
 			}

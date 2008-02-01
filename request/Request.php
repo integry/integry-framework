@@ -207,7 +207,7 @@ class Request
 		$this->dataContainer = array();
 	}
 
-	private function sanitizeArray(&$data)
+	public function sanitizeArray(&$data)
 	{
 		foreach ($data as &$value)
 		{
