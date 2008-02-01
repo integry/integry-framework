@@ -401,7 +401,7 @@ class Router
 			$url = $this->setUrlQueryParam($url, 'return', $this->getReturnPath());
 		}
 
-		return $url;
+		return strip_tags($url);
 	}
 
 	public function createFullUrl($relativeUrl, $https = null)
@@ -521,7 +521,7 @@ class Router
 	 */
 	public function getRouteFromUrl($url)
 	{
-		$route = substr($url, strlen($this->getBaseDirFromUrl()));
+		$route = substr(strip_tags($url), strlen($this->getBaseDirFromUrl()));
 		if (strpos($route, '?'))
 		{
 			$route = substr($route, 0, strpos($route, '?'));
@@ -540,7 +540,7 @@ class Router
 			$query = '?' . $query;
 		}
 
-		return $this->getBaseDirFromUrl() . $route . $query;
+		return $this->getBaseDirFromUrl() . strip_tags($route) . $query;
 	}
 
 	/**
