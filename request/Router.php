@@ -570,7 +570,7 @@ class Router
 
 		$url = $parts[0] . '?' . implode($this->variableSeparator, $pairs);
 
-		return $url;
+		return strip_tags($url);
 	}
 
 	/**
@@ -580,7 +580,7 @@ class Router
 	{
 		if (!$_SERVER['QUERY_STRING'])
 		{
-			return $url;
+			return strip_tags($url);
 		}
 
 		$pairs = explode('&', $_SERVER['QUERY_STRING']);
