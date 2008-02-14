@@ -207,6 +207,11 @@ class Request
 		$this->dataContainer = array();
 	}
 
+	public function sanitizeAllData()
+	{
+		$this->sanitizeArray($this->dataContainer);
+	}
+
 	public function sanitizeArray(&$data)
 	{
 		foreach ($data as &$value)
