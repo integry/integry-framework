@@ -72,7 +72,7 @@ class ClassLoader
 		{
 			if ($func($class))
 			{
-				return true;
+				return $className;
 			}
 		}
 
@@ -83,6 +83,8 @@ class ClassLoader
 				throw new ClassLoaderException('File '.$class.'.php not found');
 			}
 		}
+
+		return $className;
 	}
 
 	public static function registerAutoLoadFunction($functionName)
@@ -167,11 +169,11 @@ class ClassLoader
 		if (strpos($path, '*'))
 		{
 			$path = str_replace('*', '', $path);
-			self::importPath($path);
+			return self::importPath($path);
 		}
 		else
 		{
-			self::load($path);
+			return self::load($path);
 		}
 	}
 
