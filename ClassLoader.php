@@ -220,7 +220,7 @@ class ClassLoader
 			}
 		}
 
-		$mountPoints[] = $mountedPath . implode(".", $pathParts);
+		$mountPoints[] = $mountedPath . implode(DIRECTORY_SEPARATOR, $pathParts);
 
 		$reserve = array_intersect_key(self::$reserveMountList, $possiblePoints);
 		if ($reserve)
@@ -230,7 +230,7 @@ class ClassLoader
 			$reserveParts = array_slice($parts, count(explode('.', $found)));
 			foreach ($reserve[$found] as $reservePath)
 			{
-				$mountPoints[] = $reservePath . ($reserveParts ? '.' . implode(".", $reserveParts) : '');
+				$mountPoints[] = $reservePath . ($reserveParts ? '.' . implode(DIRECTORY_SEPARATOR, $reserveParts) : '');
 			}
 		}
 
@@ -278,7 +278,6 @@ class ClassLoader
 
 		foreach ($mounted as $path)
 		{
-			$path = str_replace('.', DIRECTORY_SEPARATOR, $path);
 			$replaced = str_replace('*', '', $path);
 			if (is_file($replaced . '.php') || is_dir($replaced))
 			{
@@ -286,7 +285,7 @@ class ClassLoader
 			}
 		}
 
-		return str_replace('.', DIRECTORY_SEPARATOR, $mounted[0]);
+		return $mounted[0];
 	}
 
 	/**
