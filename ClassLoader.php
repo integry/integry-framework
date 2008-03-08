@@ -186,7 +186,14 @@ class ClassLoader
 	private static function mapToMountPoint($path)
 	{
 		$possiblePoints = array();
-		$parts = $pathParts = explode(".", $path);
+		$parts = explode(".", $path);
+
+		foreach ($parts as $key => $part)
+		{
+			$parts[$key] = str_replace('#', '.', $part);
+		}
+
+		$pathParts = $parts;
 
 		$processed = array();
 		foreach ($pathParts as $part)
@@ -202,7 +209,7 @@ class ClassLoader
 			end($res);
 			$found = key($res);
 			$pathParts = array_slice($pathParts, count(explode('.', $found)));
-			$mountedPath = $res[$found] . ($pathParts ? '.' : '');
+			$mountedPath = $res[$found] . ($pathParts ? DIRECTORY_SEPARATOR : '');
 		}
 		else
 		{
@@ -230,7 +237,7 @@ class ClassLoader
 			$reserveParts = array_slice($parts, count(explode('.', $found)));
 			foreach ($reserve[$found] as $reservePath)
 			{
-				$mountPoints[] = $reservePath . ($reserveParts ? '.' . implode(DIRECTORY_SEPARATOR, $reserveParts) : '');
+				$mountPoints[] = $reservePath . ($reserveParts ? DIRECTORY_SEPARATOR . implode(DIRECTORY_SEPARATOR, $reserveParts) : '');
 			}
 		}
 

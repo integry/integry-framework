@@ -607,6 +607,11 @@ class Router
 		$this->autoAppendVariableList = $assocArray;
 	}
 
+	public function removeAutoAppendVariable($key)
+	{
+		unset($this->autoAppendVariableList[$key]);
+	}
+
 	/**
 	 * Set variable list that will automatically be appended to URL query part
 	 * (for example, ?currency=USD). This method should be used when there are no

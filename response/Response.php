@@ -20,6 +20,8 @@ abstract class Response
 	 */
 	private $headerData = array();
 
+	private $statusCode = null;
+
 	/**
 	 * Sets raw header to response
 	 *
@@ -127,6 +129,16 @@ abstract class Response
 		{
 			header($name . ': ' . $value);
 		}
+
+		if ($this->statusCode)
+		{
+			header(' ', true, $this->statusCode);
+		}
+	}
+
+	public function setStatusCode($status)
+	{
+		$this->statusCode = !(int)$status ? 200 : $status;
 	}
 
 	abstract public function getData();

@@ -20,14 +20,14 @@ abstract class HTTPStatusException extends ApplicationException
 	{
 		$this->controller = $controller;
 		$this->statusCode = $statusCode;
-		
+
 		if(!$message)
 		{
 			$action = $this->getController()->getRequest()->getControllerName() . '/' . $this->getController()->getRequest()->getActionName();
 			$code = $this->getStatusCode() . ' (' . self::getCodeMeaning($this->getStatusCode()) . ')';
 			$message = "Error accessing $action.\n $code";
 		}
-		
+
 		parent::__construct($message);
 	}
 
@@ -35,7 +35,7 @@ abstract class HTTPStatusException extends ApplicationException
 	{
 		return $this->statusCode;
 	}
-	
+
 	/**
 	 * @return Controller
 	 */
@@ -43,7 +43,7 @@ abstract class HTTPStatusException extends ApplicationException
 	{
 		return $this->controller;
 	}
-	
+
 	public static function getCodeMeaning($code)
 	{
 		$meanings = array (
@@ -101,7 +101,7 @@ abstract class HTTPStatusException extends ApplicationException
 			509 => 'Bandwidth Limit Exceeded',
 			510 => 'Not Extended (RFC 2774)',
 		);
-		
+
 		return isset($meanings[$code]) ? $meanings[$code] : 'Unknown code';
 	}
 }

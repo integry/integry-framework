@@ -198,7 +198,7 @@ class Application
 						}
 					}
 
-					$applicationOutput = $this->render($controllerName, $actionName, $response);
+					$applicationOutput = $this->render($controllerInstance, $response);
 
 					$this->getRenderer()->set("ACTION_VIEW", $applicationOutput);
 					echo $this->getRenderer()->render($this->getLayoutPath($controllerInstance->getLayout()));
@@ -206,7 +206,7 @@ class Application
 				}
 				else
 				{
-					echo $this->render($controllerName, $actionName, $response);
+					echo $this->render($controllerInstance, $response);
 				}
 			}
 			else if ($response instanceof InternalRedirectResponse)
@@ -345,14 +345,16 @@ class Application
 	/**
 	 * Renders response from controller action
 	 *
-	 * @param string $controllerName Controller name
-	 * @param string $actionName Action name
+	 * @param string $controllerInstance Controller
 	 * @param Response $response Response to render
 	 * @return string Renderer content
 	 * @throws ViewNotFoundException if view does not exists for specified controller
 	 */
-	public function render($controllerName, $actionName, Response $response)
+	protected function render(Controller $controllerInstance, Response $response)
 	{
+		$controllerName = $this->getRequest()->getControllerName();
+		$actionName = $this->getRequest()->getActionName();
+
 		try
 		{
 			return $this->getRenderer()->process($response, $this->getView($controllerName, $actionName));
