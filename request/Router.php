@@ -276,6 +276,8 @@ class Router
 		foreach ($this->routeList as $route)
 		{
 			$routePattern = str_replace('\047', '\/', $route->getRecognitionPattern());
+			$routePattern = str_replace('.', '\.', $routePattern);
+
 			if (preg_match("/^" . $routePattern . "$/U", $URLStr, $result))
 			{
 				unset($result[0]);
@@ -307,6 +309,11 @@ class Router
 	public function createURL($URLParamList, $isXHtml = false)
 	{
 		$variableSeparator = $isXHtml ? '&amp;' : '&';
+
+		if (isset($URLParamList['']))
+		{
+			unset($URLParamList['']);
+		}
 
 		if (!isset($URLParamList['controller']))
 		{
