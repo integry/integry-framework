@@ -332,7 +332,8 @@ class Application
 				{
 					$controllerName = $location[CompositeResponse::CONTROLLER_HANDLE];
 					$actionName = $location[CompositeResponse::ACTION_HANDLE];
-					$response->set($outputHandle, $this->render($controllerName, $actionName, $this->execute($this->getControllerInstance($controllerName), $actionName)));
+					$instance = $this->getControllerInstance($controllerName);
+					$response->set($outputHandle, $this->render($instance, $this->execute($instance, $actionName), $actionName));
 				}
 			}
 			catch(ApplicationException $ex)
@@ -350,10 +351,10 @@ class Application
 	 * @return string Renderer content
 	 * @throws ViewNotFoundException if view does not exists for specified controller
 	 */
-	protected function render(Controller $controllerInstance, Response $response)
+	protected function render(Controller $controllerInstance, Response $response, $actionName = null)
 	{
 		$controllerName = $this->getRequest()->getControllerName();
-		$actionName = $this->getRequest()->getActionName();
+		$actionName = $actionName ? $actionName : $this->getRequest()->getActionName();
 
 		try
 		{
