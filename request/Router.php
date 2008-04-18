@@ -97,6 +97,8 @@ class Router
 
 	private $sslActions = array();
 
+	private $sslHost = '';
+
 	/**
 	 * Router constructor
 	 *
@@ -425,6 +427,11 @@ class Router
 			$parts['scheme'] = 'http';
 		}
 
+		if (('https' == $parts['scheme']) && $this->sslHost)
+		{
+			$parts['host'] = $this->sslHost;
+		}
+
 		return $parts['scheme'] . '://' . $parts['host'] . (isset($parts['port']) ? ':' . $parts['port'] : '') . $relativeUrl;
 	}
 
@@ -647,6 +654,11 @@ class Router
 		{
 			$this->sslActions[$controller] = array();
 		}
+	}
+
+	public function setSslHost($hostName)
+	{
+		$this->sslHost = $hostName;
 	}
 
 	public function isSSL($controller, $action)
