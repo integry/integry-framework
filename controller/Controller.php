@@ -139,14 +139,13 @@ abstract class Controller
 		$thisControllerName = get_class($this);
 		$controllerMethod = new ReflectionMethod($thisControllerName, $actionName);
 		$reflectionClass = $controllerMethod->getDeclaringClass();
-		if ($thisControllerName != $reflectionClass->getName() || !$controllerMethod->isPublic())
+
+		if (!$controllerMethod->isPublic())
 		{
 			return false;
 		}
-		else
-		{
-			return true;
-		}
+
+		return !(($thisControllerName != $reflectionClass->getName()) && $reflectionClass->isAbstract() && !call_user_func(array($reflectionClass->getName(), 'isCallable')));
 	}
 
 	/**
@@ -302,6 +301,10 @@ abstract class Controller
 		}
 	}
 
+	public static function isCallable()
+	{
+		return false;
+	}
 }
 
 ?>
