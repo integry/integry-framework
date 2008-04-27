@@ -191,23 +191,24 @@ abstract class Controller
 		return ;
 	}
 
-	/**
-	 * Gets a structure of the layout that you created
-	 *
-	 * @return array
-	 */
-	public function getLayoutStructure()
+	public function getBlockResponse($block)
 	{
-		$structure = array();
-		foreach($this->blockList as $value)
+		ClassLoader::import('framework.response.BlockResponse');
+		return call_user_func($block['call']);
+	}
+
+	public function getBlocks($name)
+	{
+		$blocks = array();
+		foreach($this->blockList as $block)
 		{
-			$response = call_user_func($value['call']);
-			if ($response != null && $response instanceof ActionResponse)
+			if ($block['container'] == $name)
 			{
-				$structure[] = array('container' => $value['container'], 'response' => $response, 'view' => $value['view'], 'name' => $value['block']);
+				$blocks[] = $block;
 			}
 		}
-		return $structure;
+
+		return $blocks;
 	}
 
 	/**

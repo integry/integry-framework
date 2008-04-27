@@ -173,6 +173,7 @@ class Application
 		try
 		{
 			$controllerInstance = $this->getControllerInstance($controllerName);
+			$this->controllerInstance = $controllerInstance;
 
 			$response = $this->execute($controllerInstance, $actionName);
 			$response->sendHeaders();
@@ -182,27 +183,10 @@ class Application
 				// using layout defined in a controller for action output
 				if ($controllerInstance->getLayout() != null)
 				{
-					ClassLoader::import('framework.response.BlockResponse');
-					$structure = $controllerInstance->getLayoutStructure();
-					foreach($structure as $block)
-					{
-						if ($block['response'] instanceof BlockResponse)
-						{
-							$this->postProcessResponse($block['response'], $controllerInstance);
-							$blockOutput = $this->getRenderer()->process($block['response'], $block['view']);
-							$this->getRenderer()->appendValue($block['container'], $blockOutput);
-						}
-						else
-						{
-							throw new ApplicationException("Unknown response flom a block");
-						}
-					}
-
 					$applicationOutput = $this->render($controllerInstance, $response);
 
 					$this->getRenderer()->set("ACTION_VIEW", $applicationOutput);
 					echo $this->getRenderer()->render($this->getLayoutPath($controllerInstance->getLayout()));
-					/* end layout renderer block */
 				}
 				else
 				{
@@ -225,6 +209,49 @@ class Application
 		{
 			throw $ex;
 		}
+	}
+
+	public function getBlockContent($name)
+	{
+		$output = '';
+		foreach ($this->renderBlockContainer($name) as $rendered)
+		{
+			$output .= $rendered['output'];
+		}
+
+		return $output;
+	}
+
+	protected function renderBlockContainer($name)
+	{
+		$render = array();
+		foreach ($this->controllerInstance->getBlocks($name) as $block)
+		{
+			$render[] = array('output' => $this->renderBlock($block, $this->controllerInstance));
+		}
+
+		return $render;
+	}
+
+	protected function renderBlock($block, Controller $controllerInstance)
+	{
+		$block['response'] = $controllerInstance->getBlockResponse($block);
+
+		if (!$block['response'])
+		{
+			return false;
+		}
+
+		if (!($block['response'] instanceof BlockResponse))
+		{
+			throw new ApplicationException("Unknown response flom a block");
+		}
+
+		$this->postProcessResponse($block['response'], $controllerInstance);
+		$blockOutput = $this->getRenderer()->process($block['response'], $block['view']);
+		$this->getRenderer()->appendValue($block['container'], $blockOutput);
+
+		return $blockOutput;
 	}
 
 	/**
