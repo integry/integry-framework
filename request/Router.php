@@ -599,10 +599,13 @@ class Router
 		}
 
 		$pairs = explode('&', $_SERVER['QUERY_STRING']);
-
 		foreach ($pairs as $pair)
 		{
 			list($param, $value) = explode('=', $pair, 2);
+			if ('route' == $param)
+			{
+				continue;
+			}
 			$url = $this->setUrlQueryParam($url, $param, $value);
 		}
 
