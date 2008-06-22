@@ -120,9 +120,12 @@ class Router
 			$this->baseDir .= '/';
 		}
 
-		$this->baseUrl = $this->urlScheme . $_SERVER['SERVER_NAME'] . $this->baseDir;
-		$this->httpsBaseUrl = 'https://' . $_SERVER['SERVER_NAME'] . $this->baseDir;
-		$this->getBaseDirFromUrl();
+		if (isset($_SERVER['SERVER_NAME']))
+		{
+			$this->baseUrl = $this->urlScheme . $_SERVER['SERVER_NAME'] . $this->baseDir;
+			$this->httpsBaseUrl = 'https://' . $_SERVER['SERVER_NAME'] . $this->baseDir;
+			$this->getBaseDirFromUrl();
+		}
 	}
 
 	/**
