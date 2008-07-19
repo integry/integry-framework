@@ -120,10 +120,10 @@ class Router
 			$this->baseDir .= '/';
 		}
 
-		if (isset($_SERVER['SERVER_NAME']))
+		if (isset($_SERVER['HTTP_HOST']))
 		{
-			$this->baseUrl = $this->urlScheme . $_SERVER['SERVER_NAME'] . $this->baseDir;
-			$this->httpsBaseUrl = 'https://' . $_SERVER['SERVER_NAME'] . $this->baseDir;
+			$this->baseUrl = $this->urlScheme . $_SERVER['HTTP_HOST'] . $this->baseDir;
+			$this->httpsBaseUrl = 'https://' . $_SERVER['HTTP_HOST'] . $this->baseDir;
 			$this->getBaseDirFromUrl();
 		}
 	}
@@ -142,7 +142,7 @@ class Router
 	{
 		if (!$this->virtualBaseDir)
 		{
-			$URI = $_SERVER['REQUEST_URI'];
+			$URI = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
 
 			$queryStartPos = strpos($URI, '?');
 			if ($queryStartPos !== false)
@@ -170,8 +170,8 @@ class Router
 		$this->baseDir = $dir;
 		$this->virtualBaseDir = $virtualBaseDir;
 
-		$this->baseUrl = $this->urlScheme . $_SERVER['SERVER_NAME'] . $this->baseDir;
-		$this->httpsBaseUrl = 'https://' . $_SERVER['SERVER_NAME'] . $this->baseDir;
+		$this->baseUrl = $this->urlScheme . $_SERVER['HTTP_HOST'] . $this->baseDir;
+		$this->httpsBaseUrl = 'https://' . $_SERVER['HTTP_HOST'] . $this->baseDir;
 	}
 
 	/**

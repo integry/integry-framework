@@ -30,8 +30,6 @@ class Request
 	 */
 	private $dataContainer = array();
 
-	private $isAjax = false;
-
 	/**
 	 * @param array $default Associative array with default values
 	 */
@@ -51,14 +49,6 @@ class Request
 		$this->setValueArray($_COOKIE);
 
 		$this->dataContainer = $this->removeMagicQuotes($this->dataContainer);
-
-		// Will only work with prototype
-		$this->isAjax = isset($_SERVER['HTTP_X_REQUESTED_WITH']);
-	}
-
-	public function isAjax()
-	{
-		return $this->isAjax;
 	}
 
 	/**
@@ -139,8 +129,17 @@ class Request
 	 */
 	public function getIP()
 	{
-		return $_SERVER['REMOTE_ADDR'];
+		return isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '127.0.0.1';
 	}
+
+	/**
+	 * Returns clients IP address as integer
+	 */
+	public function getIPLong()
+	{
+		return ip2long($this->getIP());
+	}
+
 
 	/**
 	 * Gets an action name from a request

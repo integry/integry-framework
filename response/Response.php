@@ -22,6 +22,8 @@ abstract class Response
 
 	private $statusCode = null;
 
+	private $cookies = array();
+
 	/**
 	 * Sets raw header to response
 	 *
@@ -118,6 +120,11 @@ abstract class Response
 			return false;
 		}
 
+		foreach ($this->cookies as $name => $params)
+		{
+			setcookie($name, $params[0], $params[1], $params[2], $params[3], $params[4]);
+		}
+
 		/* Raw header */
 		foreach((array)$this->rawHeaderData as $header)
 		{
@@ -134,6 +141,11 @@ abstract class Response
 		{
 			header(' ', true, $this->statusCode);
 		}
+	}
+
+	public function setCookie($name, $value = null, $expiration = null, $path = null, $domain = null, $secure = null)
+	{
+		$this->cookies[$name] = array($value, $expiration, $path, $domain, $secure);
 	}
 
 	public function setStatusCode($status)

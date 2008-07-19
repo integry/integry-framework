@@ -138,6 +138,11 @@ class Application
 		return $this->request;
 	}
 
+	public function setRequest(Request $request)
+	{
+		$this->request = $request;
+	}
+
 	/**
 	 * Return a router instance
 	 *
