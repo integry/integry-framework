@@ -2,7 +2,7 @@
 
 /**
  * @package	framework.roles
- * @author	Integry Systems 
+ * @author	Integry Systems
  */
 class RolesParser
 {
@@ -11,49 +11,49 @@ class RolesParser
 	 *
 	 */
 	const ROLE_TAG = "@role";
-	
+
 	/**
 	 * Array of parsed roles
-	 * 
+	 *
 	 * @var array
 	 */
 	private $roles = array();
-	
+
 	/**
 	 * Names of all roles used in this class
-	 * 
+	 *
 	 * @var array
 	 */
 	private $roleNames = array();
-	
+
 	/**
 	 * Assigned class name
 	 *
 	 * @var string
 	 */
 	private $className;
-	
+
 	/**
 	 * Path to file with cached class roles
 	 *
 	 * @var string
 	 */
 	private $cacheFile;
-	
+
 	/**
 	 * Path to class file with parsed roles
 	 *
 	 * @var string
 	 */
 	private $parsedFile;
-	
+
 	/**
 	 * Shows if roles where expired during this script run
-	 * 
+	 *
 	 * @var boolean
 	 */
 	private $wereExpired = false;
-	
+
 	/**
 	 * Create roles object
 	 *
@@ -65,9 +65,12 @@ class RolesParser
 		$this->parsedFile = $parsedFile;
 		$this->cacheFile = $cacheFile;
 		$this->className = substr(basename($parsedFile), 0, -4);
-			 
-		include_once $this->parsedFile;
-		
+
+		if (!class_exists($this->className, false))
+		{
+			include_once $this->parsedFile;
+		}
+
 		if($this->isExpired())
 		{
 			$this->parseClass();
@@ -78,7 +81,7 @@ class RolesParser
 			include $this->cacheFile;
 			$this->roles = $roles;
 		}
-		
+
 		// Make role names list
 		foreach($this->roles as $roleName)
 		{
@@ -88,7 +91,7 @@ class RolesParser
 			}
 		}
 	}
-	
+
 	/**
 	 * Returns true if parsed roles are expired
 	 *
@@ -98,10 +101,10 @@ class RolesParser
 	{
 		$expired = !file_exists($this->cacheFile) || filemtime($this->parsedFile) > filemtime($this->cacheFile);
 		$this->wereExpired = $expired;
-		
+
 		return $expired;
 	}
-	
+
 	/**
 	 * Returns true if roles where expired during this script run
 	 *
@@ -111,7 +114,7 @@ class RolesParser
 	{
 		return $this->wereExpired;
 	}
-	
+
 	/**
 	 * Get array of curent class roles
 	 *
@@ -121,7 +124,7 @@ class RolesParser
 	{
 		return $this->roles;
 	}
-	
+
 	/**
 	 * Get names of all roles used in this class
 	 *
@@ -131,7 +134,7 @@ class RolesParser
 	{
 		return $this->roleNames;
 	}
-	
+
 	/**
 	 * Get parsed class name
 	 *
@@ -141,7 +144,7 @@ class RolesParser
 	{
 		return $this->className;
 	}
-	 
+
 	/**
 	 * Cache roles object into file
 	 */
@@ -149,7 +152,7 @@ class RolesParser
 	{
 		file_put_contents($this->cacheFile, "<?php\n" . $this->toPHPString() . "\n?>");
 	}
-	   
+
 	/**
 	 * Get role by specifying method name
 	 *
@@ -160,10 +163,10 @@ class RolesParser
 	{
 		if (isset($this->roles["{$this->className}::$method"]))
 		{
-			return $this->roles["{$this->className}::$method"];			
+			return $this->roles["{$this->className}::$method"];
 		}
 	}
-	   
+
 	/**
 	 * Convert roles array into php code which could later be written into file
 	 *
@@ -179,7 +182,7 @@ class RolesParser
 	 *
 	 */
 	private function parseClass()
-	{		
+	{
 		$reflectionClass = new ReflectionClass($this->className);
 		$className = $reflectionClass->getName();
 		$this->roles[$className] = $this->parsePHPDoc($reflectionClass->getDocComment());
@@ -192,15 +195,15 @@ class RolesParser
 			}
 		}
 	}
-	
+
 	private function addRoleName($roleName)
 	{
-		if(!in_array($roleName, $this->roleNames)) 
+		if(!in_array($roleName, $this->roleNames))
 		{
-			$this->roleNames[] = $roleName;			
+			$this->roleNames[] = $roleName;
 		}
 	}
-	
+
 	/**
 	 * Parse class method to create roles array entry
 	 */
@@ -208,7 +211,7 @@ class RolesParser
 	{
 		return $this->parsePHPDoc($method->getDocComment(), $prefix);
 	}
-	
+
 	/**
 	 * Parse PHPDoc block form role parameters
 	 *
@@ -219,13 +222,13 @@ class RolesParser
 	private function parsePHPDoc($phpDoc, $prefix = '')
 	{
 		preg_match('/\s*\*\s*'.self::ROLE_TAG.'\s+(!)?([\w\.]+)/', $phpDoc, $roleMatches);
-		
+
 		$role = $prefix;
 		if(!empty($roleMatches))
 		{
 			if($roleMatches[1] == '!')
 			{
-				$role = $roleMatches[2];	
+				$role = $roleMatches[2];
 			}
 			else
 			{
@@ -233,8 +236,8 @@ class RolesParser
 				{
 					$role .= '.';
 				}
-				$role .= $roleMatches[2];	 
-			}   
+				$role .= $roleMatches[2];
+			}
 		}
 		return $role;
 	}
