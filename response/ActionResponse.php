@@ -32,10 +32,10 @@ class ActionResponse extends Response implements Renderable
 		{
 			$this->set($name, $value);
 		}
-		
+
 		$this->setHeader('Content-type', 'text/html');
 	}
-	
+
 	/**
 	 * A smarter way to set response data - this method automaticaly recognizes type of a
 	 * given data and chooses a proper method to register it
@@ -55,6 +55,11 @@ class ActionResponse extends Response implements Renderable
 		}
 	}
 
+	public function setReference($name, &$value)
+	{
+		$this->dataContainer[$name] =& $value;
+	}
+
 	/**
 	 * Gets a response variable name
 	 *
@@ -66,12 +71,12 @@ class ActionResponse extends Response implements Renderable
 		if(isset($this->dataContainer[$name]))
 		{
 			return $this->dataContainer[$name];
-		} 
+		}
 		else if(isset($this->objectContainer[$name]))
 		{
 			return $this->objectContainer[$name];
 		}
-		
+
 		return null;
 	}
 

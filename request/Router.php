@@ -170,6 +170,11 @@ class Router
 		$this->baseDir = $dir;
 		$this->virtualBaseDir = $virtualBaseDir;
 
+		if (!isset($_SERVER['HTTP_HOST']))
+		{
+			$_SERVER['HTTP_HOST'] = 'localhost';
+		}
+
 		$this->baseUrl = $this->urlScheme . $_SERVER['HTTP_HOST'] . $this->baseDir;
 		$this->httpsBaseUrl = 'https://' . $_SERVER['HTTP_HOST'] . $this->baseDir;
 	}
@@ -330,36 +335,28 @@ class Router
 			$URLParamList['action'] = $this->defaultAction;
 		}
 
-		if (!empty($URLParamList['query']))
+		$queryVars = array();
+		if (!empty($URLParamList['query']) && !is_array($URLParamList['query']))
 		{
-			if (is_array($URLParamList['query']))
+			foreach (explode('&', $URLParamList['query']) as $val)
 			{
-				$pairs = array();
-				foreach ($URLParamList['query'] as $key => $value)
-				{
-					$pairs[] = urlencode($key) . '=' . urlencode($value);
-				}
-				$URLParamList['query'] = implode($variableSeparator, $pairs);
+				list($key, $value) = explode('=', $val, 2);
+				$queryVars[urldecode($key)] = urldecode($value);
 			}
 		}
+
+		if (isset($URLParamList['query']) && is_array($URLParamList['query']))
+		{
+			$queryVars = $URLParamList['query'];
+		}
+
+		unset($URLParamList['query']);
 
 		// merging persisted variables into an URL variable array
 		$URLParamList = array_merge($this->autoAppendVariableList, $URLParamList);
 
-		$queryToAppend = "";
-
-		if ($this->autoAppendQueryVariableList)
-		{
-			$queryVars = implode($variableSeparator, array_keys($this->autoAppendQueryVariableList));
-			if (!empty($URLParamList['query']))
-			{
-				$URLParamList['query'] = $queryVars . $variableSeparator . $URLParamList['query'];
-			}
-			else
-			{
-				$URLParamList['query'] = $queryVars;
-			}
-		}
+		$queryVars = array_merge($queryVars, $this->autoAppendQueryVariableList);
+		$queryVars = array_diff_key($queryVars, $URLParamList);
 
 		$addReturnPath = false;
 		if (!empty($URLParamList['returnPath']))
@@ -368,10 +365,17 @@ class Router
 			unset($URLParamList['returnPath']);
 		}
 
-		if (!empty($URLParamList['query']))
+		$queryToAppend = '';
+		if (!empty($queryVars))
 		{
-			$queryToAppend = ((strpos($this->virtualBaseDir, '?') === false) ? '?' : '&') . $URLParamList['query'];
-			unset($URLParamList['query']);
+			$pairs = array();
+			foreach ($queryVars as $key => $value)
+			{
+				$pairs[] = urlencode($key) . '=' . urlencode($value);
+			}
+
+			$queryToAppend = implode($variableSeparator, $pairs);
+			$queryToAppend = ((strpos($this->virtualBaseDir, '?') === false) ? '?' : '&') . $queryToAppend;
 		}
 
 		/* Handling special case: URL rewrite is not enabled */
@@ -642,7 +646,7 @@ class Router
 	 */
 	public function addAutoAppendQueryVariable($key, $value)
 	{
-		$this->autoAppendQueryVariableList[$key . '=' . $value] = true;
+		$this->autoAppendQueryVariableList[$key] = $value;
 	}
 
 	public function setSslAction($controller = '', $action = '')
