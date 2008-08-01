@@ -197,6 +197,9 @@ abstract class Controller
 		return call_user_func($block['call']);
 	}
 
+	/**
+	 *	Get blocks by container name
+	 */
 	public function getBlocks($name)
 	{
 		$blocks = array();
@@ -235,7 +238,7 @@ abstract class Controller
 	 *
 	 * Layout block is an atomic part of application which cannot be called directly
 	 * by a user. Block fills a layout which encapsulates currently executed action
-	 * (some kind of contextual menu or enviroinment depending on application part)
+	 * (some kind of contextual menu or environment depending on application part)
 	 *
 	 * Usage (lets say it is a body of some controller action)
 	 * <code>
@@ -253,10 +256,11 @@ abstract class Controller
 	 * @param string $containerName Name of template variable to which content of this block will be assigned
 	 * @param string $blockName Name of block
 	 * @param string $viewName View name for block (without file extension)
+	 * @param bool $prepend Whether to add the block to the beginning of the current stack
 	 *
 	 * @see self::removeBlock()
 	 */
-	public final function addBlock($containerName, $blockName, $viewName = null)
+	public final function addBlock($containerName, $blockName, $viewName = null, $prepend = false)
 	{
 		if (!is_array($blockName))
 		{
@@ -279,7 +283,16 @@ abstract class Controller
 			throw new ControllerException($this, "Block $blockName[1] not found!");
 		}
 
-		$this->blockList[] = array("container" => $containerName, "block" => $blockMethodName, "view" => $viewPath, 'call' => array($blockName[0], $blockMethodName));
+		$entry = array("container" => $containerName, "block" => $blockMethodName, "view" => $viewPath, 'call' => array($blockName[0], $blockMethodName));
+
+		if ($prepend)
+		{
+			array_unshift($this->blockList, $entry);
+		}
+		else
+		{
+			$this->blockList[] = $entry;
+		}
 	}
 
 	/**
@@ -289,14 +302,13 @@ abstract class Controller
 	 */
 	public final function removeBlock($blockName)
 	{
-		$blockMethodName = $blockName."Block";
+		$blockMethodName = $blockName . 'Block';
+
 		foreach($this->blockList as $index => $block)
 		{
-			$position = array_search($blockMethodName, $block);
-			if ($position !== false)
+			if (($block['block'] == $blockMethodName) || ($block['container'] == $blockName))
 			{
 				unset($this->blockList[$index]);
-
 				return true;
 			}
 		}
