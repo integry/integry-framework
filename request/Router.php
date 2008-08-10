@@ -355,7 +355,7 @@ class Router
 		// merging persisted variables into an URL variable array
 		$URLParamList = array_merge($this->autoAppendVariableList, $URLParamList);
 
-		$queryVars = array_merge($queryVars, $this->autoAppendQueryVariableList);
+		$queryVars = array_merge($this->autoAppendQueryVariableList, $queryVars);
 		$queryVars = array_diff_key($queryVars, $URLParamList);
 
 		$addReturnPath = false;

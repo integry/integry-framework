@@ -6,7 +6,7 @@ ClassLoader::import('framework.response.Response');
  * Class for creating redirect response.
  *
  * @package	framework.response
- * @author	Integry Systems 
+ * @author	Integry Systems
  */
 class RedirectResponse extends Response
 {
@@ -34,7 +34,7 @@ class RedirectResponse extends Response
 	 *
 	 * @return string URL location
 	 */
-	public function getRedirectURL($url)
+	public function getRedirectURL()
 	{
 		return $this->getHeader('Location');
 	}
