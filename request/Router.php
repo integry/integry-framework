@@ -335,6 +335,11 @@ class Router
 			$URLParamList['action'] = $this->defaultAction;
 		}
 
+		if (empty($URLParamList['query']))
+		{
+			unset($URLParamList['query']);
+		}
+
 		$queryVars = array();
 		if (!empty($URLParamList['query']) && !is_array($URLParamList['query']))
 		{
