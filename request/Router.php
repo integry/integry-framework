@@ -444,6 +444,18 @@ class Router
 			$parts['host'] = $this->sslHost;
 		}
 
+		$parts['scheme'] = 'http';
+		$parts['host'] = 'localhost/livekart';
+
+		if (strpos($parts['host'], '/'))
+		{
+			list($domain, $dir) = explode('/', $parts['host'], 2);
+			$nonSecureDir = rtrim($this->virtualBaseDir, '/');
+			$dir = rtrim($dir, '/');
+
+			$relativeUrl = '/' . $dir . substr($relativeUrl, strlen($nonSecureDir));
+		}
+
 		return $parts['scheme'] . '://' . $parts['host'] . (isset($parts['port']) ? ':' . $parts['port'] : '') . $relativeUrl;
 	}
 
