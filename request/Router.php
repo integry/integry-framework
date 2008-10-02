@@ -99,6 +99,8 @@ class Router
 
 	private $sslHost = '';
 
+	private $sslQueryVariables = array();
+
 	/**
 	 * Router constructor
 	 *
@@ -415,6 +417,11 @@ class Router
 		if ($this->isSsl($URLParamList['controller'], $URLParamList['action']))
 		{
 			$url = $this->createFullUrl($url, true);
+
+			foreach ($this->sslQueryVariables as $key => $var)
+			{
+				$url = $this->setUrlQueryParam($url, $key, $var);
+			}
 		}
 
 		if ($addReturnPath)
@@ -682,7 +689,17 @@ class Router
 
 	public function setSslHost($hostName)
 	{
+		list($hostName, $params) = explode('?', $hostName);
 		$this->sslHost = $hostName;
+
+		if ($params)
+		{
+			foreach (explode('&', $params) as $pair)
+			{
+				list($key, $value) = explode('=', $pair);
+				$this->sslQueryVariables[$key] = $value;
+			}
+		}
 	}
 
 	public function isSSL($controller, $action)
