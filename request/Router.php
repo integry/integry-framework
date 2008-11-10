@@ -369,8 +369,8 @@ class Router
 		if (!empty($URLParamList['returnPath']))
 		{
 			$addReturnPath = true;
-			unset($URLParamList['returnPath']);
 		}
+		unset($URLParamList['returnPath']);
 
 		$queryToAppend = '';
 		if (!empty($queryVars))
