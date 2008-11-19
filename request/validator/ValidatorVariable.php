@@ -2,8 +2,8 @@
 
 /**
  * Maps request variable to checks and filters (validation elements)
- * 
- * Note: this class is protected and should not be used directly. Use a RequestValidator 
+ *
+ * Note: this class is protected and should not be used directly. Use a RequestValidator
  * instead.
  *
  * @see RequestValidator
@@ -18,7 +18,7 @@ class ValidatorVariable
 	 * @var Check[]
 	 */
 	private $checkList = array();
-	
+
 	/**
 	 * List of Filter subclass objects
 	 *
@@ -32,7 +32,7 @@ class ValidatorVariable
 	 * @var string
 	 */
 	private $varName = "";
-	
+
 	/**
 	 * Request instance
 	 *
@@ -55,12 +55,12 @@ class ValidatorVariable
 	{
 		$this->filterList[] = $filter;
 	}
-	
+
 	public function getName()
 	{
 		return $this->varName;
 	}
-	
+
 	/**
 	 * Applies validation rules to a request variable
 	 *
@@ -76,7 +76,7 @@ class ValidatorVariable
 			}
 		}
 	}
-	
+
 	/**
 	 * Applies all registered filters sequentialy to a value
 	 *
@@ -85,11 +85,11 @@ class ValidatorVariable
 	{
 		foreach ($this->filterList as $filter)
 		{
-			$this->request->set($this->varName, 
+			$this->request->set($this->varName,
 									 $filter->apply($this->request->get($this->varName)));
 		}
 	}
-	
+
 	public function getCheckData()
 	{
 		$data = array();
@@ -98,12 +98,12 @@ class ValidatorVariable
 			$name = get_class($check);
 			$constraintList = $check->getParamList();
 			$errMsg = $check->getViolationMsg();
-			$data[$name] = array("error" => $errMsg, 
+			$data[$name] = array("error" => $errMsg,
 								 "param" => $constraintList);
 		}
 		return $data;
 	}
-	
+
 	public function getFilterData()
 	{
 		$data = array();
@@ -115,6 +115,15 @@ class ValidatorVariable
 		return $data;
 	}
 
+	public function getChecks()
+	{
+		return $this->checkList;
+	}
+
+	public function getFilters()
+	{
+		return $this->filterList;
+	}
 }
 
 ?>

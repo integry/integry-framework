@@ -101,6 +101,23 @@ class RequestValidator
 		return $this->validatorVarList[$name];
 	}
 
+	public function getChecks()
+	{
+		$checks = array();
+
+		foreach ($this->validatorVarList as $validatorVar)
+		{
+			$checks = array_merge($checks, $validatorVar->getChecks());
+		}
+
+		return $checks;
+	}
+
+	public function getValidatorVars()
+	{
+		return $this->validatorVarList;
+	}
+
 	/**
 	 * Applies a check (some kind of requirement for a value) to a request variable
 	 *
