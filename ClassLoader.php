@@ -57,6 +57,8 @@ class ClassLoader
 
 	private static $autoLoadFunctions = array();
 
+	private static $registeredImports = array();
+
 	/**
 	 * Loads a class file (performs include_once)
 	 *
@@ -64,6 +66,15 @@ class ClassLoader
 	 */
 	public static function load($class)
 	{
+		if (!empty(self::$registeredImports[strtolower($class)]))
+		{
+			foreach (self::$registeredImports[strtolower($class)] as $path => $foo)
+			{
+				self::load($path);
+				return;
+			}
+		}
+
 		preg_match('/([^\\' . DIRECTORY_SEPARATOR . ']+)$/', $class, $matches); //substr($class, strrpos($class, DIRECTORY_SEPARATOR));
 		$className = $matches[1];
 
@@ -162,19 +173,29 @@ class ClassLoader
 	 *
 	 * @param string $path
 	 */
-	public static function import($path)
+	public static function import($path, $now = false)
 	{
-		$path = self::getRealPath($path);
+		$realPath = self::getRealPath($path);
 
-		if (strpos($path, '*'))
+		if (!$now)
 		{
-			$path = str_replace('*', '', $path);
-			return self::importPath($path);
+			self::$registeredImports[strtolower(array_pop(explode('.', $path)))][$realPath] = true;
 		}
-		else
+
+		if (strpos($realPath, '*'))
 		{
-			return self::load($path);
+			$realPath = str_replace('*', '', $realPath);
+			return self::importPath($realPath);
 		}
+		else if ($now)
+		{
+			return self::load($realPath);
+		}
+	}
+
+	public static function importNow($path)
+	{
+		self::import($path, true);
 	}
 
 	/**
