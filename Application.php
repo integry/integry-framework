@@ -174,6 +174,8 @@ class Application
 			$actionName = Controller::DEFAULT_ACTION;
 		}
 
+		$output = '';
+
 		/* Execute an action of some controller */
 		try
 		{
@@ -191,11 +193,11 @@ class Application
 					$applicationOutput = $this->render($controllerInstance, $response);
 
 					$this->getRenderer()->set("ACTION_VIEW", $applicationOutput);
-					echo $this->getRenderer()->render($this->getLayoutPath($controllerInstance->getLayout()));
+					$output = $this->getRenderer()->render($this->getLayoutPath($controllerInstance->getLayout()));
 				}
 				else
 				{
-					echo $this->render($controllerInstance, $response);
+					$output = $this->render($controllerInstance, $response);
 				}
 			}
 			else if ($response instanceof InternalRedirectResponse)
@@ -207,12 +209,25 @@ class Application
 			}
 			else
 			{
-				echo $response->getData();
+				$output = $response->getData();
 			}
 		}
 		catch(ApplicationException $ex)
 		{
 			throw $ex;
+		}
+
+		if ($output)
+		{
+			if (function_exists('gzencode') && $_SERVER['HTTP_ACCEPT_ENCODING'] && (strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== false))
+			{
+				$output = gzencode($output, 9);
+				header('Content-Encoding: gzip');
+			}
+
+			header('Content-Length: ' . strlen($output));
+
+			echo $output;
 		}
 	}
 
