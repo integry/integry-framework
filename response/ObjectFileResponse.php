@@ -1,24 +1,46 @@
 <?php
 
-ClassLoader::import("framework.response.Response");
+ClassLoader::import('framework.response.Response');
 
 /**
  * JSON response
  *
  * @package framework.response
- * @author	Integry Systems 
+ * @author	Integry Systems
  */
 class ObjectFileResponse extends Response
 {
+	private $file;
+
 	public function __construct(ObjectFile $objectFile)
 	{
-		$this->setHeader('Cache-Control', 'no-cache, must-revalidate');
-		$this->setHeader('Expires', 'Mon, 26 Jul 1997 05:00:00 GMT');
-		$this->setHeader('Content-type', $objectFile->getMimeType());
-		$this->setHeader('Content-Disposition', 'attachment; filename="'.$objectFile->getBaseName().'"');
-		$this->setHeader('Content-Length', (string)$objectFile->getSize());
-		
-		$this->content = $objectFile->getContents();
+		if ($objectFile->isLocalFile())
+		{
+			$this->setHeader('Cache-Control', 'no-cache, must-revalidate');
+			$this->setHeader('Expires', 'Mon, 26 Jul 1997 05:00:00 GMT');
+			$this->setHeader('Content-type', $objectFile->getMimeType());
+			$this->setHeader('Content-Disposition', 'attachment; filename="'.$objectFile->getBaseName().'"');
+			$this->setHeader('Content-Length', (string)$objectFile->getSize());
+
+			$this->file = $objectFile;
+		}
+		else
+		{
+			$this->setHeader('Location', $objectFile->filePath->get());
+		}
+	}
+
+	public function sendData()
+	{
+		@ini_set('max_execution_time', 0);
+		$f = fopen($this->file->getPath(), 'r');
+
+		while (!feof($f))
+		{
+			echo fread($f);
+		}
+
+		fclose($f);
 	}
 
 	public function getData()

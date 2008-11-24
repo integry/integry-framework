@@ -184,6 +184,7 @@ class Application
 
 			$response = $this->execute($controllerInstance, $actionName);
 			$response->sendHeaders();
+			$response->sendData();
 
 			if ($response instanceof Renderable)
 			{
@@ -219,7 +220,8 @@ class Application
 
 		if ($output)
 		{
-			if (function_exists('gzencode') && $_SERVER['HTTP_ACCEPT_ENCODING'] && (strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== false))
+			/* @todo: isDevMode is LiveCart specific... */
+			if (!$this->isDevMode() && function_exists('gzencode') && $_SERVER['HTTP_ACCEPT_ENCODING'] && (strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== false))
 			{
 				$output = gzencode($output, 9);
 				header('Content-Encoding: gzip');

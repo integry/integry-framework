@@ -153,6 +153,10 @@ abstract class Response
 		$this->statusCode = !(int)$status ? 200 : $status;
 	}
 
+	public function sendData()
+	{
+	}
+
 	abstract public function getData();
 }
 
