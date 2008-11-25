@@ -221,13 +221,16 @@ class Application
 		if ($output)
 		{
 			/* @todo: isDevMode is LiveCart specific... */
-			if (!$this->isDevMode() && function_exists('gzencode') && $_SERVER['HTTP_ACCEPT_ENCODING'] && (strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== false))
+			if (!$this->isDevMode() && function_exists('gzencode') && $_SERVER['HTTP_ACCEPT_ENCODING'] && (strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== false) && !headers_sent())
 			{
 				$output = gzencode($output, 9);
 				header('Content-Encoding: gzip');
 			}
 
-			header('Content-Length: ' . strlen($output));
+			if (!headers_sent())
+			{
+				header('Content-Length: ' . strlen($output));
+			}
 
 			echo $output;
 		}
