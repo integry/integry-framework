@@ -427,6 +427,7 @@ class Router
 		if ($addReturnPath)
 		{
 			$url = $this->setUrlQueryParam($url, 'return', $this->getReturnPath());
+			$url = $this->setUrlQueryParam($url, 'csid', session_id());
 		}
 
 		return strip_tags($url);
