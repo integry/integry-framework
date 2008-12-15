@@ -41,6 +41,9 @@ ClassLoader::import('framework.ApplicationException');
  */
 class Application
 {
+	protected $routerClass = 'Router';
+	protected $requestClass = 'Request';
+
 	/**
 	 * @var Router
 	 */
@@ -74,8 +77,8 @@ class Application
 	 */
 	public function __construct()
 	{
-		$this->request = new Request();
-		$this->router = new Router($this->request);
+		$this->request = new $this->requestClass();
+		$this->router = new $this->routerClass($this->request);
 	}
 
 	/**
