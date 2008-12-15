@@ -37,7 +37,7 @@ class ObjectFileResponse extends Response
 
 		while (!feof($f))
 		{
-			echo fread($f);
+			echo fread($f, 4096);
 		}
 
 		fclose($f);
