@@ -25,8 +25,10 @@ abstract class CompositeResponse extends Response
 	 */
 	private $requestedActionList = array();
 
+	private $responseList = array();
+
 	/**
-	 * Includes onothers action output to response
+	 * Includes action output to response
 	 *
 	 * @param string $name Name of value assign to
 	 * @param string $controller Name of controller
@@ -35,8 +37,18 @@ abstract class CompositeResponse extends Response
 	 */
 	public function addAction($actionOutputHandle, $controllerName, $actionName)
 	{
-		$this->requestedActionList[$actionOutputHandle] = array(self::CONTROLLER_HANDLE => $controllerName, 
+		$this->requestedActionList[$actionOutputHandle] = array(self::CONTROLLER_HANDLE => $controllerName,
 															self::ACTION_HANDLE => $actionName);
+	}
+
+	public function addResponse($actionOutputHandle, Response $response, Controller $controller, $actionName)
+	{
+		$this->responseList[$actionOutputHandle] = array($response, $controller, $actionName);
+	}
+
+	public function getResponseList()
+	{
+		return $this->responseList;
 	}
 
 	/**
@@ -77,6 +89,11 @@ abstract class CompositeResponse extends Response
 			return $this->requestedActionList[$actionOutputHandle][self::ACTION_HANDLE];
 		}
 		return null;
+	}
+
+	public function setResponse($outputHandle, Response $response)
+	{
+		$this->set($outputHandle, $response->getData());
 	}
 }
 

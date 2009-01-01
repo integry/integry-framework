@@ -13,12 +13,12 @@ ClassLoader::import("framework.response.CompositeResponse");
 class CompositeJSONResponse extends CompositeResponse
 {
 	private $data = array();
-	
+
 	public function __construct()
 	{
 		$this->setHeader('Cache-Control', 'no-cache, must-revalidate');
 		$this->setHeader('Expires', 'Mon, 26 Jul 1997 05:00:00 GMT');
-		$this->setHeader('Content-type', 'text/javascript');		
+		$this->setHeader('Content-type', 'text/javascript');
 	}
 
 	public function set($key, $value)
@@ -29,6 +29,18 @@ class CompositeJSONResponse extends CompositeResponse
 	public function getData()
 	{
 		return json_encode($this->data);
+	}
+
+	public function setResponse($outputHandle, Response $response)
+	{
+		if ($response instanceof JSONResponse)
+		{
+			$this->set($outputHandle, $response->getValue());
+		}
+		else
+		{
+			parent::setResponse($outputHandle, $response);
+		}
 	}
 }
 

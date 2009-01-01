@@ -382,13 +382,27 @@ class Application
 		{
 			try
 			{
-				$requestedActionList = $response->getRequestedActionList();
-				foreach($requestedActionList as $outputHandle => $location)
+				$responses = array();
+				foreach ($response->getRequestedActionList() as $outputHandle => $location)
 				{
 					$controllerName = $location[CompositeResponse::CONTROLLER_HANDLE];
 					$actionName = $location[CompositeResponse::ACTION_HANDLE];
 					$instance = $this->getControllerInstance($controllerName);
-					$response->set($outputHandle, $this->render($instance, $this->execute($instance, $actionName), $actionName));
+					$responses[$outputHandle] = array($this->execute($instance, $actionName), $instance, $actionName);
+				}
+
+				foreach (array_merge($responses, $response->getResponseList()) as $outputHandle => $data)
+				{
+					list($includedResponse, $controller, $actionName) = $data;
+
+					if ($includedResponse instanceof Renderable)
+					{
+						$response->set($outputHandle, $this->render($controller, $includedResponse, $actionName));
+					}
+					else
+					{
+						$response->setResponse($outputHandle, $includedResponse);
+					}
 				}
 			}
 			catch(ApplicationException $ex)
