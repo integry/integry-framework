@@ -230,7 +230,7 @@ class Application
 				header('Content-Encoding: gzip');
 			}
 
-			if (!headers_sent())
+			if (!headers_sent() && !$this->isDevMode())
 			{
 				header('Content-Length: ' . strlen($output));
 			}
