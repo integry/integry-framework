@@ -221,22 +221,12 @@ class Application
 			throw $ex;
 		}
 
-		if ($output)
-		{
-			/* @todo: isDevMode is LiveCart specific... */
-			if (!$this->isDevMode() && function_exists('gzencode') && $_SERVER['HTTP_ACCEPT_ENCODING'] && (strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== false) && !headers_sent())
-			{
-				$output = gzencode($output, 9);
-				header('Content-Encoding: gzip');
-			}
+		$this->sendOutput($output);
+	}
 
-			if (!headers_sent() && !$this->isDevMode())
-			{
-				header('Content-Length: ' . strlen($output));
-			}
-
-			echo $output;
-		}
+	protected function sendOutput($output)
+	{
+		echo $output;
 	}
 
 	public function getBlockContent($name)

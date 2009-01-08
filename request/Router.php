@@ -322,11 +322,6 @@ class Router
 	{
 		$variableSeparator = $isXHtml ? '&amp;' : '&';
 
-		if (isset($URLParamList['']))
-		{
-			unset($URLParamList['']);
-		}
-
 		if (!isset($URLParamList['controller']))
 		{
 			$URLParamList['controller'] = $this->defaultController;
@@ -357,7 +352,7 @@ class Router
 			$queryVars = $URLParamList['query'];
 		}
 
-		unset($URLParamList['query']);
+		unset($URLParamList['query'], $URLParamList['']);
 
 		// merging persisted variables into an URL variable array
 		$URLParamList = array_merge($this->autoAppendVariableList, $URLParamList);
@@ -394,7 +389,7 @@ class Router
 
 		$matchingRoute = $this->findRoute($URLParamList);
 
-		if ($matchingRoute == null)
+		if (null === $matchingRoute)
 		{
 			throw new RouterException("Router::createURL - Unable to find matching route <Br />" .
 									  var_export($URLParamList, true));
