@@ -32,6 +32,8 @@ class Router
 	 */
 	private $routeListByParamCount = array();
 
+	private $matchingRoutes = array();
+
 	/**
 	 * Default controller name
 	 *
@@ -236,6 +238,20 @@ class Router
 		array_unshift($this->routeList, $route);
 	}
 
+	public function loadRoutes(array $routeArray)
+	{
+		$this->routeList = array_merge($this->routeList, $routeArray);
+		foreach ($this->routeList as $route)
+		{
+			$this->routeListByParamCount[count($route->getParamList())][] = $route;
+		}
+	}
+
+	public function getRoutes()
+	{
+		return $this->routeList;
+	}
+
 	/**
 	 * Connects a new route to some URL pattern.
 	 * URLPattern might have "variables", which has a ":" at the beggining. e.x. ":action"
@@ -332,11 +348,6 @@ class Router
 			$URLParamList['action'] = $this->defaultAction;
 		}
 
-		if (empty($URLParamList['query']))
-		{
-			unset($URLParamList['query']);
-		}
-
 		$queryVars = array();
 		if (!empty($URLParamList['query']) && !is_array($URLParamList['query']))
 		{
@@ -347,25 +358,24 @@ class Router
 			}
 		}
 
-		if (isset($URLParamList['query']) && is_array($URLParamList['query']))
+		if (!empty($URLParamList['query']) && is_array($URLParamList['query']))
 		{
 			$queryVars = $URLParamList['query'];
 		}
-
-		unset($URLParamList['query'], $URLParamList['']);
-
-		// merging persisted variables into an URL variable array
-		$URLParamList = array_merge($this->autoAppendVariableList, $URLParamList);
-
-		$queryVars = array_merge($this->autoAppendQueryVariableList, $queryVars);
-		$queryVars = array_diff_key($queryVars, $URLParamList);
 
 		$addReturnPath = false;
 		if (!empty($URLParamList['returnPath']))
 		{
 			$addReturnPath = true;
 		}
-		unset($URLParamList['returnPath']);
+
+		unset($URLParamList['query'], $URLParamList['returnPath'], $URLParamList['']);
+
+		// merging persisted variables into an URL variable array
+		$URLParamList = array_merge($this->autoAppendVariableList, $URLParamList);
+
+		$queryVars = array_merge($this->autoAppendQueryVariableList, $queryVars);
+		$queryVars = array_diff_key($queryVars, $URLParamList);
 
 		$queryToAppend = '';
 		if (!empty($queryVars))
@@ -395,17 +405,13 @@ class Router
 									  var_export($URLParamList, true));
 		}
 
-		$url = $matchingRoute->getDefinitionPattern();
-
-		$params = array_keys($URLParamList);
 		$p = array();
-		foreach ($params as $value)
+		foreach ($URLParamList as $key => $value)
 		{
-			$p[] = ':' . $value;
+			$p[':' . $key] = $value;
 		}
 
-		$values = array_values($URLParamList);
-		$url = str_replace($p, $values, $url);
+		$url = strtr($matchingRoute->getDefinitionPattern(), $p);
 
 		$url = $this->getBaseDirFromUrl() . $url . $queryToAppend;
 
@@ -474,19 +480,38 @@ class Router
 		return $this->returnPath ? $this->returnPath : $this->getRequestedRoute();
 	}
 
-	private function findRoute($URLParamList)
+	public function setMatchingRoute($nameHash, Route $route)
+	{
+		$this->matchingRoutes[$nameHash][] = $route;
+	}
+
+	private function findRoute(&$URLParamList)
 	{
 		$urlParamNames = array_keys($URLParamList);
+		$nameHash = implode('-', $urlParamNames);
 
 		$matchingRoute = null;
 
-		foreach ($this->routeListByParamCount[count($urlParamNames)] as $route)
+		if (isset($this->matchingRoutes[$nameHash]))
 		{
-			$routeExpectedParamList = $route->getParamList();
+			$matchingRoute = $this->findMatchingRoute($this->matchingRoutes[$nameHash], $URLParamList, $urlParamNames, $nameHash);
+		}
 
-			if (!array_diff($urlParamNames, array_keys($routeExpectedParamList)))
+		if (!$matchingRoute)
+		{
+			$matchingRoute = $this->findMatchingRoute($this->routeListByParamCount[count($urlParamNames)], $URLParamList, $urlParamNames, $nameHash);
+		}
+
+		return $matchingRoute;
+	}
+
+	private function findMatchingRoute(array &$routeList, array &$URLParamList, array &$urlParamNames, $nameHash)
+	{
+		foreach ($routeList as $route)
+		{
+			if ($route->hasMatchingParams($urlParamNames, $nameHash, $this))
 			{
-				foreach ($routeExpectedParamList as $paramName => $paramRequirement)
+				foreach ($route->getParamList() as $paramName => $paramRequirement)
 				{
 					if (!preg_match('/^' . $paramRequirement . '/U' , $URLParamList[$paramName]))
 					{

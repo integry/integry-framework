@@ -59,6 +59,8 @@ class ClassLoader
 
 	private static $registeredImports = array();
 
+	private static $importedPaths = array();
+
 	/**
 	 * Loads a class file (performs include_once)
 	 *
@@ -68,11 +70,8 @@ class ClassLoader
 	{
 		if (!empty(self::$registeredImports[strtolower($class)]))
 		{
-			foreach (self::$registeredImports[strtolower($class)] as $path => $foo)
-			{
-				self::load($path);
-				return;
-			}
+			self::load(self::$registeredImports[strtolower($class)]);
+			return;
 		}
 
 		preg_match('/([^\\' . DIRECTORY_SEPARATOR . ']+)$/', $class, $matches); //substr($class, strrpos($class, DIRECTORY_SEPARATOR));
@@ -175,11 +174,18 @@ class ClassLoader
 	 */
 	public static function import($path, $now = false)
 	{
+		if (isset(self::$importedPaths[$path]))
+		{
+			return false;
+		}
+
+		self::$importedPaths[$path] = true;
+
 		$realPath = self::getRealPath($path);
 
 		if (!$now)
 		{
-			self::$registeredImports[strtolower(array_pop(explode('.', $path)))][$realPath] = true;
+			self::$registeredImports[strtolower(array_pop(explode('.', $path)))] = $realPath;
 		}
 
 		if (strpos($realPath, '*'))
@@ -207,25 +213,23 @@ class ClassLoader
 	private static function mapToMountPoint($path)
 	{
 		$possiblePoints = array();
-		$parts = explode(".", $path);
-
-		foreach ($parts as $key => $part)
-		{
-			$parts[$key] = str_replace('#', '.', $part);
-		}
+		$parts = explode('/', strtr($path, array('.' => '/', '#' => '.')));
 
 		$pathParts = $parts;
 
-		$processed = array();
-		foreach ($pathParts as $part)
+		if (count(self::$mountList) > 1)
 		{
-			$processed[] = $part;
-			$possiblePoints[implode('.', $processed)] = true;
+			$processed = array();
+			foreach ($pathParts as $part)
+			{
+				$processed[] = $part;
+				$possiblePoints[implode('.', $processed)] = true;
+			}
+
+			$res = array_intersect_key(self::$mountList, $possiblePoints);
 		}
 
-		$res = array_intersect_key(self::$mountList, $possiblePoints);
-
-		if ($res)
+		if (!empty($res))
 		{
 			end($res);
 			$found = key($res);
@@ -250,15 +254,18 @@ class ClassLoader
 
 		$mountPoints[] = $mountedPath . implode(DIRECTORY_SEPARATOR, $pathParts);
 
-		$reserve = array_intersect_key(self::$reserveMountList, $possiblePoints);
-		if ($reserve)
+		if (self::$reserveMountList)
 		{
-			end($reserve);
-			$found = key($reserve);
-			$reserveParts = array_slice($parts, count(explode('.', $found)));
-			foreach ($reserve[$found] as $reservePath)
+			$reserve = array_intersect_key(self::$reserveMountList, $possiblePoints);
+			if ($reserve)
 			{
-				$mountPoints[] = $reservePath . ($reserveParts ? DIRECTORY_SEPARATOR . implode(DIRECTORY_SEPARATOR, $reserveParts) : '');
+				end($reserve);
+				$found = key($reserve);
+				$reserveParts = array_slice($parts, count(explode('.', $found)));
+				foreach ($reserve[$found] as $reservePath)
+				{
+					$mountPoints[] = $reservePath . ($reserveParts ? DIRECTORY_SEPARATOR . implode(DIRECTORY_SEPARATOR, $reserveParts) : '');
+				}
 			}
 		}
 

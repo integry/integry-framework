@@ -1,5 +1,7 @@
 <?php
 
+ClassLoader::import('framework.response.BlockResponse');
+
 /**
  * Class of application controller (action container)
  *
@@ -193,7 +195,6 @@ abstract class Controller
 
 	public function getBlockResponse($block)
 	{
-		ClassLoader::import('framework.response.BlockResponse');
 		return call_user_func($block['call']);
 	}
 
