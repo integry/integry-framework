@@ -176,7 +176,7 @@ class ClassLoader
 	{
 		if (isset(self::$importedPaths[$path]))
 		{
-			return false;
+			return !$now ? false : array_pop(explode('.', $path));
 		}
 
 		self::$importedPaths[$path] = true;
