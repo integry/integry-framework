@@ -11,6 +11,7 @@ ClassLoader::import('framework.response.Response');
 class ObjectFileResponse extends Response
 {
 	private $file;
+	private $deleteFile = false;
 
 	public function __construct(ObjectFile $objectFile)
 	{
@@ -30,6 +31,11 @@ class ObjectFileResponse extends Response
 		}
 	}
 
+	public function deleteFileOnComplete($delete = true)
+	{
+		$this->deleteFile = $delete;
+	}
+
 	public function sendData()
 	{
 		@ini_set('max_execution_time', 0);
@@ -46,6 +52,18 @@ class ObjectFileResponse extends Response
 	public function getData()
 	{
 		return $this->content;
+	}
+
+	public function __destruct()
+	{
+		if ($this->deleteFile)
+		{
+			$path = $this->file->getPath();
+			if (file_exists($path))
+			{
+				unlink($path);
+			}
+		}
 	}
 }
 
