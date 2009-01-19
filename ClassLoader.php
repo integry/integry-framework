@@ -252,6 +252,11 @@ class ClassLoader
 			}
 		}
 
+		if (!isset($mountedPath))
+		{
+			$mountedPath = self::$mountList["."];
+		}
+
 		$mountPoints[] = $mountedPath . implode(DIRECTORY_SEPARATOR, $pathParts);
 
 		if (self::$reserveMountList)
