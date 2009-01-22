@@ -40,6 +40,7 @@ class JSONResponse extends Response
 			$this->sendHeaders();
 		}
 
+		ob_end_flush();
 		echo $string;
 		flush();
 	}
