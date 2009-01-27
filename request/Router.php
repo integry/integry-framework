@@ -597,7 +597,13 @@ class Router
 	{
 		$variableSeparator = $isXHtml ? '&amp;' : '&';
 
-		$query = implode($variableSeparator, array_keys($this->autoAppendQueryVariableList));
+		$queryParts = array();
+		foreach ($this->autoAppendQueryVariableList as $param => $value)
+		{
+			$queryParts[] = $param . '=' . $value;
+		}
+
+		$query = implode($variableSeparator, $queryParts);
 		if ($query)
 		{
 			$query = '?' . $query;
