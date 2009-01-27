@@ -26,11 +26,14 @@ class ActionResponse extends Response implements Renderable
 	 */
 	protected $objectContainer = array();
 
-	public function __construct($name = '', $value = '')
+	public function __construct()
 	{
-		if ($name)
+		if (func_num_args())
 		{
-			$this->set($name, $value);
+			foreach (array_chunk(func_get_args(), 2) as $param)
+			{
+				$this->set($param[0], $param[1]);
+			}
 		}
 
 		$this->setHeader('Content-type', 'text/html');
