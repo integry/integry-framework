@@ -20,7 +20,7 @@ class ViewNotFoundException extends RendererException
 	 */
 	public function __construct($view)
 	{
-		parent::__construct("Specified view ($view) was not found");
+		parent::__construct('Specified view (' . $view . ') was not found');
 		$this->viewName = $view;
 	}
 

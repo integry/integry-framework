@@ -195,6 +195,11 @@ abstract class Controller
 
 	public function getBlockResponse($block)
 	{
+		if (!is_object($block['call'][0]))
+		{
+			$block['call'][0] = new $block['call'][0]($this->application);
+		}
+
 		return call_user_func($block['call']);
 	}
 
@@ -279,10 +284,12 @@ abstract class Controller
 			$viewPath = $viewName . ".tpl";
 		}
 
+		/*
 		if (!method_exists($blockName[0], $blockMethodName))
 		{
 			throw new ControllerException($this, "Block $blockName[1] not found!");
 		}
+		*/
 
 		$entry = array("container" => $containerName, "block" => $blockMethodName, "view" => $viewPath, 'call' => array($blockName[0], $blockMethodName));
 
