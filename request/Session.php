@@ -16,7 +16,7 @@ class Session
 		{
 			session_name($name);
 		}
-		
+
 		@session_start();
 	}
 
@@ -52,7 +52,7 @@ class Session
 	 * @param string $name
 	 * @return mixed
 	 */
-	public function get($name)
+	public function get($name, $default = null)
 	{
 		if (!empty($_SESSION[$name]))
 		{
@@ -60,7 +60,7 @@ class Session
 		}
 		else
 		{
-			return null;
+			return $default;
 		}
 	}
 
@@ -74,20 +74,20 @@ class Session
 	{
 		$value = $this->get($name);
 		$this->unsetValue($name);
-		
+
 		return $value;
 	}
 
 	public function getObject($name)
 	{
 		if (!empty($_SESSION[$name]))
-		{			
+		{
 			return unserialize($_SESSION[$name]);
 		}
 		else
 		{
 			return null;
-		}		
+		}
 	}
 
 	public function isValueSet($value)
@@ -110,7 +110,7 @@ class Session
 	 */
 	public function getControllerData(Controller $controller, $key = '')
 	{
-		$hash = $this->getControllerHash($controller);	
+		$hash = $this->getControllerHash($controller);
 		if (isset($_SESSION['controller'][$hash]))
 		{
 			if ($key)
@@ -118,7 +118,7 @@ class Session
 				if (isset($_SESSION['controller'][$hash][$key]))
 				{
 					return $_SESSION['controller'][$hash][$key];
-				}	
+				}
 				else
 				{
 					return array();
@@ -126,8 +126,8 @@ class Session
 			}
 			else
 			{
-				return $_SESSION['controller'][$hash];	
-			}			
+				return $_SESSION['controller'][$hash];
+			}
 		}
 		else
 		{
@@ -140,10 +140,10 @@ class Session
 	 */
 	public function setControllerData(Controller $controller, $key, $value)
 	{
-		$hash = $this->getControllerHash($controller);	
+		$hash = $this->getControllerHash($controller);
 		$_SESSION['controller'][$hash][$key] = $value;
 	}
-	
+
 	/**
 	 * Destroys this session
 	 */
@@ -153,7 +153,7 @@ class Session
 		session_destroy();
 		unset($this);
 	}
-	
+
 	private function getControllerHash(Controller $controller)
 	{
 		$hash = array();
@@ -163,8 +163,8 @@ class Session
 			$controller = get_parent_class($controller);
 			$hash[] = $controller;
 		}
-		
-		return md5(implode(',', $hash));		
+
+		return md5(implode(',', $hash));
 	}
 
 }
