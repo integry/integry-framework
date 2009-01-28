@@ -425,7 +425,7 @@ class Router
 			}
 		}
 
-		if ($addReturnPath)
+		if ($addReturnPath && empty($queryVars['return']))
 		{
 			$url = $this->setUrlQueryParam($url, 'return', $this->getReturnPath());
 			$url = $this->setUrlQueryParam($url, 'csid', session_id());
