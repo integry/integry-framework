@@ -462,6 +462,11 @@ class Router
 			$parts['host'] = $domain;
 		}
 
+		if ($relativeUrl[0] != '/')
+		{
+			$relativeUrl = '/' . $relativeUrl;
+		}
+
 		return $parts['scheme'] . '://' . $parts['host'] . (isset($parts['port']) ? ':' . $parts['port'] : '') . $relativeUrl;
 	}
 

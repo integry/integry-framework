@@ -17,7 +17,10 @@ class Session
 			session_name($name);
 		}
 
-		@session_start();
+		if (!session_id())
+		{
+			session_start();
+		}
 	}
 
 	/**
