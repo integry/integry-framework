@@ -193,11 +193,11 @@ abstract class Controller
 		return ;
 	}
 
-	public function getBlockResponse($block)
+	public function getBlockResponse(&$block)
 	{
 		if (!is_object($block['call'][0]))
 		{
-			$block['call'][0] = new $block['call'][0]($this->application);
+			$block['call'][0] = $this->application->getControllerInstance($block['call'][0]);
 		}
 
 		return call_user_func($block['call']);

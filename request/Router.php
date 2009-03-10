@@ -171,6 +171,11 @@ class Router
 
 	public function setBaseDir($dir, $virtualBaseDir)
 	{
+		if ($dir[0] == '\\')
+		{
+			$dir = substr($dir, 1);
+		}
+
 		$this->baseDir = $dir;
 		$this->virtualBaseDir = $virtualBaseDir;
 
@@ -608,13 +613,14 @@ class Router
 			$queryParts[] = $param . '=' . $value;
 		}
 
+		$url = $this->getBaseDirFromUrl() . $route;
 		$query = implode($variableSeparator, $queryParts);
 		if ($query)
 		{
-			$query = '?' . $query;
+			$query = (strpos($url, '?') ? '&' : '?') . $query;
 		}
 
-		$url = $this->getBaseDirFromUrl() . $route . $query;
+		$url .= $query;
 		return strip_tags($url);
 	}
 

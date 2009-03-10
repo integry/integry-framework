@@ -70,6 +70,8 @@ class Application
 	 */
 	private $defaultControllerName = "index";
 
+	protected $controllerDirectories = array();
+
 	/**
 	 * Application constructor.
 	 *
@@ -266,6 +268,16 @@ class Application
 		}
 
 		$this->postProcessResponse($block['response'], $controllerInstance);
+		//$blockOutput = $this->getRenderer()->process($block['response'], $block['view']);
+
+		// dynamically loaded blocks
+		if (substr($block['view'], 0, 2) == './')
+		{
+			// trim .tpl
+			$block['view'] = substr($block['view'], 0, -4);
+			$block['view'] = $this->getView($block['call'][0]->getControllerName(), $block['view']);
+		}
+
 		$blockOutput = $this->getRenderer()->process($block['response'], $block['view']);
 		$this->getRenderer()->appendValue($block['container'], $blockOutput);
 
@@ -318,16 +330,14 @@ class Application
 		$pathLength = count($controllerPath);
 		$className = ucfirst($controllerPath[$pathLength - 1]).'Controller';
 		$controllerPath[$pathLength - 1] = $className;
-		$controllerPath = implode(".", $controllerPath);
+		$controllerPath = implode("/", $controllerPath);
 
-		$controllerSystemPaths = array();
-		$controllerSystemPaths[] = ClassLoader::getRealPath("application.controller." . $controllerPath) . ".php";
-		$controllerSystemPaths[] = ClassLoader::getRealPath("application.controller." . $controllerName . '.' . $controllerPath) . ".php";
-
-		foreach ($controllerSystemPaths as $controllerSystemPath)
+		foreach ($this->getControllerDirectories() as $dir)
 		{
+			$controllerSystemPath = $dir . '/' . $controllerPath . '.php';
 			if (file_exists($controllerSystemPath))
 			{
+				$this->controllerDirectories[$controllerName] = $dir;
 				include_once($controllerSystemPath);
 				$refl = new ReflectionClass($className);
 				if (!$refl->isInstantiable())
@@ -341,6 +351,13 @@ class Application
 		}
 
 		throw new ControllerNotFoundException($controllerName);
+	}
+
+	protected function getControllerDirectories()
+	{
+		$controllerSystemPaths = array();
+		$controllerSystemPaths[] = ClassLoader::getRealPath("application.controller");
+		return $controllerSystemPaths;
 	}
 
 	/**
@@ -434,7 +451,8 @@ class Application
 	 */
 	public function getView($controllerName, $actionName)
 	{
-		return ClassLoader::getRealPath('application.view.' . $controllerName) . '/' . $actionName . '.tpl';
+		$dir = dirname($this->controllerDirectories[str_replace('/', '.', $controllerName)]) . '/view';
+		return $dir . '/' . str_replace('.', '/', $controllerName) . '/' . $actionName . '.tpl';
 	}
 
 	/**
