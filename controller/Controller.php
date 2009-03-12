@@ -273,16 +273,14 @@ abstract class Controller
 			$blockName = array($this, $blockName);
 		}
 
-		$blockMethodName = $blockName[1] . 'Block';
+		$blockMethodName = $blockName[1] . (substr($blockName[1], -5) == 'Block' ? '' : 'Block');
 
 		if (empty($viewName))
 		{
-			$viewPath = "block" . DIRECTORY_SEPARATOR . $blockName[1] . ".tpl";
+			$viewName = "block" . DIRECTORY_SEPARATOR . $blockName[1] . ".tpl";
 		}
-		else
-		{
-			$viewPath = $viewName . ".tpl";
-		}
+
+		$viewPath = $viewName . (substr($viewName, -4) == '.tpl' ? '' : '.tpl');
 
 		/*
 		if (!method_exists($blockName[0], $blockMethodName))
