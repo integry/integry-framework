@@ -55,6 +55,9 @@ abstract class Controller
 	 */
 	private static $currentController;
 
+	private $blockName;
+	private $parentController;
+
 	/**
 	 * Controller constructor
 	 *
@@ -200,6 +203,13 @@ abstract class Controller
 			$block['call'][0] = $this->application->getControllerInstance($block['call'][0]);
 		}
 
+		// pass the name of the current block container
+		if ($block['call'][0] instanceof Controller)
+		{
+			$block['call'][0]->setBlockName($this->getBlockName());
+			$block['call'][0]->setParentController($this);
+		}
+
 		return call_user_func($block['call']);
 	}
 
@@ -318,6 +328,32 @@ abstract class Controller
 				return true;
 			}
 		}
+	}
+
+	/**
+	 *	Set name of the current block context
+	 */
+	public function setBlockName($name)
+	{
+		$this->blockName = $name;
+	}
+
+	/**
+	 *	Set name of the current block context
+	 */
+	public function getBlockName()
+	{
+		return $this->blockName;
+	}
+
+	public function setParentController(Controller $parent)
+	{
+		$this->parentController = $parent;
+	}
+
+	public function getParentController()
+	{
+		return $this->parentController;
 	}
 
 	public static function isCallable()

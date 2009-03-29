@@ -255,6 +255,7 @@ class Application
 
 	protected function renderBlock($block, Controller $controllerInstance)
 	{
+		$controllerInstance->setBlockName($block['container']);
 		$block['response'] = $controllerInstance->getBlockResponse($block);
 
 		if (!$block['response'])
