@@ -140,7 +140,6 @@ class Request
 		return ip2long($this->getIP());
 	}
 
-
 	/**
 	 * Gets an action name from a request
 	 *
