@@ -44,6 +44,8 @@ class ObjectFileResponse extends Response
 		while (!feof($f))
 		{
 			echo fread($f, 4096);
+			flush();
+			ob_flush();
 		}
 
 		fclose($f);

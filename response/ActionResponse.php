@@ -36,7 +36,7 @@ class ActionResponse extends Response implements Renderable
 			}
 		}
 
-		$this->setHeader('Content-type', 'text/html');
+		$this->setHeader('Content-type', 'text/html;charset=utf-8');
 	}
 
 	/**
