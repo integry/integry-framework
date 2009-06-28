@@ -633,7 +633,8 @@ class Router
 		$params = array();
 		if (isset($parts[1]))
 		{
-			$pairs = explode($this->variableSeparator, $parts[1]);
+			$sep = strpos($url, '&amp;') !== false ? '&amp;' : '&';
+			$pairs = explode($sep, $parts[1]);
 			foreach ($pairs as $pair)
 			{
 				list($key, $value) = explode('=', $pair, 2);

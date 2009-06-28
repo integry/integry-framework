@@ -132,6 +132,11 @@ abstract class Controller
 		}
 	}
 
+	public function executeBlock($methodName)
+	{
+		return call_user_func(array($this, $methodName));
+	}
+
 	/**
 	 * Checks if a method "$actionName" is really an action
 	 * An action is considered to be a public method of controller defined in a top-level
@@ -210,7 +215,7 @@ abstract class Controller
 			$block['call'][0]->setParentController($this);
 		}
 
-		return call_user_func($block['call']);
+		return $this->application->execute($block['call'][0], $block['call'][1], true);
 	}
 
 	/**

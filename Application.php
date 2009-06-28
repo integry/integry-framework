@@ -193,17 +193,13 @@ class Application
 
 			if ($response instanceof Renderable)
 			{
-				// using layout defined in a controller for action output
-				if ($controllerInstance->getLayout() != null)
-				{
-					$applicationOutput = $this->render($controllerInstance, $response);
+				$output = $this->render($controllerInstance, $response);
 
-					$this->getRenderer()->set("ACTION_VIEW", $applicationOutput);
-					$output = $this->getRenderer()->render($this->getLayoutPath($controllerInstance->getLayout()));
-				}
-				else
+				// using layout defined in a controller for action output
+				if ($controllerInstance->getLayout() != null && !($response instanceof BlockResponse))
 				{
-					$output = $this->render($controllerInstance, $response);
+					$this->getRenderer()->set("ACTION_VIEW", $output);
+					$output = $this->getRenderer()->render($this->getLayoutPath($controllerInstance->getLayout()));
 				}
 			}
 			else if ($response instanceof InternalRedirectResponse)
@@ -217,6 +213,7 @@ class Application
 			{
 				$output = $response->getData();
 			}
+
 		}
 		catch(ApplicationException $ex)
 		{
@@ -452,6 +449,7 @@ class Application
 	 */
 	public function getView($controllerName, $actionName)
 	{
+		$controllerName = str_replace('\\', '/', $controllerName);
 		$dir = dirname($this->controllerDirectories[str_replace('/', '.', $controllerName)]) . '/view';
 		return $dir . '/' . str_replace('.', '/', $controllerName) . '/' . $actionName . '.tpl';
 	}
