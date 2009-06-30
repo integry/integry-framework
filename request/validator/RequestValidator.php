@@ -215,6 +215,11 @@ class RequestValidator
 		return $this->restoredRequest;
 	}
 
+	public function getRequest()
+	{
+		return $this->request;
+	}
+
 	/**
 	 * Get errors list
 	 *
