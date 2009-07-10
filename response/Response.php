@@ -139,7 +139,7 @@ abstract class Response
 
 		if ($this->statusCode)
 		{
-			header(' ', true, $this->statusCode);
+			header('', true, $this->statusCode);
 		}
 	}
 

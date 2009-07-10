@@ -38,6 +38,9 @@ class JSONResponse extends Response
 		if (!headers_sent())
 		{
 			$this->sendHeaders();
+			ob_flush();
+			ob_end_clean();
+			flush();
 		}
 
 		if (ob_get_length())
