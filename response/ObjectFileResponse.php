@@ -24,6 +24,7 @@ class ObjectFileResponse extends Response
 			$this->setHeader('Content-type', $objectFile->getMimeType());
 			$this->setHeader('Content-Disposition', 'attachment; filename="'.$objectFile->getBaseName().'"');
 			$this->setHeader('Content-Length', (string)$objectFile->getSize());
+			$this->setHeader('Content-Encoding', 'none');
 		}
 		else
 		{
@@ -53,7 +54,7 @@ class ObjectFileResponse extends Response
 
 	public function getData()
 	{
-		return $this->content;
+		return '';
 	}
 
 	public function __destruct()
