@@ -160,7 +160,7 @@ class Router
 
 			$route = $this->getRequestedRoute();
 
-			$this->virtualBaseDir = str_replace($route, "", urldecode($URIBase));
+			$this->virtualBaseDir = str_replace($route, "", urldecode(urldecode($URIBase)));
 
 			// strip double slashes
 			$this->virtualBaseDir = preg_replace('/\/{2,}$/', '/', $this->virtualBaseDir);
@@ -439,7 +439,7 @@ class Router
 		return strip_tags($url);
 	}
 
-	public function createFullUrl($relativeUrl, $https = null)
+	public function createFullUrl($relativeUrl, $https = null, $includeBaseDir = null)
 	{
 		if (preg_match('/^http[s]{0,1}:\/\//i', $relativeUrl))
 		{
@@ -472,7 +472,7 @@ class Router
 			$relativeUrl = '/' . $relativeUrl;
 		}
 
-		return $parts['scheme'] . '://' . $parts['host'] . (isset($parts['port']) ? ':' . $parts['port'] : '') . $relativeUrl;
+		return $parts['scheme'] . '://' . $parts['host'] . (isset($parts['port']) ? ':' . $parts['port'] : '') . ($includeBaseDir ? $parts['path'] : '') . $relativeUrl;
 	}
 
 	public function setReturnPath($returnRoute)

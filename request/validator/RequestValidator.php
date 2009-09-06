@@ -72,7 +72,7 @@ class RequestValidator
 	 */
 	private function execute()
 	{
-		unset($this->errorList);
+		$this->errorList = array();
 		foreach ($this->validatorVarList as $var)
 		{
 			try
