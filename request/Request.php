@@ -31,17 +31,17 @@ class Request
 	private $dataContainer = array();
 
 	/**
-	 * Unsanitized GET request data storage, use with care!
+	 * Unsanitized request data storage, use with care!
 	 * @var array
 	 */
-	private $rawGetDataContainer = array();
+	private $rawDataContainer = array();
 
 	/**
 	 * @param array $default Associative array with default values
 	 */
 	public function __construct()
 	{
-		$this->rawGetDataContainer = $_REQUEST;
+		$this->rawDataContainer = $_REQUEST;
 		$this->sanitizeArray($_GET);
 
 		$this->setValueArray($_GET);
@@ -132,12 +132,12 @@ class Request
 	}
 
 	/**
-	 * Gets a unsanitized GET request parameters
+	 * Gets a unsanitized request parameters
 	 *
 	 * @return array
 	 */
-	public function getRawGet() {
-		return $this->rawGetDataContainer;
+	public function getRawRequest() {
+		return $this->rawDataContainer;
 	}
 	
 	/**
