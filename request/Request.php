@@ -31,10 +31,17 @@ class Request
 	private $dataContainer = array();
 
 	/**
+	 * Unsanitized GET request data storage, use with care!
+	 * @var array
+	 */
+	private $rawGetDataContainer = array();
+
+	/**
 	 * @param array $default Associative array with default values
 	 */
 	public function __construct()
 	{
+		$this->rawGetDataContainer = $_REQUEST;
 		$this->sanitizeArray($_GET);
 
 		$this->setValueArray($_GET);
@@ -124,6 +131,15 @@ class Request
 		return $default;
 	}
 
+	/**
+	 * Gets a unsanitized GET request parameters
+	 *
+	 * @return array
+	 */
+	public function getRawGet() {
+		return $this->rawGetDataContainer;
+	}
+	
 	/**
 	 * Returns clients IP address
 	 */
