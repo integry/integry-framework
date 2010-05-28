@@ -49,6 +49,8 @@ class Request
 		$this->setValueArray($_COOKIE);
 
 		$this->dataContainer = $this->removeMagicQuotes($this->dataContainer);
+		$this->dataContainer['__server'] = $_SERVER;
+		$this->dataContainer['ip'] = $this->getIP();
 	}
 
 	/**
