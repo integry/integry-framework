@@ -61,6 +61,8 @@ class ClassLoader
 
 	private static $importedPaths = array();
 
+	private static $realPathCache = array();
+
 	/**
 	 * Loads a class file (performs include_once)
 	 *
@@ -210,7 +212,7 @@ class ClassLoader
 	 * @param unknown_type $path
 	 * @return unknown
 	 */
-	private static function mapToMountPoint($path)
+	public static function mapToMountPoint($path)
 	{
 		$possiblePoints = array();
 		$parts = explode('/', strtr($path, array('.' => '/', '#' => '.')));
@@ -314,18 +316,28 @@ class ClassLoader
 	 */
 	public static function getRealPath($path)
 	{
-		$mounted = self::mapToMountPoint($path);
-
-		foreach ($mounted as $path)
+		if (!isset(self::$realPathCache[$path]))
 		{
-			$replaced = str_replace('*', '', $path);
-			if (is_file($replaced . '.php') || is_dir($replaced))
+			self::$realPathCache[$path] = null;
+			$mounted = self::mapToMountPoint($path);
+
+			foreach ($mounted as $possiblePath)
 			{
-				return $path;
+				$replaced = str_replace('*', '', $possiblePath);
+				if (is_file($replaced . '.php') || is_dir($replaced))
+				{
+					self::$realPathCache[$path] = $possiblePath;
+					break;
+				}
+			}
+
+			if (!self::$realPathCache[$path])
+			{
+				self::$realPathCache[$path] = array_shift($mounted);
 			}
 		}
 
-		return $mounted[0];
+		return self::$realPathCache[$path];
 	}
 
 	/**

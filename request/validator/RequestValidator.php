@@ -168,7 +168,7 @@ class RequestValidator
 	public function hasSavedState()
 	{
 		@session_start();
-		if (!empty($_SESSION['_validator'][$this->name]))
+		if (!empty($_SESSION['validatorData'][$this->name]))
 		{
 			return true;
 		}
@@ -184,9 +184,10 @@ class RequestValidator
 	 */
 	public function saveState()
 	{
-		@session_start();
-		$_SESSION['_validator'][$this->name]['error'] = $this->errorList;
-		$_SESSION['_validator'][$this->name]['data'] = $this->request->toArray();
+		//@session_start();
+		$_SESSION['validatorData'][$this->name]['error'] = $this->errorList;
+		$_SESSION['validatorData'][$this->name]['data'] = $this->request->toArray();
+		unset($_SESSION['validatorData'][$this->name]['data']['server']);
 	}
 
 	/**
@@ -197,12 +198,12 @@ class RequestValidator
 	{
 		@session_start();
 
-		$this->errorList = $_SESSION['_validator'][$this->name]['error'];
-		//$this->restoredData =  $_SESSION['_validator'][$this->name]['data'];
+		$this->errorList = $_SESSION['validatorData'][$this->name]['error'];
+		//$this->restoredData =  $_SESSION['validatorData'][$this->name]['data'];
 		$this->restoredRequest = new Request();
-		$this->restoredRequest->setValueArray($_SESSION['_validator'][$this->name]['data']);
+		$this->restoredRequest->setValueArray($_SESSION['validatorData'][$this->name]['data']);
 
-		unset($_SESSION['_validator'][$this->name]);
+		unset($_SESSION['validatorData'][$this->name]);
 	}
 
 	/**

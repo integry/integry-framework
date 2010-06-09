@@ -32,6 +32,11 @@ class ObjectFileResponse extends Response
 		}
 	}
 
+	public function getFile()
+	{
+		return $this->file;
+	}
+
 	public function deleteFileOnComplete($delete = true)
 	{
 		$this->deleteFile = $delete;

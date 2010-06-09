@@ -163,9 +163,12 @@ class Application
 	 *
 	 * @throws ApplicationException Rethrowed framework level exception (should be handled manually)
 	 */
-	public function run()
+	public function run($redirect = false)
 	{
-		$this->router->mapToRoute($this->router->getRequestedRoute(), $this->request);
+		if (!$redirect)
+		{
+			$this->router->mapToRoute($this->router->getRequestedRoute(), $this->request);
+		}
 
 		$controllerName = $this->getRequest()->getControllerName();
 		$actionName = $this->getRequest()->getActionName();
@@ -204,10 +207,11 @@ class Application
 			}
 			else if ($response instanceof InternalRedirectResponse)
 			{
-				$this->request->setControllerName($response->getControllerName());
-				$this->request->setActionName($response->getActionName());
-				$this->request->setValueArray($response->getParamList());
-				return $this->run();
+				$this->getRequest()->setControllerName($response->getControllerName());
+				$this->getRequest()->setActionName($response->getActionName());
+				$this->getRequest()->setValueArray($response->getParamList());
+
+				return $this->run(true);
 			}
 			else
 			{
@@ -372,9 +376,7 @@ class Application
 		{
 			try
 			{
-				$paramList = array("controller" => $response->getControllerName(), "action" => $response->getActionName());
-				$paramList = array_merge($paramList, $response->getParamList());
-				$response->setRedirectURL($this->router->createURL($paramList));
+				$this->getActionRedirectResponseUrl($response);
 			}
 			catch(ApplicationException $ex)
 			{
@@ -415,6 +417,15 @@ class Application
 				throw $ex;
 			}
 		}
+	}
+
+	public function getActionRedirectResponseUrl(ActionRedirectResponse $response)
+	{
+		$paramList = array("controller" => $response->getControllerName(), "action" => $response->getActionName());
+		$paramList = array_merge($paramList, $response->getParamList());
+		$response->setRedirectURL($this->router->createURL($paramList));
+
+		return $response->getRedirectURL();
 	}
 
 	/**

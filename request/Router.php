@@ -429,6 +429,10 @@ class Router
 				$url = $this->setUrlQueryParam($url, $key, $var);
 			}
 		}
+		else if ($this->isHttps())
+		{
+			$url = $this->createFullUrl($url, true);
+		}
 
 		if ($addReturnPath && empty($queryVars['return']))
 		{
@@ -594,10 +598,31 @@ class Router
 	 */
 	public function getRouteFromUrl($url)
 	{
-		$route = substr(strip_tags($url), strlen($this->getBaseDirFromUrl()));
+		if (substr($url, 0, 4) == 'http')
+		{
+			$base = dirname($this->getBaseUrl());
+			$base = str_replace('https://', 'http://', $base);
+			$url = str_replace('https://', 'http://', $url);
+			$route = substr(strip_tags($url), strlen($base));
+		}
+		else
+		{
+			$base = dirname($this->getBaseDir());
+			$route = substr(strip_tags($url), strlen($base));
+			if (substr($route, 0, 11) == '/index.php/')
+			{
+				$route = substr($route, 11);
+			}
+		}
+
 		if (strpos($route, '?'))
 		{
 			$route = substr($route, 0, strpos($route, '?'));
+		}
+
+		if (substr($route, 0, 1) == '/')
+		{
+			$route = substr($route, 1);
 		}
 
 		return $route;
@@ -693,7 +718,7 @@ class Router
 
 	public function removeAutoAppendVariable($key)
 	{
-		unset($this->autoAppendVariableList[$key]);
+		unset($this->autoAppendVariableList[$key], $this->autoAppendQueryVariableList[$key]);
 	}
 
 	/**
