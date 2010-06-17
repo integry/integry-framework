@@ -8,7 +8,7 @@ ClassLoader::import("framework.request.validator.check.Check");
  * @package framework.request.validator.check
  * @author Integry Systems
  */
-class IsValidEmailCheck extends Check
+class RegExpCheck extends Check
 {
 	private $pattern = "";
 	
