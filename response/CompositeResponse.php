@@ -95,6 +95,19 @@ abstract class CompositeResponse extends Response
 	{
 		$this->set($outputHandle, $response->getData());
 	}
+	
+	public function set($key, $value)
+	{
+		$this->data[$key] = $value;
+	}
+
+	public function get($key)
+	{
+		if (isset($this->data[$key]))
+		{
+			return $this->data[$key];
+		}
+	}
 }
 
 ?>
