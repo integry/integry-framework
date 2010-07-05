@@ -21,11 +21,6 @@ class CompositeJSONResponse extends CompositeResponse
 		$this->setHeader('Content-type', 'text/javascript');
 	}
 
-	public function set($key, $value)
-	{
-		$this->data[$key] = $value;
-	}
-
 	public function getData()
 	{
 		return json_encode($this->data);
