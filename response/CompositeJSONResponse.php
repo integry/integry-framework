@@ -12,7 +12,7 @@ ClassLoader::import("framework.response.CompositeResponse");
  */
 class CompositeJSONResponse extends CompositeResponse
 {
-	private $data = array();
+	protected $data = array();
 
 	public function __construct()
 	{
