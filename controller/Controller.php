@@ -115,7 +115,7 @@ abstract class Controller
 			$response = call_user_func(array(&$this, $actionName));
 			if ($response instanceof Response)
 			{
-				if ($response instanceof ActionResponse)
+				if ($response instanceof Renderable)
 				{
 					$response->set("request", $this->request->toArray());
 				}
