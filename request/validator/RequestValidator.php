@@ -101,6 +101,11 @@ class RequestValidator
 		return $this->validatorVarList[$name];
 	}
 
+	public function removeValidatorVar($name)
+	{
+		unset($this->validatorVarList[$name]);
+	}
+
 	public function getChecks()
 	{
 		$checks = array();

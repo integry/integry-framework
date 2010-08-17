@@ -630,6 +630,11 @@ class Router
 
 	public function createUrlFromRoute($route, $isXHtml = false)
 	{
+		if (substr($route, 0, 1) == '/')
+		{
+			return $route;
+		}
+
 		$variableSeparator = $isXHtml ? '&amp;' : '&';
 
 		$queryParts = array();

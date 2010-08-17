@@ -16,9 +16,12 @@
  * @package framework
  * @author Integry Systems
  */
-function __autoload($className)
+if (!function_exists('__autoload'))
 {
-	ClassLoader::load($className);
+	function __autoload($className)
+	{
+		ClassLoader::load($className);
+	}
 }
 
 /**
