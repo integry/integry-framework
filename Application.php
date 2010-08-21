@@ -47,7 +47,7 @@ class Application
 	/**
 	 * @var Router
 	 */
-	protected $router = null;
+	/* protected $router = null; */
 
 	/**
 	 * Request instance
@@ -80,7 +80,6 @@ class Application
 	public function __construct()
 	{
 		$this->request = new $this->requestClass();
-		$this->router = new $this->routerClass($this->request);
 	}
 
 	/**
@@ -474,6 +473,20 @@ class Application
 	public function getLayoutPath($layout)
 	{
 		return ClassLoader::getRealPath('application.view.layout.' . $layout) . '.tpl';
+	}
+
+	public function __get($name)
+	{
+		switch ($name)
+	  	{
+			case 'router':
+				$this->router = new $this->routerClass($this->request);
+				return $this->router;
+			break;
+
+			default:
+			break;
+		}
 	}
 }
 ?>

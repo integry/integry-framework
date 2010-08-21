@@ -9,7 +9,7 @@ ClassLoader::import("framework.request.Route");
  * @author Integry Systems
  * @package framework.request
  */
-class Router
+class Router implements Serializable
 {
 	/**
 	 * Request object instance
@@ -130,6 +130,11 @@ class Router
 			$this->httpsBaseUrl = 'https://' . $_SERVER['HTTP_HOST'] . $this->baseDir;
 			$this->getBaseDirFromUrl();
 		}
+	}
+
+	public function setRequest(Request $request)
+	{
+		$this->request = $request;
 	}
 
 	/**
@@ -788,6 +793,26 @@ class Router
 	public function isHttps()
 	{
 		return $this->isHttps;
+	}
+
+	public function serialize()
+	{
+		$serialize = get_object_vars($this);
+		unset($serialize['request']);
+		unset($serialize['matchingRoutes']);
+		unset($serialize['autoAppendVariableList']);
+		unset($serialize['autoAppendQueryVariableList']);
+		$res = serialize($serialize);
+		var_dump(strlen($res));
+		return $res;
+	}
+
+	public function unserialize($vars)
+	{
+		foreach (unserialize($vars) as $key => $value)
+		{
+			$this->$key = $value;
+		}
 	}
 }
 
