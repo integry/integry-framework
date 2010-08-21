@@ -66,6 +66,10 @@ class ClassLoader
 
 	private static $realPathCache = array();
 
+	private static $mountPointCache = array();
+
+	private static $isCacheChanged = false;
+
 	/**
 	 * Loads a class file (performs include_once)
 	 *
@@ -217,6 +221,11 @@ class ClassLoader
 	 */
 	public static function mapToMountPoint($path)
 	{
+		if (isset(self::$mountPointCache[$path]))
+		{
+			return self::$mountPointCache[$path];
+		}
+
 		$possiblePoints = array();
 		$parts = explode('/', strtr($path, array('.' => '/', '#' => '.')));
 
@@ -279,6 +288,13 @@ class ClassLoader
 			}
 		}
 
+		if (self::$mountPointCache)
+		{
+			self::$isCacheChanged = true;
+		}
+
+		self::$mountPointCache[$path] = $mountPoints;
+
 		return $mountPoints;
 	}
 
@@ -321,6 +337,11 @@ class ClassLoader
 	{
 		if (!isset(self::$realPathCache[$path]))
 		{
+			if (self::$realPathCache)
+			{
+				self::$isCacheChanged = true;
+			}
+
 			self::$realPathCache[$path] = null;
 			$mounted = self::mapToMountPoint($path);
 
@@ -341,6 +362,31 @@ class ClassLoader
 		}
 
 		return self::$realPathCache[$path];
+	}
+
+	public static function getRealPathCache()
+	{
+		return self::$realPathCache;
+	}
+
+	public static function setRealPathCache($paths)
+	{
+		self::$realPathCache = array_merge(self::$realPathCache, $paths);
+	}
+
+	public static function getMountPointCache()
+	{
+		return self::$mountPointCache;
+	}
+
+	public static function setMountPointCache($paths)
+	{
+		self::$mountPointCache = array_merge(self::$mountPointCache, $paths);
+	}
+
+	public static function isCacheChanged()
+	{
+		return self::$isCacheChanged;
 	}
 
 	/**

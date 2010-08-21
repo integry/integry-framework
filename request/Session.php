@@ -159,15 +159,24 @@ class Session
 
 	private function getControllerHash(Controller $controller)
 	{
-		$hash = array();
-		$hash[] = get_class($controller);
-		while ($controller)
+		static $cache = array();
+
+		$controller = $top = get_class($controller);
+
+		if (!isset($cache[$top]))
 		{
-			$controller = get_parent_class($controller);
+			$hash = array();
 			$hash[] = $controller;
+			while ($controller)
+			{
+				$controller = get_parent_class($controller);
+				$hash[] = $controller;
+			}
+
+			$cache[$top] = md5(implode(',', $hash));
 		}
 
-		return md5(implode(',', $hash));
+		return $cache[$top];
 	}
 
 }

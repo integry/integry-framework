@@ -802,9 +802,7 @@ class Router implements Serializable
 		unset($serialize['matchingRoutes']);
 		unset($serialize['autoAppendVariableList']);
 		unset($serialize['autoAppendQueryVariableList']);
-		$res = serialize($serialize);
-		var_dump(strlen($res));
-		return $res;
+		return serialize($serialize);
 	}
 
 	public function unserialize($vars)
