@@ -532,7 +532,7 @@ class Router implements Serializable
 			{
 				foreach ($route->getParamList() as $paramName => $paramRequirement)
 				{
-					if (!preg_match('/^' . $paramRequirement . '/U' , $URLParamList[$paramName]))
+					if (!preg_match('/^' . $paramRequirement . '$/U' , $URLParamList[$paramName]))
 					{
 						$matchingRoute = null;
 						break;
