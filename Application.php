@@ -139,6 +139,7 @@ class Application
 		{
 			$this->request = $this->router->getRequest();
 		}
+
 		return $this->request;
 	}
 
@@ -260,7 +261,9 @@ class Application
 
 		if (!$block['response'])
 		{
-			return false;
+			$blockOutput = '';
+			$this->getRenderer()->appendValue($block['container'], $blockOutput);
+			return $blockOutput;
 		}
 
 		if (!($block['response'] instanceof BlockResponse))
@@ -339,7 +342,9 @@ class Application
 			if (file_exists($controllerSystemPath))
 			{
 				$this->controllerDirectories[$controllerName] = $dir;
+
 				include_once($controllerSystemPath);
+
 				$refl = new ReflectionClass($className);
 				if (!$refl->isInstantiable())
 				{
