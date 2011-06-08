@@ -1,7 +1,6 @@
 <?php
 
 //require_once("ClassLoaderException.php");
-//ClassLoader::import("framework.ClassLoaderException");
 
 /**
  * Automatically loads a requested class
@@ -16,13 +15,8 @@
  * @package framework
  * @author Integry Systems
  */
-if (!function_exists('__autoload'))
-{
-	function __autoload($className)
-	{
-		ClassLoader::load($className);
-	}
-}
+
+spl_autoload_register(array('ClassLoader', 'load'));
 
 /**
  * Application class loader
@@ -70,6 +64,8 @@ class ClassLoader
 
 	private static $isCacheChanged = false;
 
+	private static $ignoreMissingClasses = false;
+
 	/**
 	 * Loads a class file (performs include_once)
 	 *
@@ -97,13 +93,33 @@ class ClassLoader
 
 		if (!class_exists($className, false))
 		{
-			if(!(include_once($class.'.php')))
+			if(!(@include_once($class.'.php')) && !self::$ignoreMissingClasses)
 			{
+				// WTF PHP bug
+				// #0  ClassLoader::load(g25c7hui)
+				// #1  spl_autoload_call(g25c7hui) <<== g25c7hui instead of EavField ?
+				// #2  call_user_func(Array ([0] => EavField,[1] => getFieldIDColumnName)) called at ../application/model/eavcommon/EavSpecificationManagerCommon.php:816]
+				// also wtf'ed here: http://stackoverflow.com/questions/3517789/scrambled-class-name-passed-to-spl-autoload-call-via-call-user-func
+				$hasWtfBug = preg_match('/^[_a-z0-9]+$/', $className) && preg_match('/[0-9]/', $className);
+
+				// for now just ignore as the necessary class is likely to be already loaded
+				// but perhaps we'll need to look at debug_backtrace if it isn't
+				if ($hasWtfBug)
+				{
+					return;
+				}
+
+				ClassLoader::import("framework.ClassLoaderException");
 				throw new ClassLoaderException('File '.$class.'.php not found');
 			}
 		}
 
 		return $className;
+	}
+
+	public static function ignoreMissingClasses($ignore = true)
+	{
+		self::$ignoreMissingClasses = $ignore;
 	}
 
 	public static function registerAutoLoadFunction($functionName)
@@ -183,9 +199,9 @@ class ClassLoader
 	 */
 	public static function import($path, $now = false)
 	{
-		if (isset(self::$importedPaths[$path]))
+		if (isset(self::$importedPaths[$path]) && !$now)
 		{
-			return !$now ? false : array_pop(explode('.', $path));
+			return array_pop(explode('.', $path));
 		}
 
 		self::$importedPaths[$path] = true;
