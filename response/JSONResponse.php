@@ -52,6 +52,11 @@ class JSONResponse extends Response
 		flush();
 	}
 
+	public function flushChunk($data)
+	{
+		$this->flush(base64_encode(json_encode($data)) . '|');
+	}
+
 	public function getValue()
 	{
 		return $this->data;
