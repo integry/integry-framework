@@ -1,6 +1,6 @@
 <?php
 
-ClassLoader::import("framework.ApplicationException");
+require_once("ApplicationException.php");
 
 /**
  * Indicates that class loader failed loading some source file

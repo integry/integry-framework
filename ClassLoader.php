@@ -1,6 +1,6 @@
 <?php
 
-//require_once("ClassLoaderException.php");
+require_once("ClassLoaderException.php");
 
 /**
  * Automatically loads a requested class
