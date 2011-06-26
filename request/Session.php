@@ -17,7 +17,7 @@ class Session
 			session_name($name);
 		}
 
-		if (!session_id())
+		if (!session_id() && !headers_sent())
 		{
 			session_start();
 		}
