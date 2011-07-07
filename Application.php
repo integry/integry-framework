@@ -405,6 +405,8 @@ class Application
 				foreach (array_merge($responses, $response->getResponseList()) as $outputHandle => $data)
 				{
 					list($includedResponse, $controller, $actionName) = $data;
+					$this->processResponse($includedResponse);
+					$this->postProcessResponse($includedResponse, $controller);
 
 					if ($includedResponse instanceof Renderable)
 					{
