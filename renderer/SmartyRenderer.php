@@ -173,6 +173,10 @@ class SmartyRenderer extends Renderer
 		self::$helperDirectories[] = $directory;
 	}
 
+	public function getViewExtension()
+	{
+		return 'tpl';
+	}
 }
 
 ?>
