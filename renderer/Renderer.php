@@ -91,6 +91,13 @@ abstract class Renderer
 	 * @throws ViewNotFoundException if view does not exists
 	 */
 	abstract public function render($view);
+
+	/**
+	 * Returns the file extension of view files
+	 *
+	 * @return string File extension
+	 */
+	abstract public function getViewExtension();
 }
 
 ?>

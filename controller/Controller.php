@@ -288,14 +288,16 @@ abstract class Controller
 			$blockName = array($this, $blockName);
 		}
 
+		$viewExt = $this->application->getRenderer()->getViewExtension();
+
 		$blockMethodName = $blockName[1] . (substr($blockName[1], -5) == 'Block' ? '' : 'Block');
 
 		if (empty($viewName))
 		{
-			$viewName = "block" . DIRECTORY_SEPARATOR . $blockName[1] . ".tpl";
+			$viewName = "block" . DIRECTORY_SEPARATOR . $blockName[1] . "." . $viewExt;
 		}
 
-		$viewPath = $viewName . (substr($viewName, -4) == '.tpl' ? '' : '.tpl');
+		$viewPath = $viewName . (substr($viewName, -1 * (strlen($viewExt) + 1)) == '.' . $viewExt ? '' : '.' . $viewExt);
 
 		/*
 		if (!method_exists($blockName[0], $blockMethodName))

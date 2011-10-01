@@ -43,6 +43,7 @@ class Application
 {
 	protected $routerClass = 'Router';
 	protected $requestClass = 'Request';
+	protected $rendererClass = 'PHPRenderer';
 
 	/**
 	 * @var Router
@@ -114,6 +115,11 @@ class Application
 		$this->renderer = $renderer;
 	}
 
+	public function setRendererClass($className)
+	{
+		$this->rendererClass = $className;
+	}
+
 	/**
 	 * Gets renderer for application
 	 *
@@ -123,7 +129,8 @@ class Application
 	{
 		if (is_null($this->renderer))
 		{
-			$this->renderer = new SmartyRenderer($this);
+			$class = $this->rendererClass;
+			$this->renderer = new $class($this);
 		}
 		return $this->renderer;
 	}
@@ -468,7 +475,7 @@ class Application
 	{
 		$controllerName = str_replace('\\', '/', $controllerName);
 		$dir = dirname($this->controllerDirectories[str_replace('/', '.', $controllerName)]) . '/view';
-		return $dir . '/' . str_replace('.', '/', $controllerName) . '/' . $actionName . '.tpl';
+		return $dir . '/' . str_replace('.', '/', $controllerName) . '/' . $actionName . '.' . $this->getRenderer()->getViewExtension();
 	}
 
 	/**
@@ -479,7 +486,7 @@ class Application
 	 */
 	public function getLayoutPath($layout)
 	{
-		return ClassLoader::getRealPath('application.view.layout.' . $layout) . '.tpl';
+		return ClassLoader::getRealPath('application.view.layout.' . $layout) . '.' . $this->getRenderer()->getViewExtension();
 	}
 
 	public function __get($name)
