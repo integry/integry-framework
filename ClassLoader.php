@@ -93,7 +93,7 @@ class ClassLoader
 
 		if (!class_exists($className, false))
 		{
-			if(!(@include_once($class.'.php')) && !self::$ignoreMissingClasses)
+			if(!(include_once($class.'.php')) && !self::$ignoreMissingClasses)
 			{
 				// WTF PHP bug
 				// #0  ClassLoader::load(g25c7hui)
