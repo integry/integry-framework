@@ -93,8 +93,14 @@ class ClassLoader
 
 		if (!class_exists($className, false))
 		{
+			// we don't want to display PHP errors if a file can't be included, but at the same time
+			// we also don't want to supress all error messages from include_once (could be a parse error, etc.)
+			$errLevel = error_reporting();
+			error_reporting(E_ALL ^ E_WARNING);
+
 			if(!(include_once($class.'.php')) && !self::$ignoreMissingClasses)
 			{
+				error_reporting($errLevel);
 				// WTF PHP bug
 				// #0  ClassLoader::load(g25c7hui)
 				// #1  spl_autoload_call(g25c7hui) <<== g25c7hui instead of EavField ?
@@ -112,6 +118,8 @@ class ClassLoader
 				ClassLoader::import("framework.ClassLoaderException");
 				throw new ClassLoaderException('File '.$class.'.php not found');
 			}
+
+			error_reporting($errLevel);
 		}
 
 		return $className;
