@@ -120,16 +120,35 @@ class Request
 	/**
 	 * Gets a variable value from a request
 	 *
-	 * @param string $name Name of variable
+	 * @param mixed $name Name of variable. String - returns value by simple key. Array - returns value from multi-level array, for example, array('firstlevel', 'key')
 	 * @param mixed $default Default value to return
 	 * @return mixed
 	 */
 	public function get($name, $default = null)
 	{
+		if (is_array($name))
+		{
+			$data = $this->dataContainer;
+			foreach ($name as $key)
+			{
+				if (isset($data[$key]))
+				{
+					$data = $data[$key];
+				}
+				else
+				{
+					return $default;
+				}
+			}
+
+			return $data;
+		}
+
 		if (isset($this->dataContainer[$name]))
 		{
 			return $this->dataContainer[$name];
 		}
+
 		return $default;
 	}
 
@@ -141,7 +160,7 @@ class Request
 	public function getRawRequest() {
 		return $this->rawDataContainer;
 	}
-	
+
 	/**
 	 * Returns clients IP address
 	 */
