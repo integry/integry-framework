@@ -35,10 +35,11 @@ abstract class CompositeResponse extends Response
 	 * @param string $action Name of action
 	 * @return void
 	 */
-	public function addAction($actionOutputHandle, $controllerName, $actionName)
+	public function addAction($actionOutputHandle, $controllerName, $actionName, $params = array())
 	{
 		$this->requestedActionList[$actionOutputHandle] = array(self::CONTROLLER_HANDLE => $controllerName,
-															self::ACTION_HANDLE => $actionName);
+															self::ACTION_HANDLE => $actionName,
+																'params' => $params);
 	}
 
 	public function addResponse($actionOutputHandle, Response $response, Controller $controller, $actionName)
@@ -95,7 +96,7 @@ abstract class CompositeResponse extends Response
 	{
 		$this->set($outputHandle, $response->getData());
 	}
-	
+
 	public function set($key, $value)
 	{
 		$this->data[$key] = $value;

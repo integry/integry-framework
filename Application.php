@@ -405,8 +405,22 @@ class Application
 				{
 					$controllerName = $location[CompositeResponse::CONTROLLER_HANDLE];
 					$actionName = $location[CompositeResponse::ACTION_HANDLE];
+
+					if ($location['params'])
+					{
+						$originalRequest = $this->request;
+						$this->request = clone $this->request;
+						$this->request->setValueArray($location['params']);
+					}
+
 					$instance = $this->getControllerInstance($controllerName);
+
 					$responses[$outputHandle] = array($this->execute($instance, $actionName), $instance, $actionName);
+
+					if ($location['params'])
+					{
+						$this->request = $originalRequest;
+					}
 				}
 
 				foreach (array_merge($responses, $response->getResponseList()) as $outputHandle => $data)
