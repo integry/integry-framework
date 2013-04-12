@@ -361,7 +361,8 @@ class Router implements Serializable
 		$queryVars = array();
 		if (!empty($URLParamList['query']) && !is_array($URLParamList['query']))
 		{
-			foreach (explode('&', $URLParamList['query']) as $val)
+			$sep = strpos($URLParamList['query'], '&amp;') !== false ? '&amp;' : '&';
+			foreach (explode($sep, $URLParamList['query']) as $val)
 			{
 				list($key, $value) = explode('=', $val, 2);
 				$queryVars[urldecode($key)] = urldecode($value);
@@ -397,7 +398,7 @@ class Router implements Serializable
 			}
 
 			$queryToAppend = implode($variableSeparator, $pairs);
-			$queryToAppend = ((strpos($this->virtualBaseDir, '?') === false) ? '?' : '&') . $queryToAppend;
+			$queryToAppend = ((strpos($this->virtualBaseDir, '?') === false) ? '?' : $variableSeparator) . $queryToAppend;
 		}
 
 		/* Handling special case: URL rewrite is not enabled */
@@ -436,7 +437,7 @@ class Router implements Serializable
 		}
 		else if ($this->isHttps())
 		{
-			$url = $this->createFullUrl($url, true);
+			//$url = $this->createFullUrl($url, true);
 		}
 
 		if ($addReturnPath && empty($queryVars['return']))
@@ -481,7 +482,7 @@ class Router implements Serializable
 			$relativeUrl = '/' . $relativeUrl;
 		}
 
-		return $parts['scheme'] . '://' . $parts['host'] . (isset($parts['port']) ? ':' . $parts['port'] : '') . ($includeBaseDir ? $parts['path'] : '') . $relativeUrl;
+		return $parts['scheme'] . '://' . $parts['host'] . (isset($parts['port']) ? ':' . $parts['port'] : '') . str_replace('//', '/', ($includeBaseDir ? $parts['path'] : '') . $relativeUrl);
 	}
 
 	public function setReturnPath($returnRoute)
@@ -553,13 +554,18 @@ class Router implements Serializable
 
 	private function createQueryString($URLParamList)
 	{
+		return ((strpos($this->virtualBaseDir, '?') === false) ? '?' : '&') . $this->createUrlParamString($URLParamList);
+	}
+
+	public function createUrlParamString($URLParamList)
+	{
 		$assigmentList = array();
 		foreach ($URLParamList as $paramName => $value)
 		{
 			$assigmentList[] = $paramName . "=" . urlencode($value);
 		}
 
-		return ((strpos($this->virtualBaseDir, '?') === false) ? '?' : '&') . implode("&", $assigmentList);
+		return implode("&", $assigmentList);
 	}
 
 	/**
