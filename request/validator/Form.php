@@ -140,6 +140,23 @@ class Form
 	{
 		return $this->params;
 	}
+
+	public function isRequired($name)
+	{
+		$var = $this->getValidator()->getValidatorVar($name);
+		if (!$var)
+		{
+			return;
+		}
+
+		foreach ($var->getChecks() as $check)
+		{
+			if ($check instanceof IsNotEmptyCheck)
+			{
+				return true;
+			}
+		}
+	}
 }
 
 ?>
