@@ -18,7 +18,7 @@ class SmartyRenderer extends Renderer
 	 */
 	protected static $compileDir = "";
 
-	protected static $helperDirectories = array();
+	protected $helperDirectories = array();
 
 	/**
 	 * Template engine instance
@@ -45,9 +45,11 @@ class SmartyRenderer extends Renderer
 		$this->application = $application;
 
 		$this->tpl = $this->getSmartyInstance();
-		$this->tpl->load_filter('pre', 'config');
-		$this->tpl->assign("BASE_URL", $this->application->getRouter()->getBaseUrl());
+		$this->helperDirectories = array_merge($this->helperDirectories, $this->tpl->getPluginsDir());
+
 		$this->registerHelperList();
+		$this->tpl->loadFilter('pre', 'config');
+		$this->tpl->assign("BASE_URL", $this->application->getRouter()->getBaseUrl());
 	}
 
 	/**
@@ -112,24 +114,28 @@ class SmartyRenderer extends Renderer
 
 	public function setObject($name, $object)
 	{
-		$this->tpl->assign_by_ref($name, $object);
+		$this->tpl->assign($name, $object);
 	}
 
 	public function unsetValue($name)
 	{
-		$this->tpl->clear_assign($name);
+		$this->tpl->clearAssign($name);
 	}
 
 	public function unsetAll()
 	{
-		$this->tpl->clear_all_assign();
+		$this->tpl->clearAllAssign();
 	}
 
 	public function render($view)
 	{
-		if ($this->tpl->template_exists($view))
+		if ($this->tpl->templateExists($view))
 		{
-			return $this->tpl->fetch($view);
+			$ignoreStatus = ClassLoader::getIgnoreStatus();
+			ClassLoader::ignoreMissingClasses(true);
+			$res = $this->tpl->fetch($view);
+			ClassLoader::ignoreMissingClasses($ignoreStatus);
+			return $res;
 		}
 		else
 		{
@@ -147,7 +153,7 @@ class SmartyRenderer extends Renderer
 	 */
 	public function registerObject($title, $object, $allowed = array(), $blockMethods = array())
 	{
-		$this->tpl->register_object($title, $object, $allowed, true, $blockMethods);
+		$this->tpl->registerObject($title, $object, $allowed, true, $blockMethods);
 	}
 
 	/**
@@ -165,12 +171,12 @@ class SmartyRenderer extends Renderer
 	 */
 	public function registerHelperList()
 	{
-		$this->tpl->plugins_dir = array_merge($this->tpl->plugins_dir, self::$helperDirectories);
+		$this->tpl->setPluginsDir($this->helperDirectories);
 	}
 
-	public static function registerHelperDirectory($directory)
+	public function registerHelperDirectory($directory)
 	{
-		self::$helperDirectories[] = $directory;
+		$this->helperDirectories[] = $directory;
 	}
 
 	public function getViewExtension()
