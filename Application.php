@@ -266,6 +266,7 @@ class Application
 		$controllerInstance->setBlockName($block['container']);
 		$block['response'] = $controllerInstance->getBlockResponse($block);
 
+
 		if (!$block['response'])
 		{
 			$blockOutput = '';
@@ -410,10 +411,15 @@ class Application
 					{
 						$originalRequest = $this->request;
 						$this->request = clone $this->request;
-						$this->request->setValueArray($location['params']);
 					}
 
 					$instance = $this->getControllerInstance($controllerName);
+
+					// avoid parameter sanitization
+					if ($location['params'])
+					{
+						$this->request->setValueArray($location['params']);
+					}
 
 					$responses[$outputHandle] = array($this->execute($instance, $actionName), $instance, $actionName);
 
@@ -489,7 +495,7 @@ class Application
 	{
 		$controllerName = str_replace('\\', '/', $controllerName);
 		$dir = dirname($this->controllerDirectories[str_replace('/', '.', $controllerName)]) . '/view';
-		return $dir . '/' . str_replace('.', '/', $controllerName) . '/' . $actionName . '.' . $this->getRenderer()->getViewExtension();
+		return $dir . '/' . str_replace('.', '/', $controllerName) . '/' . $actionName . '.tpl'; //$this->getRenderer()->getViewExtension();
 	}
 
 	/**
@@ -500,7 +506,7 @@ class Application
 	 */
 	public function getLayoutPath($layout)
 	{
-		return ClassLoader::getRealPath('application.view.layout.' . $layout) . '.' . $this->getRenderer()->getViewExtension();
+		return ClassLoader::getRealPath('application.view.layout.' . $layout) . '.tpl'; //$this->getRenderer()->getViewExtension();
 	}
 
 	public function __get($name)
@@ -517,4 +523,13 @@ class Application
 		}
 	}
 }
+
+if (!function_exists('array_last'))
+{
+	function array_last($array)
+	{
+		return end($array);
+	}
+}
+
 ?>
