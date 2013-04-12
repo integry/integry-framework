@@ -96,7 +96,8 @@ class ClassLoader
 			// we don't want to display PHP errors if a file can't be included, but at the same time
 			// we also don't want to supress all error messages from include_once (could be a parse error, etc.)
 			$errLevel = error_reporting();
-			error_reporting(E_ALL ^ E_WARNING);
+
+			error_reporting(E_ALL & ~E_STRICT ^ E_WARNING);
 
 			if(!(include_once($class.'.php')) && !self::$ignoreMissingClasses)
 			{
@@ -115,6 +116,7 @@ class ClassLoader
 					return;
 				}
 
+				die('Error loading class ' . $class);
 				ClassLoader::import("framework.ClassLoaderException");
 				throw new ClassLoaderException('File '.$class.'.php not found');
 			}
@@ -128,6 +130,11 @@ class ClassLoader
 	public static function ignoreMissingClasses($ignore = true)
 	{
 		self::$ignoreMissingClasses = $ignore;
+	}
+
+	public static function getIgnoreStatus()
+	{
+		return self::$ignoreMissingClasses;
 	}
 
 	public static function registerAutoLoadFunction($functionName)
@@ -218,7 +225,9 @@ class ClassLoader
 
 		if (!$now)
 		{
-			self::$registeredImports[strtolower(array_pop(explode('.', $path)))] = $realPath;
+			$parts = explode('.', $path);
+			$key = strtolower(array_pop($parts));
+			self::$registeredImports[$key] = $realPath;
 		}
 
 		if (strpos($realPath, '*'))

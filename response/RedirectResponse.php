@@ -15,6 +15,7 @@ class RedirectResponse extends Response
 	 */
 	public function __construct($url)
 	{
+		$url = str_replace('&amp;', '&', $url);
 		$this->setRedirectUrl($url);
 	}
 
@@ -26,6 +27,7 @@ class RedirectResponse extends Response
 	 */
 	public function setRedirectURL($url)
 	{
+		$url = str_replace('&amp;', '&', $url);
 		$this->setHeader('Location', $url);
 	}
 
