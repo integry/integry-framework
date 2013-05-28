@@ -239,10 +239,10 @@ class Application
 		echo $output;
 	}
 
-	public function getBlockContent($name)
+	public function getBlockContent($name, $params = null)
 	{
 		$output = '';
-		foreach ($this->renderBlockContainer($name) as $rendered)
+		foreach ($this->renderBlockContainer($name, $params) as $rendered)
 		{
 			$output .= $rendered['output'];
 		}
@@ -250,22 +250,23 @@ class Application
 		return $output;
 	}
 
-	protected function renderBlockContainer($name)
+	protected function renderBlockContainer($name, $params = null)
 	{
 		$render = array();
 		foreach ($this->controllerInstance->getBlocks($name) as $block)
 		{
-			$render[] = array('output' => $this->renderBlock($block, $this->controllerInstance));
+			$render[] = array('output' => $this->renderBlock($block, $this->controllerInstance, $params));
 		}
 
 		return $render;
 	}
 
-	protected function renderBlock($block, Controller $controllerInstance)
+	protected function renderBlock($block, Controller $controllerInstance, $params = array())
 	{
 		$controllerInstance->setBlockName($block['container']);
 		$block['response'] = $controllerInstance->getBlockResponse($block);
 
+		$this->getRenderer()->getSmartyInstance()->assign($params);
 
 		if (!$block['response'])
 		{
